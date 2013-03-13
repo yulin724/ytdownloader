@@ -118,6 +118,8 @@ public class SettingsActivity extends Activity {
             }
             initSwapPreference();
             
+            initBitratePreference();
+            
             for(int i=0;i<getPreferenceScreen().getPreferenceCount();i++){
                 initSummary(getPreferenceScreen().getPreference(i));
             }
@@ -310,13 +312,23 @@ public class SettingsActivity extends Activity {
 					Log.d(DEBUG_TAG, "diffrent YTD signature in prefs (F-Droid?). Update check cancelled.");
 					up.setEnabled(false);
 				}
-			}
+			}			
 		}
 
 		private void initSwapPreference() {
 			boolean swap = settings.getBoolean("swap_location", false);
 			PreferenceScreen p = (PreferenceScreen) findPreference("open_chooser");
             if (swap == true) {
+            	p.setEnabled(true);
+            } else {
+            	p.setEnabled(false);
+            }
+		}
+		
+		private void initBitratePreference() {
+			String encode = settings.getString("audio_extraction_type", "strip");
+			Preference p = (Preference) findPreference("mp3_bitrate");
+            if (encode.equals("encode") == true) {
             	p.setEnabled(true);
             } else {
             	p.setEnabled(false);
@@ -354,6 +366,7 @@ public class SettingsActivity extends Activity {
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         	updatePrefSummary(findPreference(key));
         	initSwapPreference();
+        	initBitratePreference();
         }
         	 
         private void initSummary(Preference p){

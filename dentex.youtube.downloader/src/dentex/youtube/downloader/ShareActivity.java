@@ -84,6 +84,7 @@ public class ShareActivity extends Activity {
     //private InputStream isFromString;
     List<String> links = new ArrayList<String>();
     List<String> codecs = new ArrayList<String>();
+    String acodec = "";
     List<String> qualities = new ArrayList<String>();
     List<String> sizes = new ArrayList<String>();
     List<String> cqsChoices = new ArrayList<String>();
@@ -132,6 +133,8 @@ public class ShareActivity extends Activity {
 	public static NotificationCompat.Builder mBuilder;
 	public static String onlineVersion;
 	public static List<Long> sequence = new ArrayList<Long>();
+	public String composedAudioFilename;
+	private boolean audioExtractionEnabled;
 
     @SuppressLint("CutPasteId")
 	@Override
@@ -329,7 +332,10 @@ public class ShareActivity extends Activity {
 
     private class AsyncDownload extends AsyncTask<String, Void, String> {
 
-    	protected void onPreExecute() {
+    	private Object extrType;
+		private String aquality;
+
+		protected void onPreExecute() {
     		isAsyncDownloadRunning = true;
     		tv.setText(R.string.loading);
     		progressBar1.setVisibility(View.VISIBLE);
@@ -402,10 +408,17 @@ public class ShareActivity extends Activity {
 			    	}
 
                     helpBuilder.setPositiveButton(getString(R.string.list_click_download_local), new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
+
+						public void onClick(DialogInterface dialog, int which) {
                         	try {
                             	Log.d(DEBUG_TAG, "Destination folder is available and writable");
                         		composedFilename = composeFilename();
+                        		
+                        		audioExtractionEnabled = settings.getBoolean("enable_audio_extraction", false);
+                        		if (audioExtractionEnabled == true) {
+                        			composeAudioFilename();
+                        		}
+                        		
 	                            fileRenameEnabled = settings.getBoolean("enable_rename", false);
 
 	                            if (fileRenameEnabled == true) {
@@ -553,6 +566,30 @@ public class ShareActivity extends Activity {
     	    return vfilename;
         }
 
+        public void composeAudioFilename() {
+        	//CODEC [file EXTENSION]
+        	extrType = settings.getString("audio_extraction_type", "strip");
+    		if (extrType.equals("encode") == true) {
+    			acodec = ".mp3";
+    		} else {
+    			if (codecs.get(pos).equals("webm")) acodec = ".ogg";
+    			if (codecs.get(pos).equals("mp4")) acodec = ".aac";
+    			if (codecs.get(pos).equals("flv") && qualities.get(pos).equals("small")) acodec = ".mp3";
+    			if (codecs.get(pos).equals("flv") && qualities.get(pos).equals("medium")) acodec = ".aac";
+    			if (codecs.get(pos).equals("flv") && qualities.get(pos).equals("large")) acodec = ".aac";
+    			if (codecs.get(pos).equals("3gpp")) acodec = ".aac";
+    		}
+    		//QUALITY
+        	if (useQualitySuffix() ==  true && extrType.equals("encode") == true) {
+        		aquality = "_" + settings.getString("mp3_bitrate", "192");
+        	} else { 
+        		aquality = "";
+        	}
+        	//FINALLY
+        	composedAudioFilename = title + aquality + acodec;
+        	Log.d(DEBUG_TAG, "composedAudioFilename: " + composedAudioFilename);
+        }
+
 		void callConnectBot() {
         	Context context = getApplicationContext();
     		PackageManager pm = context.getPackageManager();
@@ -613,6 +650,12 @@ public class ShareActivity extends Activity {
     	Intent intent1 = new Intent(ShareActivity.this, DownloadsService.class);
     	intent1.putExtra("COPY", false);
     	
+    	if (settings.getBoolean("enable_audio_extraction", false)) {
+    		intent1.putExtra("AUDIO", true);
+    	} else {
+    		intent1.putExtra("AUDIO", false);
+    	}
+    	
 		try {
 			enqueue = dm.enqueue(request);
         	Log.d(DEBUG_TAG, "_ID " + enqueue + " enqueued");
@@ -634,7 +677,11 @@ public class ShareActivity extends Activity {
 			sequence.add(enqueue);
 			settings.edit().putLong(composedFilename, enqueue).apply();
 			
-			fileObserver = new Observer.delFileObserver(path.getAbsolutePath());
+			if (videoOnExt == true) {
+				fileObserver = new Observer.delFileObserver(dir_Downloads.getAbsolutePath());
+			} else {
+				fileObserver = new Observer.delFileObserver(path.getAbsolutePath());
+			}
 			fileObserver.startWatching();
 			
 			NotificationHelper();

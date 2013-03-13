@@ -1,7 +1,10 @@
 package dentex.youtube.downloader.service;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import android.app.DownloadManager;
 import android.app.DownloadManager.Query;
@@ -13,6 +16,9 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.ffmpeg.cmdline.BinaryInstaller;
+import android.ffmpeg.cmdline.FfmpegController;
+import android.ffmpeg.cmdline.ShellUtils;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
@@ -27,6 +33,7 @@ public class DownloadsService extends Service {
 	public static SharedPreferences settings = ShareActivity.settings;
 	public final String PREFS_NAME = ShareActivity.PREFS_NAME;
 	public boolean copy;
+	public boolean audio;
 	public static int ID;
 
 	@Override
@@ -49,6 +56,14 @@ public class DownloadsService extends Service {
 		} else {
 			Log.d(DEBUG_TAG, "Copy to extSdcard: false");
 		}
+		
+		audio = intent.getBooleanExtra("AUDIO", false);
+		if (audio == true) {
+			Log.d(DEBUG_TAG, "Audio extraction: true");
+		} else {
+			Log.d(DEBUG_TAG, "Audio extraction: false");
+		}
+		
 		super.onStartCommand(intent, flags, startId);
 		return START_NOT_STICKY;
 	}
@@ -130,6 +145,23 @@ public class DownloadsService extends Service {
 							Log.e(DEBUG_TAG, "_ID " + ID + "Copy to extSdCard FAILED");
 						}
 					}
+					
+					if (audio == true) {
+						Log.e(DEBUG_TAG, ">>>>>>>>>>> starting ffmpeg test...");
+						FfmpegController ffmpeg = null;
+					    try {
+					    	ffmpeg = new FfmpegController(context);
+					    } catch (IOException ioe) {
+					    	Log.e(DEBUG_TAG, "Error loading ffmpeg. " + ioe.getMessage());
+					    }
+
+						ShellUtils.ShellCallback sc = null;
+						List<String> cmd = new ArrayList<String>();
+						cmd.add(ffmpeg.mFfmpegBinPath);
+						cmd.add("-i /storage/sdcard0/v.mp4 -vn -acodec copy /storage/sdcard0/a.aac");
+						ffmpeg.execProcess(cmd, sc);
+					}
+					
 					break;
 				case DownloadManager.STATUS_FAILED:
 					Log.e(DEBUG_TAG, "_ID " + id + " FAILED (status " + status + ")");

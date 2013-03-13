@@ -144,6 +144,18 @@
     <string name="show_thumb_title">Show preview image</string>
     <string name="show_thumb_summary">Download a preview image together with the video list</string>
     
+    <!-- @3.5 -->
+    <string name="settings_cat_audio">Audio</string>
+    <string name="enable_audio_extraction_title">Enable audio extraxtion</string>
+    <string name="enable_audio_extraction_summary">Strip or convert audio from downloaded video (requires Root)</string>
+    <string name="mp3_bitrate_title">Choose bitrate for mp3 encoding</string>
+    <string name="audio_extraction_type_title">Choose Extraction type:</string>
+
+    <string-array name="audio_extraction_type_entries">
+        <item>Extract only</item>
+        <item>Extract and encode to mp3</item>
+    </string-array>
+    
     <!-- @4 -->
     <string name="settings_cat_notifications">Notifications</string>
     <string name="enable_own_notification_title">Enable own notification</string>
