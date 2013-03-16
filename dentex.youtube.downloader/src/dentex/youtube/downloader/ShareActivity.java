@@ -11,7 +11,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -951,9 +950,8 @@ public class ShareActivity extends Activity {
     
     private String getVideoFileSizeAsync(String link) throws IOException {
 		final URL uri = new URL(link);
-		URLConnection ucon;
 		try {
-			ucon=uri.openConnection();
+			HttpURLConnection ucon = (HttpURLConnection) uri.openConnection();
 			ucon.connect();
 			int file_size = ucon.getContentLength();
 			return MakeSizeHumanReadable(file_size, true);

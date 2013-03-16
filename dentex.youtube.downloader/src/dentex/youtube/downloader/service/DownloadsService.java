@@ -1,7 +1,6 @@
 package dentex.youtube.downloader.service;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +15,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.ffmpeg.cmdline.BinaryInstaller;
 import android.ffmpeg.cmdline.FfmpegController;
 import android.ffmpeg.cmdline.ShellUtils;
 import android.os.IBinder;
@@ -147,7 +145,7 @@ public class DownloadsService extends Service {
 					}
 					
 					if (audio == true) {
-						Log.e(DEBUG_TAG, ">>>>>>>>>>> starting ffmpeg test...");
+						Log.i(DEBUG_TAG, ">>>>>>>>>>> starting ffmpeg test...");
 						FfmpegController ffmpeg = null;
 					    try {
 					    	ffmpeg = new FfmpegController(context);
@@ -155,11 +153,23 @@ public class DownloadsService extends Service {
 					    	Log.e(DEBUG_TAG, "Error loading ffmpeg. " + ioe.getMessage());
 					    }
 
-						ShellUtils.ShellCallback sc = null;
+					    ShellDummy shell = new ShellDummy();
 						List<String> cmd = new ArrayList<String>();
+						
+						File in = new File("/storage/sdcard0/v.mp4");
+						File out = new File("/storage/sdcard0/a.aac");
+						
 						cmd.add(ffmpeg.mFfmpegBinPath);
-						cmd.add("-i /storage/sdcard0/v.mp4 -vn -acodec copy /storage/sdcard0/a.aac");
-						ffmpeg.execProcess(cmd, sc);
+						
+						// -i /storage/sdcard0/v.mp4 -vn -acodec copy /storage/sdcard0/a.aac");
+						cmd.add("-i");
+						cmd.add(in.getPath());
+						cmd.add("-vn");
+						cmd.add("-acodec");
+						cmd.add("copy");
+						cmd.add(out.getPath());
+						
+						ffmpeg.execProcess(cmd, shell);
 					}
 					
 					break;
@@ -204,4 +214,19 @@ public class DownloadsService extends Service {
 			ShareActivity.fileObserver.stopWatching();
 		}
 	}
+    
+    private class ShellDummy implements ShellUtils.ShellCallback {
+
+		@Override
+		public void shellOut(String shellLine) {
+			
+			Log.d(DEBUG_TAG, "FFmpeg cmd message: " + shellLine);
+		}
+
+		@Override
+		public void processComplete(int exitValue) {
+			Log.e(DEBUG_TAG, "FFmpeg process exit value: " + exitValue);
+		}
+    	
+    }
 }
