@@ -1,6 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="changelog">
+        \n v1.9 - Mar 23 2013
+        \n-----------------------------------
+        \n[x] YT web page parsing improved
+        \n[x] fixed notif. error when remove 
+        \n    downloads not yet started
+        \n[x] 4K and 3D video support
+        \n[x] re-organized menus
+        \n[x] on the fly theme switch
+        \n[x] progress bar for video list
+        \n[x] option to enable logging
+        \n[x] Korean translation
+        \n
+        \n v1.8.2 - Mar 15 2013
+        \n-----------------------------------
+        \n[x] dark/light theme switcher
+        \n[x] option to show all the file 
+        \n    sizes into the video list
+        \n[x] French translation
+        \n
+        \n v1.8.1 - Mar 14 2013
+        \n-----------------------------------
+        \n[x] notification bug fix
+        \n
         \n v1.8 - Mar 12 2013
         \n-----------------------------------
         \n[x] extSdCard support
@@ -132,15 +155,17 @@
 		IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 		CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</string>
 		
+    <string name="credits_text2">(<http>https://github.com/CyanogenMod/android_packages_apps_CMUpdater</http>).
+        \n\nCopyright &#169; 2012 The CyanogenMod Project, licensed under the GNU GPLv2 license.</string>
+		
     <string name="ytd_code_git_summary">https://github.com/dentex/ytdownloader/</string>
     <string name="ytd_code_hg_summary">https://sourceforge.net/projects/ytdownloader/</string>
     <string name="chooser_code_summary">https://code.google.com/p/android-filechooser/</string>
-		
-    <string name="credits_text2">(<http>https://github.com/CyanogenMod/android_packages_apps_CMUpdater</http>).
-        \n\n
-        Copyright &#169; 2012 The CyanogenMod Project, licensed under the GNU GPLv2 license.
-		\n\n
-		The text of the license can be found in the LICENSE_GPL2 file or at <http>https://www.gnu.org/licenses/gpl-2.0.txt</http></string>
+    
+    <string name="tweet_title">Twitter</string>
+    <string name="tweet_summary">\@twidentex</string>    
+    
+    <string name="imgview_descr">Video thumbnail</string>
 		
     <string name="app_name">YouTube Downloader</string>
     <string name="title_activity_share">YouTube Downloader</string>
@@ -167,13 +192,20 @@
     
     <string name="download_manager_notification_default">VISIBLE</string>
     
+    <string-array name="choose_theme_entry_values">
+        <item>D</item>
+        <item>L</item>
+    </string-array>
+    
+    <string name="choose_theme_default">D</string>
+    
     <string-array name="audio_extraction_type_entry_values">
         <item>strip</item>
         <item>encode</item>
     </string-array>
     
     <string name="audio_extraction_type_default">strip</string>
-    
+
     <string-array name="mp3_bitrate_entries">
         <item>128</item>
         <item>192</item>
@@ -195,6 +227,8 @@
         <item>Portuguese</item>
         <item>Turkish</item>
         <item>Dutch</item>
+        <item>French</item>
+        <item>Korean</item>
     </string-array>
     
     <string-array name="lang_entry_values">
@@ -204,14 +238,18 @@
         <item>pt</item>
         <item>tr</item>
         <item>nl</item>
+        <item>fr</item>
+        <item>ko</item>
     </string-array>
+    
+    <string name="lang_default">default</string>
     
     <string name="translators_list">   
         \nPLUG313 - Portuguese;
         \nrew06 - Turkish;
-        \nEkimPadd - Dutch.</string>
-    
-    <string name="lang_default">default</string>
-    
-    <string name="imgview_descr">Video thumbnail</string>
+        \nEkimPadd - Dutch;
+        \nblux (AKA grobux) - French;
+        \ndigitie - Korean.
+    </string>
+
 </resources>

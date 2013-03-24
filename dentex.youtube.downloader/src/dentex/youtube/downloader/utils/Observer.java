@@ -2,11 +2,15 @@ package dentex.youtube.downloader.utils;
 
 import java.io.File;
 
+import dentex.youtube.downloader.ShareActivity;
 import dentex.youtube.downloader.service.DownloadsService;
 
 import android.os.FileObserver;
-import android.util.Log;
 
+// reference:
+// https://gist.github.com/shirou/659180
+// https://github.com/shirou
+	
 public class Observer {
 	
 	static final String DEBUG_TAG = "Observer";
@@ -25,17 +29,18 @@ public class Observer {
 		}
 	
 		public void onEvent(int event, String path) {
-			//Log.d(DEBUG_TAG, TAG + "onEvent " + event + ", " + path);
+			//Utils.logger("d", TAG + "onEvent " + event + ", " + path);
 			
 			if (event == FileObserver.CREATE) {
-				Log.d(DEBUG_TAG, TAG + "file " + path + " CREATED");
+				ShareActivity.NotificationHelper();
+				Utils.logger("d", TAG + "file " + path + " CREATED", DEBUG_TAG);
 			}
 			
 			if (event == FileObserver.DELETE){
-				Log.d(DEBUG_TAG, TAG + "file " + path + " DELETED");
+				Utils.logger("d", TAG + "file " + path + " DELETED", DEBUG_TAG);
 				
 				long id = Utils.settings.getLong(path, 0);
-				Log.d(DEBUG_TAG, TAG + "Retrieved ID: " +  id);
+				Utils.logger("d", TAG + "Retrieved ID: " +  id, DEBUG_TAG);
 				DownloadsService.removeIdUpdateNotification(id);
 			}
 		}

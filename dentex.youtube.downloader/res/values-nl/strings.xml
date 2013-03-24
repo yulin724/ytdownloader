@@ -4,14 +4,17 @@
     <string name="menu_settings">Instellingen</string>
     <string name="title_activity_settings">YouTube Downloader Instellingen</string>
     <string name="title_activity_upgrade_apk">YouTube Downloader Opwaarderen</string>
+    <string name="title_activity_about">About YouTube Downloader</string>
 
     <!-- ### ShareActivity ### -->
 
     <string name="tutorial_title">Algemene App handleiding</string>
-    <string name="tutorial_msg">Nu zult u een lijst zien met alle codecs en kwaliteiten beschikbaar van de geselecteerde video.
-\n\nKies een optie en u zult de vraag krijgen of u het bestand lokaal wilt opslaan (telefoon / sdkaart) of dat u het wilt verzenden via SSH naar een linux computer.
-\n\nBestemmingsvereisten voor de linux-box: Bash en Wget. Extra SSH informatie volgt.</string>
-    <string name="loading">Laden&#8230;</string>
+	<string name="tutorial_msg_new">Now you will see a list with all the codecs and qualities available for the selected video. You can:
+		\n\n*) Press an item to download the video locally (on the device) or to send the download via SSH to a remote PC.
+		\nDestination machine requirements: Bash and Wget. Additional SSH info further on;
+		\n\n*) Long-press an item and choose between copy to clipboard or share link as text (i.e. send to another app).
+		\nPlease note that such a link (differently from when you send it via SSH) can be only used from the same device where it has been created OR from the same LAN, if you share it to another machine.\n</string>
+    <string name="loading">Laden...</string>
     <string name="error">Fout!</string>
     <string name="information">Informatie</string>
     <string name="dialogs_negative">Annuleren</string>
@@ -52,8 +55,8 @@ map, PLAK het commando (gebruik de menuknop) en klik ENTER.</string>
     <string name="notification_downloading_pt2">video bestanden</string>
     <string name="notification_no_downloads">Geen downloads in behandeling</string>
     <string name="long_click_title">Hanteer geselecteerde link:</string>
-    <string name="extsdcard_info_title">Bestemmingspan is op de verwijderbare sdkaart </string>
-    <string name="extsdcard_info_msg">Bestand wordt in eerste instantie gedownload op de standaard sdkaart en verplaatst naar de geselecteerde locatie.</string>
+    <string name="extsdcard_info_title">Non standard destination path</string>
+    <string name="extsdcard_info_msg">File is being downloaded initially in the standard Download folder and then will be moved to the selected destination.</string>
     
     <string-array name="long_click_entries">
         <item>Kopieer naar klembord</item>
@@ -78,8 +81,7 @@ map, PLAK het commando (gebruik de menuknop) en klik ENTER.</string>
     <string name="upgrade_button_download">Download\nen installeren</string>
     <string name="upgrade_uppertext_searching">Zoeken&#8230;</string>
     <string name="upgrade_uppertext_init">Installeer versie:\n</string>
-    <string name="upgrade_dialog_msg">Nieuwe versie beschikbaar:\t</string>
-    <string name="upgrade_dialog_positive">Download</string>
+
     <string name="upgrade_latest">Laatste:\t</string>
     <string name="upgrade_installed">\nGeïnstalleerd:\t</string>
     <string name="upgraded_dialog_msg">Nieuwe versie opgeslagen in standaard map sdkaart \'Download\' folder.\n\n Installeer nu?</string>
@@ -90,25 +92,31 @@ map, PLAK het commando (gebruik de menuknop) en klik ENTER.</string>
     
     <!-- ### DownloadService ### -->
     
+    <string name="ytd_video">YTD video</string>
     <string name="copy_error">Fout tijdens het kopiëren</string>
     <string name="copy_progress">YTD bezig met bestand kopiëren&#8230;</string>
-    <string name="copy_ok">Beschikbaar op extSdkaart.</string>
+    <string name="copy_ok">Copy completed.</string>
+    <string name="download_remove_failed">Error: temporary downloaded file not removed!</string>
     <string name="download_failed">Download mislukt!</string>
 
     <!-- ### preferences ### -->
 
-    <!-- @0 -->
+    <!-- -->
     <string name="dm_title">Downloads bekijken</string>
     <string name="dm_title_condensed">Downloads</string>
     <string name="dm_summary">Open system\'s Download Manager</string>
-    <string name="update_title">Controleren op updates</string>
-    <string name="update_title_condensed">Bijwerken</string>
-    <string name="autoupdate_title">Activeer automatisch bijwerken</string>
-    <string name="autoupdate_summary">Controleer op updates bij het opstarten van de applicatie (het nieuwste bestand wordt automatisch gedownload)</string>
+
+    <!-- -->
+    <string name="settings_cat_ui">User Interface</string>
     <string name="lang_title">Taal</string>
     <string name="lang_dialog_title">Taal (applicatie herstart vereist):</string>
+    <string name="choose_theme_title">Kies thema</string>
+    <string-array name="choose_theme_entries">
+        <item>Donker</item>
+        <item>Licht</item>
+    </string-array>
     
-    <!-- @1 -->
+    <!-- -->
     <string name="settings_cat_tutorials">Handleiding</string>
     <string name="quick_start_title">Snelle start</string>
     <string name="quick_start_summ">Open de snel start handleiding</string>
@@ -122,18 +130,14 @@ map, PLAK het commando (gebruik de menuknop) en klik ENTER.</string>
     <string name="ssh_info_title">Activeer SSH handleiding</string>
     <string name="ssh_info_summary">Laat een snelle tip zien over op afstand downloaden via SSH</string>
 
-    <!-- @2 -->
+    <!-- -->
     <string name="settings_cat_folder">Download map</string>
     <string name="standard_location_title">Kies een standaard map</string>
     <string name="chooser_swap_title">Wissel kiezer</string>
     <string name="chooser_location_title">Open bestandskiezer</string>
     <string name="chooser_location_summary">Lang drukken om een map te selecteren</string>
-    <string name="su_cp_title">Gebruik verwijderbare sdcard</string>
-	<string name="su_cp_summary">Activeer verwijderbare sdcard support in besandskiezer (Root vereist)</string>
-	<string name="path_on_extsdcard_dialog_title">Gekozen pad is NIET op standaard sdcard.</string>
-	<string name="path_on_extsdcard_dialog_msg">Activeer verwijderbare sdcard support? (Root vereist)</string>
 	
-    <!-- @3 -->
+    <!-- -->
     <string name="settings_cat_files">Video bestanden</string>
     <string name="enable_q_suffix_title">Kwaliteit achtervoegsel toevoegen</string>
     <string name="enable_q_suffix_summary">Kwaliteit type toevoegen in bestandsnaam</string>
@@ -141,10 +145,12 @@ map, PLAK het commando (gebruik de menuknop) en klik ENTER.</string>
     <string name="enable_rename_summary">Hernoem het video bestand voor het downloaden (alleen voor lokale download)</string>
     <string name="show_size_title">Bestandsgrootte laten zien</string>
     <string name="show_size_summary">Haal de grootte van het videobestand op bij het bevestigingsbericht (langzamer)</string>
+    <string name="show_size_list_title">Toon de grootte van alle video formaten</string>
+    <string name="show_size_list_summary">Haal de bestandsgrootte op van alle video\'s in de lijst (veel slomer)</string>
     <string name="show_thumb_title">Toon voorbeeld afbeelding</string>
     <string name="show_thumb_summary">Download een voorbeeld afbeelding met de videolijst</string>
     
-    <!-- @4 -->
+    <!-- -->
     <string name="settings_cat_notifications">Meldingen</string>
     <string name="enable_own_notification_title">Activeer eigen meldingen</string>
     <string name="enable_own_notification_summary">Laat een uitgebreide melding zien over alle YTD downloads</string>
@@ -156,13 +162,20 @@ map, PLAK het commando (gebruik de menuknop) en klik ENTER.</string>
         <item>Tijdens het uitvoering alleen</item>
         <item>Nooit</item>
     </string-array>
+    
+    <!-- -->
+    <string name="settings_cat_updates">Bijwerken</string>
+    <string name="update_title">Controleren op updates</string>
+    <string name="autoupdate_title">Activeer automatisch bijwerken</string>
+    <string name="autoupdate_summary">Controleer op updates bij het opstarten van de applicatie (het nieuwste bestand wordt automatisch gedownload)</string>
 
-    <!-- @5 -->
+    <!-- -->
     <string name="settings_cat_about">Over deze App</string>
+    <string name="settings_cat_about_condensed">About</string>
     <string name="title_changelog">Lijst met veranderingen</string>
     <string name="screen_licences_code_title">Licenties en Regels</string>
 
-    <!-- @5.1 -->
+    <!-- -->
     <string name="settings_cat_licenses">Licenties</string>
     <string name="gpl_title">YTD\'s Licentie</string>
     <string name="gpl_summary">GPL-3.0</string>
@@ -172,7 +185,7 @@ map, PLAK het commando (gebruik de menuknop) en klik ENTER.</string>
     <string name="mit_summary">MIT licentie</string>
     <string name="title_activity_mit_show">MIT licentie</string>
 
-    <string name="credits_title">Andere credits</string>
+    <string name="credits_title">Credits</string>
     <string name="credits_summary">Andere licentie en vertalingen</string>
     <string name="title_activity_credits_show">Andere licentie en vertalingen</string>
     <string name="credits_text1">Code fragmenten licentie
@@ -181,19 +194,30 @@ Deze App gebruikt bepaalde code fragementen van de CyanogenMod custom ROM;
 \n\n
 De methode om de MD5 checksum te berekenen en te vergelijken, voor het 
 downloaden van bijwerkingspakketen, zijn ontleed van de \'CMUpdater\' App</string>
+	<string name="credits_text3">\nThe text of the license can be found in the LICENSE_GPL2 file or at <http>https://www.gnu.org/licenses/gpl-2.0.txt</http></string>
+	<string name="credits_text4">\n\tCode from StackOverflow
+	    \n\n
+	    In addition, the Java methods used in YTD to compare version numbers, 
+	    to copy files on extSdCard and to make fetched video file size human readable 
+	    (and a lot of other small non-traceable references), 
+	    are taken from the site Stack Overflow (<http>http://stackoverflow.com</http>), 
+	    a question and answer site for programmers where all the content is CC BY-SA 3.0 licensed
+	    (see <http>http://creativecommons.org/licenses/by-sa/3.0</http>).
+	    For more details, look for comments in YTD\'s Java code.
+	    </string>
     <string name="credits_translators">\n\tVertalingen
 \n\nMede mogelijk gemaakt door:</string>
     <string name="translators_info">\nVoor meer informatie:
 \n<http>forum.xda-developers.com/showthread.php?p=37708791</http>
 \n\n<http>www.getlocalization.com/ytdownloader</http></string>
         
-    <!-- @5.2 -->
+    <!-- -->
     <string name="settings_cat_code">Broncode</string>
     <string name="ytd_code_git_title">YTD op GitHub</string>
     <string name="ytd_code_hg_title">YTD op Sourceforge</string>
     <string name="chooser_code_title">Bestandskiezer op Google Code</string>
 
-    <!-- @6 -->
+    <!-- -->
     <string name="settings_cat_social">Sociaal</string>
     <string name="share_title">Deze App delen</string>
     <string name="share_summary">via Twitter, Facebook, Gmail, etc&#8230;</string>
@@ -201,7 +225,12 @@ downloaden van bijwerkingspakketen, zijn ontleed van de \'CMUpdater\' App</strin
     <string name="share_message">#YouTubeDownloader
 \nGratis en Open-Source Android App om YouTube videos te downloaden!
 \nhttps://sourceforge.net/projects/ytdownloader/files/</string>
-    <string name="help_translate_title">Help deze App te vertalen</string>
+	<string name="help_translate_title">Help deze App te vertalen</string>
     <string name="help_translate_summary">Ga naar www.getlocalization.com/ytdownloader</string>
+    
+    <!-- -->
+	<string name="settings_cat_advanced">Advanced</string>
+	<string name="enable_logging_title">Enable logging</string>
+	<string name="enable_logging_summary">Include YTD\'s messages into the system log. Mandatory for sending a logcat to the developer.</string>
 	
 </resources>

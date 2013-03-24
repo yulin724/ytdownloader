@@ -8,6 +8,7 @@ import java.util.List;
 import android.app.DownloadManager;
 import android.app.DownloadManager.Query;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -15,6 +16,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.net.Uri;
 import android.ffmpeg.cmdline.FfmpegController;
 import android.ffmpeg.cmdline.ShellUtils;
 import android.os.IBinder;
@@ -33,6 +35,7 @@ public class DownloadsService extends Service {
 	public boolean copy;
 	public boolean audio;
 	public static int ID;
+	public static Context nContext;
 
 	@Override
 	public IBinder onBind(Intent intent) {
@@ -42,17 +45,22 @@ public class DownloadsService extends Service {
 	@Override
 	public void onCreate() {
 		settings = getSharedPreferences(PREFS_NAME, 0);
-		Log.d(DEBUG_TAG, "service created");
+		nContext = getBaseContext();
+		Utils.logger("d", "service created", DEBUG_TAG);
 		registerReceiver(downloadComplete, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
 	}
+	
+	public static Context getContext() {
+        return nContext;
+    }
 	
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		copy = intent.getBooleanExtra("COPY", false);
 		if (copy == true) {
-			Log.d(DEBUG_TAG, "Copy to extSdcard: true");
+			Utils.logger("d", "Copy to extSdcard: true", DEBUG_TAG);
 		} else {
-			Log.d(DEBUG_TAG, "Copy to extSdcard: false");
+			Utils.logger("d", "Copy to extSdcard: false", DEBUG_TAG);
 		}
 		
 		audio = intent.getBooleanExtra("AUDIO", false);
@@ -68,7 +76,7 @@ public class DownloadsService extends Service {
 	
 	@Override
 	public void onDestroy() {
-		Log.d(DEBUG_TAG, "service destroyed");
+		Utils.logger("d", "service destroyed", DEBUG_TAG);
 	    unregisterReceiver(downloadComplete);
 	}
 
@@ -76,12 +84,13 @@ public class DownloadsService extends Service {
     	
     	private NotificationManager cNotificationManager;
 		private NotificationCompat.Builder cBuilder;
+		private Intent intent2;
 
 		@Override
     	public void onReceive(Context context, Intent intent) {
-    		Log.d(DEBUG_TAG, "downloadComplete: onReceive CALLED");
+    		Utils.logger("d", "downloadComplete: onReceive CALLED", DEBUG_TAG);
     		long id = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
-    		String filename = settings.getString(String.valueOf(id), "file");
+    		String vfilename = settings.getString(String.valueOf(id), "video");
     		
 			Query query = new Query();
 			query.setFilterById(id);
@@ -92,30 +101,30 @@ public class DownloadsService extends Service {
 				int reasonIndex = c.getColumnIndex(DownloadManager.COLUMN_REASON);
 				int status = c.getInt(statusIndex);
 				int reason = c.getInt(reasonIndex);
+				
+				//long size = c.getLong(c.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES)); // see TODO below
 
 				switch (status) {
+				
 				case DownloadManager.STATUS_SUCCESSFUL:
-					Log.d(DEBUG_TAG, "_ID " + id + " SUCCESSFUL (status " + status + ")");
+					Utils.logger("d", "_ID " + id + " SUCCESSFUL (status " + status + ")", DEBUG_TAG);
 					ID = (int) id;
 					
 					cBuilder =  new NotificationCompat.Builder(context);
 					cNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 					
 			    	cBuilder.setSmallIcon(R.drawable.icon_nb);
-					cBuilder.setContentTitle(filename);
+					cBuilder.setContentTitle(vfilename);
 					
 					if (copy == true) {
-						File src = new File(ShareActivity.dir_Downloads, filename);
-						//File src = new File("/storage/sdcard1/Video/MTB/Br_test.mp4");
-						File dst = new File(ShareActivity.path, filename);
-						//File dst = new File("/storage/sdcard1/Video/Br_test.mp4");
+						File src = new File(ShareActivity.dir_Downloads, vfilename);
+						File dst = new File(ShareActivity.path, vfilename);
 						
 						Toast.makeText(context, context.getString(R.string.copy_progress), Toast.LENGTH_SHORT).show();
 				        cBuilder.setContentText(context.getString(R.string.copy_progress));
 						cNotificationManager.notify(ID, cBuilder.build());
-						Log.i(DEBUG_TAG, "_ID " + ID + " Copy in progress...");
+						Utils.logger("i", "_ID " + ID + " Copy in progress...", DEBUG_TAG);
 						
-						//mBuilder.setContentTitle(getString(R.string.app_name));
 						if (settings.getBoolean("enable_own_notification", true) == true) {
 							try {
 								removeIdUpdateNotification(id);
@@ -124,28 +133,49 @@ public class DownloadsService extends Service {
 							}
 						}
 							
+						intent2 = new Intent(Intent.ACTION_VIEW);
+
 						try {
 							Utils.copyFile(src, dst, context);
 							
-							Toast.makeText(context,  filename + ": " + context.getString(R.string.copy_ok), Toast.LENGTH_SHORT).show();
+							Toast.makeText(context,  vfilename + ": " + context.getString(R.string.copy_ok), Toast.LENGTH_SHORT).show();
 					        cBuilder.setContentText(context.getString(R.string.copy_ok));
-							cNotificationManager.notify(DownloadsService.ID, cBuilder.build());
-							Log.i(DEBUG_TAG, "_ID " + ID + " Copy OK");
+					        intent2.setDataAndType(Uri.fromFile(dst), "video/*");
+							Utils.logger("i", "_ID " + ID + " Copy OK", DEBUG_TAG);
 							
 							if (ShareActivity.dm.remove(id) == 0) {
-								Toast.makeText(context, "error: temp download file NOT removed", Toast.LENGTH_LONG).show();
+								Toast.makeText(context, getString(R.string.download_remove_failed), Toast.LENGTH_LONG).show();
 								Log.e(DEBUG_TAG, "temp download file NOT removed");
-				        	}
+								
+				        	} else { 
+				        		Utils.logger("v", "temp download file removed", DEBUG_TAG);
+				        		
+				        		// TODO fix: `dst` seems not to return a valid `File`
+				        		// Uri dstUri = Uri.fromFile(dst); // <-- tried also this (1)
+
+				        		/*Utils.logger("i", "dst: " + dst.getAbsolutePath());
+				        		ShareActivity.dm.addCompletedDownload(filename, 
+				        				getString(R.string.ytd_video), 
+				        				true, 
+				        				"video/*", 
+				        				dst.getAbsolutePath(), // <-- dstUri.getEncodedPath(), // (1) 
+				        				size,
+				        				false);*/
+				        	}	        	
 						} catch (IOException e) {
-							Toast.makeText(context, filename + ": " + getString(R.string.copy_error), Toast.LENGTH_LONG).show();
+							Toast.makeText(context, vfilename + ": " + getString(R.string.copy_error), Toast.LENGTH_LONG).show();
 							cBuilder.setContentText(getString(R.string.copy_error));
-							cNotificationManager.notify(ID, cBuilder.build());
+							intent2.setDataAndType(Uri.fromFile(src), "video/*");
 							Log.e(DEBUG_TAG, "_ID " + ID + "Copy to extSdCard FAILED");
+						} finally {
+							PendingIntent contentIntent = PendingIntent.getActivity(nContext, 0, intent2, PendingIntent.FLAG_UPDATE_CURRENT);
+			        		cBuilder.setContentIntent(contentIntent);
+							cNotificationManager.notify(ID, cBuilder.build());
 						}
 					}
 					
 					if (audio == true) {
-						Log.i(DEBUG_TAG, ">>>>>>>>>>> starting ffmpeg test...");
+						Utils.logger("i", ">>>>>>>>>>> starting ffmpeg test...", DEBUG_TAG);
 						FfmpegController ffmpeg = null;
 					    try {
 					    	ffmpeg = new FfmpegController(context);
@@ -156,18 +186,26 @@ public class DownloadsService extends Service {
 					    ShellDummy shell = new ShellDummy();
 						List<String> cmd = new ArrayList<String>();
 						
-						File in = new File("/storage/sdcard0/v.mp4");
-						File out = new File("/storage/sdcard0/a.aac");
+						//File in = new File(ShareActivity.dir_Downloads, filename);
+						File in = new File(ShareActivity.path, vfilename);
+						
+						String afilename = settings.getString(vfilename + "FF", "audio");
+						File out = new File(ShareActivity.path, afilename);
+						
+						//File in = new File("/storage/sdcard0/v.mp4");
+						//File out = new File("/storage/sdcard0/a.aac");
 						
 						cmd.add(ffmpeg.mFfmpegBinPath);
 						
 						// -i /storage/sdcard0/v.mp4 -vn -acodec copy /storage/sdcard0/a.aac");
 						cmd.add("-i");
 						cmd.add(in.getPath());
-						cmd.add("-vn");
+						Utils.logger("i", "ffmpeg input: " + in, DEBUG_TAG);
+						//cmd.add("-vn");
 						cmd.add("-acodec");
 						cmd.add("copy");
 						cmd.add(out.getPath());
+						Utils.logger("i", "ffmpeg output: " + out, DEBUG_TAG);
 						
 						ffmpeg.execProcess(cmd, shell);
 					}
@@ -176,12 +214,13 @@ public class DownloadsService extends Service {
 				case DownloadManager.STATUS_FAILED:
 					Log.e(DEBUG_TAG, "_ID " + id + " FAILED (status " + status + ")");
 					Log.e(DEBUG_TAG, " Reason: " + reason);
-					Toast.makeText(context,  filename + ": " + getString(R.string.download_failed), Toast.LENGTH_LONG).show();
+					Toast.makeText(context,  vfilename + ": " + getString(R.string.download_failed), Toast.LENGTH_LONG).show();
 					break;
+					
 				default:
-					Log.w(DEBUG_TAG, "_ID " + id + " completed with status " + status);
+					Utils.logger("w", "_ID " + id + " completed with status " + status, DEBUG_TAG);
 				}
-				//mBuilder.setContentTitle(getString(R.string.app_name));
+				
 				if (settings.getBoolean("enable_own_notification", true) == true) {
 					try {
 						removeIdUpdateNotification(id);
@@ -196,9 +235,9 @@ public class DownloadsService extends Service {
     public static void removeIdUpdateNotification(long id) {
 		if (id != 0) {
 			if (ShareActivity.sequence.remove(id)) {
-				Log.d(DEBUG_TAG, "_ID " + id + " REMOVED from Notification");
+				Utils.logger("d", "_ID " + id + " REMOVED from Notification", DEBUG_TAG);
 			} else {
-				Log.d(DEBUG_TAG, "_ID " + id + " Already REMOVED from Notification");
+				Utils.logger("d", "_ID " + id + " Already REMOVED from Notification", DEBUG_TAG);
 			}
 		} else {
 			Log.e(DEBUG_TAG, "_ID  not found!");
@@ -210,8 +249,9 @@ public class DownloadsService extends Service {
 		} else {
 			ShareActivity.mBuilder.setContentText(ShareActivity.noDownloads);
 			ShareActivity.mNotificationManager.notify(ShareActivity.mId, ShareActivity.mBuilder.build());
-			Log.d(DEBUG_TAG, "No downloads in progress - stopping FileObserver");
+			Utils.logger("i", "No downloads in progress; stopping FileObserver and DownloadsService", DEBUG_TAG);
 			ShareActivity.fileObserver.stopWatching();
+			nContext.stopService(new Intent(DownloadsService.getContext(), DownloadsService.class));
 		}
 	}
     

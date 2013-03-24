@@ -4,13 +4,16 @@
     <string name="menu_settings">Settings</string>
     <string name="title_activity_settings">YouTube Downloader Settings</string>
     <string name="title_activity_upgrade_apk">YouTube Downloader Upgrade</string>
+    <string name="title_activity_about">About YouTube Downloader</string>
 
     <!-- ### ShareActivity ### -->
 
     <string name="tutorial_title">General App tutorial</string>
-    <string name="tutorial_msg">Now you will see a list with all the codecs and qualities available for the selected video.
-		\n\nChoose one item and you will be asked to download the video locally (on the device) or to send the download via SSH to a linux machine.
-		\n\nDestination linux-box requirements: Bash and Wget. Additional SSH info further on.</string>
+	<string name="tutorial_msg_new">Now you will see a list with all the codecs and qualities available for the selected video. You can:
+		\n\n*) Press an item to download the video locally (on the device) or to send the download via SSH to a remote PC.
+		\nDestination machine requirements: Bash and Wget. Additional SSH info further on;
+		\n\n*) Long-press an item and choose between copy to clipboard or share link as text (i.e. send to another app).
+		\nPlease note that such a link (differently from when you send it via SSH) can be only used from the same device where it has been created OR from the same LAN, if you share it to another machine.\n</string>
     <string name="loading">Loading&#8230;</string>
     <string name="error">Error!</string>
     <string name="information">Information</string>
@@ -52,8 +55,8 @@
     <string name="notification_downloading_pt2">video files</string>
     <string name="notification_no_downloads">No downloads in progress</string>
     <string name="long_click_title">Handle selected link:</string>
-    <string name="extsdcard_info_title">Destination path is on removable sdcard</string>
-    <string name="extsdcard_info_msg">File is being downloaded initially in the standard sdcard and then will be moved to the selected destination.</string>
+    <string name="extsdcard_info_title">Non standard destination path</string>
+    <string name="extsdcard_info_msg">File is being downloaded initially in the standard Download folder and then will be moved to the selected destination.</string>
     
     <string-array name="long_click_entries">
         <item>Copy to clipboard</item>
@@ -78,8 +81,7 @@
     <string name="upgrade_button_download">Download\nand install</string>
     <string name="upgrade_uppertext_searching">Searching&#8230;</string>
     <string name="upgrade_uppertext_init">Installed version:\n</string>
-    <string name="upgrade_dialog_msg">New version available:\t</string>
-    <string name="upgrade_dialog_positive">Download</string>
+
     <string name="upgrade_latest">Latest:\t</string>
     <string name="upgrade_installed">\nInstalled:\t</string>
     <string name="upgraded_dialog_msg">New version stored in standard sdcard \'Download\' folder.\n\nInstall now?</string>
@@ -90,25 +92,31 @@
     
     <!-- ### DownloadService ### -->
     
+    <string name="ytd_video">YTD video</string>
     <string name="copy_error">Error during copy</string>
     <string name="copy_progress">YTD file copy in progress&#8230;</string>
-    <string name="copy_ok">Available on extSdCard.</string>
+    <string name="copy_ok">Copy completed.</string>
+    <string name="download_remove_failed">Error: temporary downloaded file not removed!</string>
     <string name="download_failed">Download failed!</string>
 
     <!-- ### preferences ### -->
 
-    <!-- @0 -->
+    <!-- -->
     <string name="dm_title">View Downloads</string>
     <string name="dm_title_condensed">Downloads</string>
     <string name="dm_summary">Open system\'s Download Manager</string>
-    <string name="update_title">Check for updates</string>
-    <string name="update_title_condensed">Update</string>
-    <string name="autoupdate_title">Enable auto-update</string>
-    <string name="autoupdate_summary">Check for updates on first application\'s run of the day (the new package will be auto-downloaded)</string>
+
+    <!-- -->
+    <string name="settings_cat_ui">User Interface</string>
     <string name="lang_title">Language</string>
     <string name="lang_dialog_title">Language (needs application\'s restart):</string>
+    <string name="choose_theme_title">Choose theme</string>
+    <string-array name="choose_theme_entries">
+        <item>Dark</item>
+        <item>Light</item>
+    </string-array>
     
-    <!-- @1 -->
+    <!-- -->
     <string name="settings_cat_tutorials">Tutorials</string>
     <string name="quick_start_title">Quick start</string>
     <string name="quick_start_summ">Open a quick start tutorial</string>
@@ -122,18 +130,14 @@
     <string name="ssh_info_title">Enable SSH how-to</string>
     <string name="ssh_info_summary">Show a quick tip about remote downloading via SSH</string>
 
-    <!-- @2 -->
+    <!-- -->
     <string name="settings_cat_folder">Download folder</string>
     <string name="standard_location_title">Choose standard folder</string>
     <string name="chooser_swap_title">Swap chooser</string>
     <string name="chooser_location_title">Open file-chooser</string>
     <string name="chooser_location_summary">Long-press to select a folder</string>
-    <string name="su_cp_title">Use removable sdcard</string>
-	<string name="su_cp_summary">Enable removable sdcard support in file-chooser (Root required)</string>
-	<string name="path_on_extsdcard_dialog_title">Selected path is NOT on standard sdcard.</string>
-	<string name="path_on_extsdcard_dialog_msg">Enable removable sdcard support? (Root required)</string>
 	
-    <!-- @3 -->
+    <!-- -->
     <string name="settings_cat_files">Video files</string>
     <string name="enable_q_suffix_title">Append quality suffix</string>
     <string name="enable_q_suffix_summary">Append the video quality type to the file name</string>
@@ -141,13 +145,15 @@
     <string name="enable_rename_summary">Rename the video file before downloading it (for the local download only)</string>
     <string name="show_size_title">Show file size</string>
     <string name="show_size_summary">Fetch the video file size on download confirmation message (slower)</string>
+    <string name="show_size_list_title">Show all video sizes</string>
+    <string name="show_size_list_summary">Fetch the file sizes for every item in the list of available video (much slower)</string>
     <string name="show_thumb_title">Show preview image</string>
     <string name="show_thumb_summary">Download a preview image together with the video list</string>
     
-    <!-- @3.5 -->
+    <!-- -->
     <string name="settings_cat_audio">Audio</string>
     <string name="enable_audio_extraction_title">Enable audio extraxtion</string>
-    <string name="enable_audio_extraction_summary">Strip or convert audio from downloaded video (requires Root)</string>
+    <string name="enable_audio_extraction_summary">Strip or convert audio from downloaded video</string>
     <string name="mp3_bitrate_title">Choose bitrate for mp3 encoding</string>
     <string name="audio_extraction_type_title">Choose Extraction type:</string>
 
@@ -156,7 +162,7 @@
         <item>Extract and encode to mp3</item>
     </string-array>
     
-    <!-- @4 -->
+    <!-- -->
     <string name="settings_cat_notifications">Notifications</string>
     <string name="enable_own_notification_title">Enable own notification</string>
     <string name="enable_own_notification_summary">Show a comprehensive notification about all YTD downloads</string>
@@ -168,13 +174,20 @@
         <item>While in progress only</item>
         <item>Never</item>
     </string-array>
+    
+    <!-- -->
+    <string name="settings_cat_updates">Updates</string>
+    <string name="update_title">Check for updates</string>
+    <string name="autoupdate_title">Enable auto-update</string>
+    <string name="autoupdate_summary">Check for updates on first application\'s run of the day (the new package will be auto-downloaded)</string>
 
-    <!-- @5 -->
+    <!-- -->
     <string name="settings_cat_about">About this App</string>
+    <string name="settings_cat_about_condensed">About</string>
     <string name="title_changelog">Changelog</string>
     <string name="screen_licences_code_title">Licenses and Code</string>
 
-    <!-- @5.1 -->
+    <!-- -->
     <string name="settings_cat_licenses">Licenses</string>
     <string name="gpl_title">YTD\'s License</string>
     <string name="gpl_summary">GPL-3.0</string>
@@ -184,7 +197,7 @@
     <string name="mit_summary">MIT License</string>
     <string name="title_activity_mit_show">MIT License</string>
 
-    <string name="credits_title">Other credits</string>
+    <string name="credits_title">Credits</string>
     <string name="credits_summary">Other licenses and translations</string>
     <string name="title_activity_credits_show">Other licenses and translations</string>
     <string name="credits_text1">\tCode excerpts License
@@ -193,19 +206,30 @@
         \n\n
         Specifically the methods to calculate and then compare the MD5 
         checksum for downloaded upgrade packages are taken from the \'CMUpdater\' App</string>
+	<string name="credits_text3">\nThe text of the license can be found in the LICENSE_GPL2 file or at <http>https://www.gnu.org/licenses/gpl-2.0.txt</http></string>
+	<string name="credits_text4">\n\tCode from StackOverflow
+	    \n\n
+	    In addition, the Java methods used in YTD to compare version numbers, 
+	    to copy files on extSdCard and to make fetched video file size human readable 
+	    (and a lot of other small non-traceable references), 
+	    are taken from the site Stack Overflow (<http>http://stackoverflow.com</http>), 
+	    a question and answer site for programmers where all the content is CC BY-SA 3.0 licensed
+	    (see <http>http://creativecommons.org/licenses/by-sa/3.0</http>).
+	    For more details, look for comments in YTD\'s Java code.
+	    </string>
     <string name="credits_translators">\n\tTranslations
         \n\nFurthermore, additional localizations thanks to:</string>
     <string name="translators_info">\nFor more info:
         \n<http>forum.xda-developers.com/showthread.php?p=37708791</http>
         \n\n<http>www.getlocalization.com/ytdownloader</http></string>
         
-    <!-- @5.2 -->
+    <!-- -->
     <string name="settings_cat_code">Source Code</string>
     <string name="ytd_code_git_title">YTD at GitHub</string>
     <string name="ytd_code_hg_title">YTD at Sourceforge</string>
     <string name="chooser_code_title">Filechooser at Google Code</string>
 
-    <!-- @6 -->
+    <!-- -->
     <string name="settings_cat_social">Social</string>
     <string name="share_title">Share this App</string>
     <string name="share_summary">via Twitter, Facebook, Gmail, etc&#8230;</string>
@@ -213,7 +237,12 @@
     <string name="share_message">#YouTubeDownloader
 	 	\nFree and Open-Source Android App to download YouTube video!
 	 	\nhttps://sourceforge.net/projects/ytdownloader/files/</string>
-    <string name="help_translate_title">Help translate this App</string>
+	<string name="help_translate_title">Help translate this App</string>
     <string name="help_translate_summary">Go to www.getlocalization.com/ytdownloader</string>
+    
+    <!-- -->
+	<string name="settings_cat_advanced">Advanced</string>
+	<string name="enable_logging_title">Enable logging</string>
+	<string name="enable_logging_summary">Include YTD\'s messages into the system log. Mandatory for sending a logcat to the developer.</string>
 	
 </resources>

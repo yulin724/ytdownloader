@@ -65,11 +65,15 @@ public class UpgradeApkActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		// Theme init
+    	Utils.themeInit(this);
+    	
 		setContentView(R.layout.activity_upgrade_apk);
 		
 		try {
 		    currentVersion = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
-		    Log.d(DEBUG_TAG, "current version: " + currentVersion);
+		    Utils.logger("d", "current version: " + currentVersion, DEBUG_TAG);
 		} catch (NameNotFoundException e) {
 		    Log.e(DEBUG_TAG, "version not read: " + e.getMessage());
 		    currentVersion = "100";
@@ -164,7 +168,7 @@ public class UpgradeApkActivity extends Activity {
     	protected Integer doInBackground(String... urls) {
             // params comes from the execute() call: params[0] is the url.
             try {
-            	Log.d(DEBUG_TAG, "doInBackground...");
+            	Utils.logger("d", "doInBackground...", DEBUG_TAG);
                 return downloadUrl(urls[0]);
             } catch (IOException e) {
             	Log.e(DEBUG_TAG, "doInBackground: " + e.getMessage());
@@ -176,7 +180,7 @@ public class UpgradeApkActivity extends Activity {
         private int downloadUrl(String myurl) throws IOException {
             InputStream is = null;
             int len = 100000;
-            Log.d(DEBUG_TAG, "The link is: " + myurl);
+            Utils.logger("d", "The link is: " + myurl, DEBUG_TAG);
             try {
                 URL url = new URL(myurl);
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -188,12 +192,12 @@ public class UpgradeApkActivity extends Activity {
                 conn.setDoInput(true);
                 conn.connect();
                 int response = conn.getResponseCode();
-                Log.d(DEBUG_TAG, "The response is: " + response);
+                Utils.logger("d", "The response is: " + response, DEBUG_TAG);
                 is = conn.getInputStream();
                 if (!asyncUpdate.isCancelled()) {
                 	return readIt(is, len);
                 } else {
-                	Log.d(DEBUG_TAG, "asyncUpdate cancelled @ 'return readIt'");
+                	Utils.logger("d", "asyncUpdate cancelled @ 'return readIt'", DEBUG_TAG);
                 	return 3;
                 }
                 
@@ -226,29 +230,29 @@ public class UpgradeApkActivity extends Activity {
 	        }
 	        
 	        if (compRes.contentEquals(">")) {
-		        Log.d(DEBUG_TAG, "version comparison: downloading latest version...");
+		        Utils.logger("d", "version comparison: downloading latest version...", DEBUG_TAG);
 			    upgradeButton.setEnabled(true);
 			    upgradeButton.setText(getString(R.string.upgrade_button_download));
 	    	} else if (compRes.contentEquals("==")) {
 	    		PopUps.showPopUp(getString(R.string.information), getString(R.string.upgrade_latest_installed), "info", UpgradeApkActivity.this);
-	    		Log.d(DEBUG_TAG, "version comparison: latest version is already installed!");
+	    		Utils.logger("d", "version comparison: latest version is already installed!", DEBUG_TAG);
 	    		upgradeButton.setEnabled(false);
 	    	} else if (compRes.contentEquals("<")) {
 	    		// No need for a popup...
-	    		Log.d(DEBUG_TAG, "version comparison: installed higher than the one online? ...this should not happen...");
+	    		Utils.logger("d", "version comparison: installed higher than the one online? ...this should not happen...", DEBUG_TAG);
 	    		upgradeButton.setEnabled(false);
 	    	} else if (compRes.contentEquals("init")) {
-	    		Log.d(DEBUG_TAG, "version comparison not tested");
+	    		Utils.logger("d", "version comparison not tested", DEBUG_TAG);
 	    		upgradeButton.setEnabled(false);
 	    	}
         }   
 	}
 	
 	private int OnlineUpdateCheck(String content) {
-		Log.d(DEBUG_TAG, "OnlineUpdateCheck");
+		Utils.logger("d", "OnlineUpdateCheck", DEBUG_TAG);
 		int res = 3;
 		if (asyncUpdate.isCancelled()) {
-			Log.d(DEBUG_TAG, "asyncUpdate cancelled @ 'OnlineUpdateCheck' begin");
+			Utils.logger("d", "asyncUpdate cancelled @ 'OnlineUpdateCheck' begin", DEBUG_TAG);
 			return 3;
 		}
 		// match version name
@@ -256,7 +260,7 @@ public class UpgradeApkActivity extends Activity {
         Matcher v_matcher = v_pattern.matcher(content);
         if (v_matcher.find() && !asyncUpdate.isCancelled()) {
         	matchedVersion = v_matcher.group(1);
-	    	Log.i(DEBUG_TAG, "_on-line version: " + matchedVersion);
+	    	Utils.logger("i", "_on-line version: " + matchedVersion, DEBUG_TAG);
 	    	res = res - 1;
 	    } else {
         	matchedVersion = "not_found";
@@ -268,7 +272,7 @@ public class UpgradeApkActivity extends Activity {
     	Matcher cl_matcher = cl_pattern.matcher(content);
     	if (cl_matcher.find() && !asyncUpdate.isCancelled()) {
     		matchedChangeLog = " v" + cl_matcher.group(1);
-    		Log.i(DEBUG_TAG, "_online changelog...");
+    		Utils.logger("i", "_online changelog...", DEBUG_TAG);
     		res = res - 1;
     	} else {
     		matchedChangeLog = "not_found";
@@ -281,7 +285,7 @@ public class UpgradeApkActivity extends Activity {
     	Matcher md5_matcher = md5_pattern.matcher(content);
     	if (md5_matcher.find() && !asyncUpdate.isCancelled()) {
     		matchedMd5 = md5_matcher.group(1);
-    		Log.i(DEBUG_TAG, "_online md5sum: " + matchedMd5);
+    		Utils.logger("i", "_online md5sum: " + matchedMd5, DEBUG_TAG);
     		res = res - 1;
     	} else {
     		matchedMd5 = "not_found";
@@ -289,7 +293,7 @@ public class UpgradeApkActivity extends Activity {
     	}
     	
     	compRes = Utils.VersionComparator.compare(matchedVersion, currentVersion);
-    	Log.d(DEBUG_TAG, "version comparison: " + matchedVersion + " " + compRes + " " + currentVersion);
+    	Utils.logger("d", "version comparison: " + matchedVersion + " " + compRes + " " + currentVersion, DEBUG_TAG);
     	
     	return res;
     }

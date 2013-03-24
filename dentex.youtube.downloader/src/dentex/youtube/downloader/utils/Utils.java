@@ -20,6 +20,7 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.pm.Signature;
 import android.util.Log;
 import dentex.youtube.downloader.SettingsActivity.SettingsFragment;
+import dentex.youtube.downloader.R;
 import dentex.youtube.downloader.ShareActivity;
 
 public class Utils extends Activity {
@@ -30,6 +31,14 @@ public class Utils extends Activity {
 
 	static String onlineVersion;
     
+	/* class VersionComparator from Stack Overflow:
+	 * 
+	 * http://stackoverflow.com/questions/198431/how-do-you-compare-two-version-strings-in-java
+	 * 
+	 * Q: http://stackoverflow.com/users/1288/bill-the-lizard
+	 * A: http://stackoverflow.com/users/57695/peter-lawrey
+	 */
+	
     public static class VersionComparator {
 
         public static String compare(String v1, String v2) {
@@ -62,7 +71,7 @@ public class Utils extends Activity {
 			Signature[] sigs = sf.getActivity().getPackageManager().getPackageInfo(sf.getActivity().getPackageName(), PackageManager.GET_SIGNATURES).signatures;
 			for (Signature sig : sigs) {
 				currentHashCode = sig.hashCode();
-				Log.d(DEBUG_TAG, "getSigHash: App signature " + currentHashCode);
+				logger("d", "getSigHash: App signature " + currentHashCode, DEBUG_TAG);
 			}
 		} catch (NameNotFoundException e) {
 		    Log.e(DEBUG_TAG, "getSigHash: App signature not found; " + e.getMessage());
@@ -70,6 +79,18 @@ public class Utils extends Activity {
 		return currentHashCode;
 	}
 
+	/*
+	 * checkMD5(String md5, File file)
+	 * -------------------------------
+	 * 
+	 * Copyright (C) 2012 The CyanogenMod Project
+	 *
+	 * * Licensed under the GNU GPLv2 license
+	 *
+	 * The text of the license can be found in the LICENSE_GPL2 file
+	 * or at https://www.gnu.org/licenses/gpl-2.0.txt
+	 */
+	
 	public static boolean checkMD5(String md5, File file) {
         if (md5 == null || md5.equals("") || file == null) {
             Log.e(DEBUG_TAG, "MD5 String NULL or File NULL");
@@ -88,6 +109,18 @@ public class Utils extends Activity {
         return calculatedDigest.equalsIgnoreCase(md5);
     }
 
+	/*
+	 * calculateMD5(File file)
+	 * -----------------------
+	 * 
+	 * Copyright (C) 2012 The CyanogenMod Project
+	 *
+	 * * Licensed under the GNU GPLv2 license
+	 *
+	 * The text of the license can be found in the LICENSE_GPL2 file
+	 * or at https://www.gnu.org/licenses/gpl-2.0.txt
+	 */
+	
     public static String calculateMD5(File file) {
         MessageDigest digest;
         try {
@@ -128,6 +161,14 @@ public class Utils extends Activity {
         }
     }
     
+    /* method copyFile(File src, File dst, Context context) from Stack Overflow:
+	 * 
+	 * http://stackoverflow.com/questions/4770004/how-to-move-rename-file-from-internal-app-storage-to-external-storage-on-android
+	 * 
+	 * Q: http://stackoverflow.com/users/131871/codefusionmobile
+	 * A: http://stackoverflow.com/users/472270/barmaley
+	 */
+    
     @SuppressWarnings("resource")
 	public static void copyFile(File src, File dst, Context context) throws IOException {
 	    FileChannel inChannel = new FileInputStream(src).getChannel();
@@ -139,4 +180,27 @@ public class Utils extends Activity {
 	        if (outChannel != null) outChannel.close();
 	    }
 	}
+    
+    public static void themeInit(Context context) {
+    	settings = context.getSharedPreferences(PREFS_NAME, 0);
+		String theme = settings.getString("choose_theme", "D");
+    	if (theme.equals("D")) {
+    		context.setTheme(R.style.AppThemeDark);
+    	} else {
+    		context.setTheme(R.style.AppThemeLight);
+    	}
+	}
+    public static void logger(String type, String msg, String tag) {
+    	if (settings.getBoolean("enable_logging", false)) {
+	    	if (type.equals("v")) {
+	    		Log.v(tag, msg);
+	    	} else if (type.equals("d")) {
+	    		Log.d(tag, msg);
+	    	} else if (type.equals("i")) {
+	    		Log.i(tag, msg);
+	    	} else if (type.equals("w")) {
+	    		Log.w(tag, msg);
+	    	}
+    	}
+    }
 }
