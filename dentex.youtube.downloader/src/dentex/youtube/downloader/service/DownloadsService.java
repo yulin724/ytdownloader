@@ -2,8 +2,6 @@ package dentex.youtube.downloader.service;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import android.app.DownloadManager;
 import android.app.DownloadManager.Query;
@@ -16,9 +14,9 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.net.Uri;
 import android.ffmpeg.cmdline.FfmpegController;
-import android.ffmpeg.cmdline.ShellUtils;
+import android.ffmpeg.cmdline.MediaDesc;
+import android.net.Uri;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
@@ -26,6 +24,8 @@ import android.widget.Toast;
 import dentex.youtube.downloader.R;
 import dentex.youtube.downloader.ShareActivity;
 import dentex.youtube.downloader.utils.Utils;
+
+import android.ffmpeg.cmdline.*;
 
 public class DownloadsService extends Service {
 	
@@ -176,38 +176,56 @@ public class DownloadsService extends Service {
 					
 					if (audio == true) {
 						Utils.logger("i", ">>>>>>>>>>> starting ffmpeg test...", DEBUG_TAG);
+						
+						//File in = new File("/storage/sdcard0/v.mp4");
+						//File out = new File("/storage/sdcard0/a.aac");
+						
+						File in = new File(ShareActivity.path, vfilename);
+						String afilename = settings.getString(vfilename + "FF", "audio");
+						File out = new File(ShareActivity.path, afilename);
+						
+						MediaDesc mediaOut2 = new MediaDesc();
+						mediaOut2.path =  in.getAbsolutePath();
+						mediaOut2.audioCodec = "aac";
+						
 						FfmpegController ffmpeg = null;
 					    try {
 					    	ffmpeg = new FfmpegController(context);
 					    } catch (IOException ioe) {
 					    	Log.e(DEBUG_TAG, "Error loading ffmpeg. " + ioe.getMessage());
 					    }
-
+					    
 					    ShellDummy shell = new ShellDummy();
-						List<String> cmd = new ArrayList<String>();
 						
-						//File in = new File(ShareActivity.dir_Downloads, filename);
-						File in = new File(ShareActivity.path, vfilename);
-						
-						String afilename = settings.getString(vfilename + "FF", "audio");
-						File out = new File(ShareActivity.path, afilename);
-						
-						//File in = new File("/storage/sdcard0/v.mp4");
-						//File out = new File("/storage/sdcard0/a.aac");
-						
-						cmd.add(ffmpeg.mFfmpegBinPath);
+					    String format = mediaOut2.audioCodec;
+					    
+					    try {
+					    	ffmpeg.extractAudio(mediaOut2, format, out, shell);
+						} catch (IOException e) {
+							Log.e(DEBUG_TAG, "IOException running ffmpeg" + e.getMessage());
+						} catch (InterruptedException e) {
+							Log.e(DEBUG_TAG, "InterruptedException running ffmpeg" + e.getMessage());
+						}
+
+					    /*cmd.add(ffmpeg.mFfmpegBinPath);
 						
 						// -i /storage/sdcard0/v.mp4 -vn -acodec copy /storage/sdcard0/a.aac");
 						cmd.add("-i");
-						cmd.add(in.getPath());
+						cmd.add(in.getAbsolutePath());
 						Utils.logger("i", "ffmpeg input: " + in, DEBUG_TAG);
-						//cmd.add("-vn");
-						cmd.add("-acodec");
-						cmd.add("copy");
-						cmd.add(out.getPath());
-						Utils.logger("i", "ffmpeg output: " + out, DEBUG_TAG);
 						
-						ffmpeg.execProcess(cmd, shell);
+						cmd.add("-vn");
+
+						//cmd.add("-acodec");
+						//cmd.add("copy");
+						
+						cmd.add("-f");
+						cmd.add("mp3");
+						
+						cmd.add(out.getAbsolutePath());
+						Utils.logger("i", "ffmpeg output: " + out.getAbsolutePath(), DEBUG_TAG);
+						
+						ffmpeg.execProcess(cmd, shell);*/
 					}
 					
 					break;
@@ -254,6 +272,34 @@ public class DownloadsService extends Service {
 			nContext.stopService(new Intent(DownloadsService.getContext(), DownloadsService.class));
 		}
 	}
+    
+    /*public void extractAudio (Context context, String audioFormat, File audioInPath, File audioOutPath, 
+			ShellUtils.ShellCallback sc) throws IOException, InterruptedException {
+		
+    	Utils.logger("i", ">>>>>>>>>>> starting ffmpeg test...", DEBUG_TAG);
+		FfmpegController ffmpeg = null;
+	    try {
+	    	ffmpeg = new FfmpegController(context);
+	    } catch (IOException ioe) {
+	    	Log.e(DEBUG_TAG, "Error loading ffmpeg. " + ioe.getMessage());
+	    }
+
+		List<String> cmd = new ArrayList<String>();
+
+		cmd.add(ffmpeg.mFfmpegBinPath);
+		cmd.add("-y");
+		cmd.add("-i");
+		cmd.add(audioInPath.getAbsolutePath());
+		
+		cmd.add("-vn");
+		
+		cmd.add("-f");
+		cmd.add(audioFormat);
+
+		cmd.add(audioOutPath.getAbsolutePath());
+
+		ffmpeg.execFFMPEG(cmd, sc);
+	}*/
     
     private class ShellDummy implements ShellUtils.ShellCallback {
 

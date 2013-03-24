@@ -43,6 +43,18 @@ public class FfmpegController {
 		execProcess(cmd, sc);
 	}
 	
+	public  void execFFMPEGb (List<String> cmds) {
+		execChmodb(mFfmpegBinPath, "755");
+		
+		StringBuilder cmdlog = new StringBuilder();
+		for (String cmd : cmds) {
+			cmdlog.append(cmd);
+			cmdlog.append(' ');
+		}
+		Log.v(TAG, cmdlog.toString());
+		SuCommand.suCmd(cmdlog.toString());
+	}
+	
 	public  void execChmod(String filepath, String code) {
 		Log.d(TAG, "Trying to chmod '" + filepath + "' to: " + code);
 		try {
@@ -50,6 +62,11 @@ public class FfmpegController {
 		} catch (IOException e) {
 			Log.e(TAG, "Error changing file permissions!", e);
 		}
+	}
+	
+	public  void execChmodb(String filepath, String code) {
+		Log.d(TAG, "Trying to chmod '" + filepath + "' to: " + code);
+		SuCommand.suCmd("chmod " + code + " " + filepath);
 	}
 	
 	public  int execProcess(List<String> cmds, ShellUtils.ShellCallback sc) {		

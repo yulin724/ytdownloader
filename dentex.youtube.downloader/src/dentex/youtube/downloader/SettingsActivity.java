@@ -121,6 +121,7 @@ public class SettingsActivity extends Activity {
             }
             initSwapPreference();
             initSizePreference();
+            initBitratePreference();
             
             for(int i=0;i<getPreferenceScreen().getPreferenceCount();i++){
                 initSummary(getPreferenceScreen().getPreference(i));
@@ -258,6 +259,16 @@ public class SettingsActivity extends Activity {
             	s.setEnabled(true);
             }
 		}
+		
+		private void initBitratePreference() {
+			String encode = settings.getString("audio_extraction_type", "strip");
+			Preference p = (Preference) findPreference("mp3_bitrate");
+				if (encode.equals("encode") == true) {
+					p.setEnabled(true);
+				} else {
+					p.setEnabled(false);
+				}
+		}
         
 		/*@Override
 	    public void onStart() {
@@ -291,6 +302,7 @@ public class SettingsActivity extends Activity {
         	updatePrefSummary(findPreference(key));
         	initSwapPreference();
         	initSizePreference();
+        	initBitratePreference();
         }
 
 		private void initSummary(Preference p){
