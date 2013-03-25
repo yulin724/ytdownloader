@@ -31,7 +31,7 @@ public class FfmpegController {
 
 		if (!new File(mBinFileDir, LIB_ASSETS[0]).exists())  {
 			BinaryInstaller bi = new BinaryInstaller(mContext, mBinFileDir);
-			bi.installFromRaw();
+			if (bi.installFromRaw()) Log.v(TAG, "Installing ffmpeg binary");
 		}
 		
 		mFfmpegBinPath = new File(mBinFileDir, LIB_ASSETS[0]).getAbsolutePath();
@@ -560,7 +560,7 @@ public class FfmpegController {
 		
 		cmd.add("-vn");
 		
-		if (mdesc.startTime != null) {
+		/*if (mdesc.startTime != null) {
 			cmd.add("-ss");
 			cmd.add(mdesc.startTime);
 		}
@@ -568,11 +568,12 @@ public class FfmpegController {
 		if (mdesc.duration != null) {
 			cmd.add("-t");
 			cmd.add(mdesc.duration);
-		}
+		}*/
 		
-					
-		cmd.add("-f");
-		cmd.add(audioFormat);
+		cmd.add("-acodec");
+		cmd.add("copy");
+		//cmd.add("-f");
+		//cmd.add(audioFormat);
 
 		cmd.add(audioOutPath.getAbsolutePath());
 

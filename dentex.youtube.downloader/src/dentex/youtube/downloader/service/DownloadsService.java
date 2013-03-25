@@ -177,19 +177,20 @@ public class DownloadsService extends Service {
 					if (audio == true) {
 						Utils.logger("i", ">>>>>>>>>>> starting ffmpeg test...", DEBUG_TAG);
 						
-						//File in = new File("/storage/sdcard0/v.mp4");
-						//File out = new File("/storage/sdcard0/a.aac");
+						File in = new File("/storage/sdcard0/v.mp4");
+						File out = new File("/storage/sdcard0/a.aac");
 						
-						File in = new File(ShareActivity.path, vfilename);
+						/*File in = new File(ShareActivity.path, vfilename);
 						String afilename = settings.getString(vfilename + "FF", "audio");
-						File out = new File(ShareActivity.path, afilename);
+						File out = new File(ShareActivity.path, afilename);*/
 						
 						MediaDesc mediaOut2 = new MediaDesc();
 						mediaOut2.path =  in.getAbsolutePath();
-						mediaOut2.audioCodec = "aac";
+						mediaOut2.audioCodec = "FAKE";
 						
 						FfmpegController ffmpeg = null;
 					    try {
+					    	Log.i(DEBUG_TAG, "Loading ffmpeg...");
 					    	ffmpeg = new FfmpegController(context);
 					    } catch (IOException ioe) {
 					    	Log.e(DEBUG_TAG, "Error loading ffmpeg. " + ioe.getMessage());
