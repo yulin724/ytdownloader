@@ -162,6 +162,6 @@
             android:summary="@string/enable_logging_summary"
             android:defaultValue="false"/>
 
-    </PreferenceCategory>
+    </PreferenceCategory>    
 
 </PreferenceScreen>

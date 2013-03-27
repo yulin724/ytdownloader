@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="menu_settings">Instellingen</string>
-    <string name="title_activity_settings">YouTube Downloader Instellingen</string>
-    <string name="title_activity_upgrade_apk">YouTube Downloader Opwaarderen</string>
-    <string name="title_activity_about">About YouTube Downloader</string>
+    <string name="title_activity_settings">Settings</string>
+    <string name="title_activity_upgrade_apk">Upgrade</string>
+    <string name="title_activity_about">About</string>
+    <string name="title_activity_donate">Donations</string>
 
     <!-- ### ShareActivity ### -->
 
@@ -14,7 +14,7 @@
 		\nDestination machine requirements: Bash and Wget. Additional SSH info further on;
 		\n\n*) Long-press an item and choose between copy to clipboard or share link as text (i.e. send to another app).
 		\nPlease note that such a link (differently from when you send it via SSH) can be only used from the same device where it has been created OR from the same LAN, if you share it to another machine.\n</string>
-    <string name="loading">Laden...</string>
+    <string name="loading">Laden&#8230;</string>
     <string name="error">Fout!</string>
     <string name="information">Informatie</string>
     <string name="dialogs_negative">Annuleren</string>
@@ -51,7 +51,7 @@ map, PLAK het commando (gebruik de menuknop) en klik ENTER.</string>
     <string name="codec">\n\n\tCodec:</string>
     <string name="quality">\n\tKwaliteit:</string>
     <string name="size">\n\tGroote:</string>
-    <string name="notification_downloading_pt1">Downloaden...</string>
+    <string name="notification_downloading_pt1">Downloaden&#8230;</string>
     <string name="notification_downloading_pt2">video bestanden</string>
     <string name="notification_no_downloads">Geen downloads in behandeling</string>
     <string name="long_click_title">Hanteer geselecteerde link:</string>
@@ -72,7 +72,7 @@ map, PLAK het commando (gebruik de menuknop) en klik ENTER.</string>
     <string name="sdcard_unmounted_warning">Sdkaart niet gemonteerd</string>
     <string name="update_disabled_summary">Verschillen gevonden in de ondertekening (F-Droid?)</string>
     <string name="failed_download">Mislukte download verwijderd</string>
-    <string name="new_v_download">Gevonden. Downloaden...&#8230;</string>
+    <string name="new_v_download">gevonden. Downloaden&#8230;</string>
     <string name="new_v_install">Gedownload. Klik om te instaleren.</string>
     
     <!-- ### UpgradeApkActivity ### -->
@@ -98,12 +98,17 @@ map, PLAK het commando (gebruik de menuknop) en klik ENTER.</string>
     <string name="copy_ok">Copy completed.</string>
     <string name="download_remove_failed">Error: temporary downloaded file not removed!</string>
     <string name="download_failed">Download mislukt!</string>
+    
+    <!-- ### DonateActivity ### -->
+    
+    <string name="paypal_item_name">YTD Donation</string>
+    <string name="paypal_title">PayPal</string>
+	<string name="paypal_summary">Support YTD\'s developer with a donation</string>
 
     <!-- ### preferences ### -->
 
     <!-- -->
-    <string name="dm_title">Downloads bekijken</string>
-    <string name="dm_title_condensed">Downloads</string>
+    <string name="dm_title">Downloads</string>
     <string name="dm_summary">Open system\'s Download Manager</string>
 
     <!-- -->
@@ -170,8 +175,8 @@ map, PLAK het commando (gebruik de menuknop) en klik ENTER.</string>
     <string name="autoupdate_summary">Controleer op updates bij het opstarten van de applicatie (het nieuwste bestand wordt automatisch gedownload)</string>
 
     <!-- -->
-    <string name="settings_cat_about">Over deze App</string>
-    <string name="settings_cat_about_condensed">About</string>
+    <string name="settings_cat_app">Application</string>
+    <string name="settings_cat_about_condensed">Over</string>
     <string name="title_changelog">Lijst met veranderingen</string>
     <string name="screen_licences_code_title">Licenties en Regels</string>
 

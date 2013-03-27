@@ -223,6 +223,9 @@ public class ShareActivity extends Activity {
     public boolean onOptionsItemSelected(MenuItem item) {
         super.onOptionsItemSelected(item);
         switch(item.getItemId()){
+        	case R.id.menu_donate:
+    			startActivity(new Intent(this, DonateActivity.class));
+    			return true;
         	case R.id.menu_settings:
         		startActivity(new Intent(this, SettingsActivity.class));
         		return true;
@@ -757,7 +760,7 @@ public class ShareActivity extends Activity {
     	mBuilder =  new NotificationCompat.Builder(mContext);
     	
     	mBuilder.setSmallIcon(R.drawable.icon_nb)
-    	        .setContentTitle(mContext.getString(R.string.app_name))
+    	        .setContentTitle(mContext.getString(R.string.title_activity_share))
     	        .setContentText(mContext.getString(R.string.notification_downloading_pt1) + " " + sequence.size() + " " + mContext.getString(R.string.notification_downloading_pt2));
     	
     	mNotificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);

@@ -82,6 +82,9 @@ public class SettingsActivity extends Activity {
     public boolean onOptionsItemSelected(MenuItem item) {
         super.onOptionsItemSelected(item);
         switch(item.getItemId()){
+        	case R.id.menu_donate:
+        		startActivity(new Intent(this, DonateActivity.class));
+        		return true;
         	case R.id.menu_about:
         		startActivity(new Intent(this, AboutActivity.class));
         		return true;

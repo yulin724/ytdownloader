@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="menu_settings">설정</string>
-    <string name="title_activity_settings">유튜브 다운로더 설정</string>
-    <string name="title_activity_upgrade_apk">유튜브 다운로더 업그레이드</string>
-    <string name="title_activity_about">유튜브 다운로더에 대한 정보</string>
+    <string name="title_activity_settings">Settings</string>
+    <string name="title_activity_upgrade_apk">Upgrade</string>
+    <string name="title_activity_about">About</string>
+    <string name="title_activity_donate">Donations</string>
 
     <!-- ### ShareActivity ### -->
 
@@ -97,19 +97,24 @@
     <string name="copy_ok">복사 완료되었습니다.</string>
     <string name="download_remove_failed">에러: 임시 다운로드파일이 삭제되지 않았습니다!</string>
     <string name="download_failed">다운로드 실패!</string>
+    
+    <!-- ### DonateActivity ### -->
+    
+    <string name="paypal_item_name">YTD Donation</string>
+    <string name="paypal_title">PayPal</string>
+	<string name="paypal_summary">Support YTD\'s developer with a donation</string>
 
     <!-- ### preferences ### -->
 
     <!-- -->
-    <string name="dm_title">다운로드한 비디오 보기</string>
-    <string name="dm_title_condensed">다운로드</string>
+    <string name="dm_title">Downloads</string>
     <string name="dm_summary">시스템의 다운로드 관리자를 엽니다</string>
 
     <!-- -->
     <string name="settings_cat_ui">사용자 인터페이스</string>
     <string name="lang_title">언어</string>
-    <string name="lang_dialog_title">언어 (앱 재시작 필요)</string>
-    <string name="choose_theme_title">테마 선택</string>
+    <string name="lang_dialog_title">언어 선택 (앱 재시작 필요)</string>
+    <string name="choose_theme_title">테마</string>
     <string-array name="choose_theme_entries">
         <item>어두운 테마</item>
         <item>밝은 테마</item>
@@ -143,7 +148,7 @@
     <string name="enable_rename_title">파일 이름 변경 허용</string>
     <string name="enable_rename_summary">다운로드전에 파일 이름을 변경할 수 있도록 합니다. (로컬 다운로드에서만 가능)</string>
     <string name="show_size_title">파일 크기 보이기</string>
-    <string name="show_size_summary">다운로드 확인 창에 비디오 파일 사이즈를 표시합니다. (느려짐)</string>
+    <string name="show_size_summary">다운로드 확인 창에 비디오 파일 사이즈를 표시합니다 (느려짐)</string>
     <string name="show_size_list_title">모든 비디오 사이즈 보기</string>
     <string name="show_size_list_summary">비디오 목록에서 다운로드 가능한 모든 비디오 사이즈를 얻어옵니다 (매우 느려짐)</string>
     <string name="show_thumb_title">미리보기 이미지 보기</string>
@@ -157,8 +162,8 @@
     <string name="download_manager_notification_dialog_title">다운로드 관리자 알림 설정</string>
     
     <string-array name="download_manager_notification_entries">
-        <item>다운로드 중 일때 및 완료 후</item>
-        <item>다운로드 중 일때만</item>
+        <item>다운로드 중일 때 및 완료 후</item>
+        <item>다운로드 중 일 때만</item>
         <item>사용안함</item>
     </string-array>
     
@@ -166,10 +171,10 @@
     <string name="settings_cat_updates">업데이트</string>
     <string name="update_title">업데이트 확인</string>
     <string name="autoupdate_title">자동 업데이트 활성화</string>
-    <string name="autoupdate_summary">하루 단위로 앱이 실행될 때 마다 새로운 업데이트를 체크합니다 (설치 파일은 자동으로 다운로드됩니다)</string>
+    <string name="autoupdate_summary">하루 단위로 앱이 실행될 때 마다 새로운 업데이트를 체크합니다\n(설치 파일은 자동으로 다운로드됩니다)</string>
 
     <!-- -->
-    <string name="settings_cat_about">이 앱에 대하여</string>
+    <string name="settings_cat_app">Application</string>
     <string name="settings_cat_about_condensed">이 앱에 대하여</string>
     <string name="title_changelog">변경내역</string>
     <string name="screen_licences_code_title">라이센스 및 코드</string>
@@ -192,15 +197,14 @@
 이 앱은 CyanogenMod custom ROM에서 발췌한 소스코드를 사용하고 있습니다;
 \n\n
 특히 \'CMUpdater\' 앱에서 다운로드한 업그레이드 패키지를 MD5 체크섬을 계산하여 비교하는 부분을 사용하고 있음을 알려드립니다.</string>
-	<string name="credits_text3">\n라이센스 전문은 LICENSE_GPL2 파일이나 <http>https://www.gnu.org/licenses/gpl-2.0.txt</http>을 참고하세요.</string>
+	<string name="credits_text3">\n라이센스 전문은 LICENSE_GPL2 파일이나 <http>https://www.gnu.org/licenses/gpl-2.0.txt</http> 을 참고하세요.</string>
 	<string name="credits_text4">\n\tStackOverflow에서 발췌한 코드에 대한 정보
 \n\n
-추가적으로 YTD에서 사용한 자바 메쏘드들들은 
-- 추적 불가능한 수많은 작은 참조내역들을 포함한 버전 넘버를 비교한다던가 외장 sdcard에 파일을 복사한다던가, 파일 크기를 사람이 읽기 좋게 만든다던가 하는 등의 - 
-코드는 Stack Overflow를 참조하였습니다. (<http>http://stackoverflow.com</http>),
+추가적으로 유튜브 다운로더에서 사용한 
+- 버전 넘버를 비교, 외장 sdcard에 파일 복사, 파일 크기를 사람이 읽기 좋게하는 등의 코드 및 그외 추적이 불가능한 수많은 작은 참조내역들을 포함한 - 자바 메쏘드들들은 Stack Overflow를 참조하였습니다. (<http>http://stackoverflow.com</http>),
 Stack Overflow는 모든 컨텐츠가  CC BY-SA 3.0 라이센스를 따르는 프로그래머를 위한 Q&amp;A 사이트 입니다.
-(<http>http://creativecommons.org/licenses/by-sa/3.0</http>을 참조).
-자세한 내용은 YTD\'의 자바 코드에 있는 주석을 살펴보세요.</string>
+(<http>http://creativecommons.org/licenses/by-sa/3.0</http> 을 참조).
+자세한 내용은 유튜브 다운로더의 자바 코드에 있는 주석을 살펴보세요.</string>
     <string name="credits_translators">\n\t번역
 \n\n아래에 내열한 분들의 도움으로 번역되었습니다:</string>
     <string name="translators_info">\n더 상세한 정보 확인:

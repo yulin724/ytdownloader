@@ -31,6 +31,7 @@
 
         <TextView
             android:id="@+id/afc_file_item_textview_filename"
+            android:textIsSelectable="false"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ellipsize="middle"
@@ -40,6 +41,7 @@
 
         <TextView
             android:id="@+id/afc_file_item_textview_file_info"
+            android:textIsSelectable="false"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right"

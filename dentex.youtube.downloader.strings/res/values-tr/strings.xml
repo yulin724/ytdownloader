@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="menu_settings">Ayarlar</string>
-    <string name="title_activity_settings">YouTube Downloader Ayarları</string>
-    <string name="title_activity_upgrade_apk">YouTube Downloader Sürüm Yükselt</string>
-    <string name="title_activity_about">YouTube Downloader hakkında</string>
+    <string name="title_activity_settings">Settings</string>
+    <string name="title_activity_upgrade_apk">Upgrade</string>
+    <string name="title_activity_about">About</string>
+    <string name="title_activity_donate">Donations</string>
 
     <!-- ### ShareActivity ### -->
 
@@ -14,7 +14,7 @@
 \nHedef makine gereklilikleri: Başh ve Wget.  SSH’e ek olarak;
 \n\n*) İtem’e uzunca basın ve kopyalamak yada metin olarak paylaşmak için seçim yapın. ( ya da başka uygulamaya gönderin).
 \n Lütfen şunu unutmayın: Linkler  (SSH ile gönderdiğinden farklı) sadece oluşturulduğu cihazda ya da paylaştığınız makinede kullanılabilir.\n</string>
-    <string name="loading">Yükleniyor...</string>
+    <string name="loading">Yükleniyor&#8230;</string>
     <string name="error">Hata!</string>
     <string name="information">Bilgi</string>
     <string name="dialogs_negative">Iptal</string>
@@ -98,12 +98,17 @@
     <string name="copy_ok">Kopyalama tamamlandı.</string>
     <string name="download_remove_failed">Hata: Geçici indirilen dosya silinemedi!</string>
     <string name="download_failed">İndirme Başarısız!</string>
+    
+    <!-- ### DonateActivity ### -->
+    
+    <string name="paypal_item_name">YTD Donation</string>
+    <string name="paypal_title">PayPal</string>
+	<string name="paypal_summary">Support YTD\'s developer with a donation</string>
 
     <!-- ### preferences ### -->
 
     <!-- -->
-    <string name="dm_title">İndirilenleri Göster</string>
-    <string name="dm_title_condensed">İndirmeler</string>
+    <string name="dm_title">Downloads</string>
     <string name="dm_summary">Sistem İndirme Yöneticisini Aç</string>
 
     <!-- -->
@@ -170,7 +175,7 @@
     <string name="autoupdate_summary">Uygulamayı çalıştırdığınız zaman güncellemeleri kontrol et (her gün sadece ilk çalıştırmada, ve güncelleme otomatik indirilir)</string>
 
     <!-- -->
-    <string name="settings_cat_about">Uygulama Hakkında</string>
+    <string name="settings_cat_app">Application</string>
     <string name="settings_cat_about_condensed">Hakkında</string>
     <string name="title_changelog">Değişiklikler</string>
     <string name="screen_licences_code_title">Lisans ve Kodlama</string>

@@ -167,7 +167,7 @@ public class AutoUpgradeApkService extends Service {
 		        NotificationCompat.Builder builder =  new NotificationCompat.Builder(AutoUpgradeApkService.this);
             	
             	builder.setSmallIcon(R.drawable.icon_nb)
-            	        .setContentTitle(getString(R.string.app_name))
+            	        .setContentTitle(getString(R.string.title_activity_share))
             	        .setContentText("v" + matchedVersion + " " + getString(R.string.new_v_download));
             	
             	NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
@@ -272,7 +272,7 @@ public class AutoUpgradeApkService extends Service {
                     		NotificationCompat.Builder builder =  new NotificationCompat.Builder(context);
                         	
                         	builder.setSmallIcon(R.drawable.icon_nb)
-                        	        .setContentTitle(getString(R.string.app_name))
+                        	        .setContentTitle(getString(R.string.title_activity_share))
                         	        .setContentText("v" + matchedVersion + " " + getString(R.string.new_v_install));
                         	
                         	NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="menu_settings">Opzioni</string>
-    <string name="title_activity_settings">Opzioni YouTube Downloader</string>
-    <string name="title_activity_upgrade_apk">Aggiornamento per YouTube Downloader</string>
-    <string name="title_activity_about">Riguardo a YouTube Downloader</string>
+    <string name="title_activity_settings">Opzioni</string>
+    <string name="title_activity_upgrade_apk">Aggiornamento</string>
+    <string name="title_activity_about">Informazioni</string>
+    <string name="title_activity_donate">Donazioni</string>
 
     <!-- ### ShareActivity ### -->
 
@@ -98,12 +98,17 @@
     <string name="copy_ok">Copia completata.</string>
     <string name="download_remove_failed">Errore: file temporaneo scaricato non rimosso!</string>
     <string name="download_failed">Il download è fallito!</string>
+    
+    <!-- ### DonateActivity ### -->
+    
+    <string name="paypal_item_name">Donazione per YTD</string>
+    <string name="paypal_title">PayPal</string>
+	<string name="paypal_summary">Supporta lo sviluppatore di YTD con una donazione</string>
 
     <!-- ### preferences ### -->
 
     <!-- -->
-    <string name="dm_title">Vedi Downloads</string>
-    <string name="dm_title_condensed">Downloads</string>
+    <string name="dm_title">Downloads</string>
     <string name="dm_summary">Apri il Download Manager di sistema</string>
 
     <!-- -->
@@ -170,8 +175,8 @@
     <string name="autoupdate_summary">Controlla aggiornamenti al primo avvio dell\'applicazione della giornata (il nuovo pacchetto sarà scaricato automaticamente)</string>
 
     <!-- -->
-    <string name="settings_cat_about">Riguardo questa App</string>
-    <string name="settings_cat_about_condensed">About</string>
+    <string name="settings_cat_app">Applicazione</string>
+    <string name="settings_cat_about_condensed">Informazioni</string>
     <string name="title_changelog">Changelog</string>
     <string name="screen_licences_code_title">Codice e Licenze</string>
 
