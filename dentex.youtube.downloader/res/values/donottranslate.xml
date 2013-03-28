@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="changelog">
+        \n vX.X - Xxx XX 2013
+        \n-----------------------------------
+        \n[x] PayPal donation menu
+        \n[x] on the fly language switch
+        \n
         \n v1.9 - Mar 23 2013
         \n-----------------------------------
         \n[x] YT web page parsing improved
