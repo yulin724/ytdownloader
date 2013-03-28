@@ -5,9 +5,9 @@ Android 3+ App to download videos from YouTube
 
 ################################################################
 
-`versionCode="41"`
+`versionCode="42"`
 
-`versionName="1.9"`
+`versionName="1.9.1"`
 
 MD5 checksum: `8a9292ac9e5def6bb7f694b70de08de1` dentex.youtube.downloader_v1.9.apk
 
@@ -28,19 +28,26 @@ Copyright (C) 2012  Samuele Rini
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-`Additional licenses informations about code used in this project
-is available from within the App's *About* menu.
 
-The device-framed screenshots in the project's directory have been 
-generated with the "Device Frame Generator" Android App by Prateek 
-Srivastava, available at <https://github.com/f2prateek/Device-Frame-Generator/>.
-The generated artwork is released ander the "Creative Commons Attribution 
-3.0 Unported License". 
-For further details, go to <http://creativecommons.org/licenses/by/3.0/>.`
+    Additional licenses informations about code used in this project
+    is available from within the App's "About" menu.
+    
+    The device-framed screenshots in the project's directory have been 
+    generated with the "Device Frame Generator" Android App by Prateek 
+    Srivastava, available at 
+    <https://github.com/f2prateek/Device-Frame-Generator/>.
+    The generated artwork is released ander the "Creative Commons 
+    Attribution 3.0 Unported License". 
+    For further details, <http://creativecommons.org/licenses/by/3.0/>.
 
 CHANGELOG
 ================================================================
     
+     vX.X - Xxx XX 2013 
+    ----------------------------------- 
+    [x] PayPal donation menu 
+    [x] on the fly language switch 
+     
      v1.9 - Mar 23 2013 
     ----------------------------------- 
     [x] YT web page parsing improved 
