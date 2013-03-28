@@ -41,10 +41,15 @@ Copyright (C) 2012  Samuele Rini
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 " >> $dest
 
-echo "\`Additional licenses informations about code used in this project is available from within the App's *About* menu\`
+echo "\`Additional licenses informations about code used in this project
+is available from within the App's *About* menu.
 
-\`The screenshot-like images in the project's directory have been generated with the *Device Frame Generator* Android App by **Prateek Srivastava**, available at https://github.com/f2prateek/Device-Frame-Generator.
-The generated artwork is released ander the *Creative Commons Attribution 3.0 Unported License*. For further details: http://creativecommons.org/licenses/by/3.0\`" >> $dest
+The device-framed screenshots in the project's directory have been 
+generated with the \"Device Frame Generator\" Android App by Prateek 
+Srivastava, available at <https://github.com/f2prateek/Device-Frame-Generator/>.
+The generated artwork is released ander the \"Creative Commons Attribution 
+3.0 Unported License\". 
+For further details, go to <http://creativecommons.org/licenses/by/3.0/>.\`" >> $dest
 
 echo "
 CHANGELOG
