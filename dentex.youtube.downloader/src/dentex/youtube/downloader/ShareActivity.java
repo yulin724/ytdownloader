@@ -1,11 +1,9 @@
 package dentex.youtube.downloader;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
@@ -44,7 +42,6 @@ import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.MediaScannerConnection;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -100,8 +97,8 @@ public class ShareActivity extends Activity {
     public String validatedLink;
     public static DownloadManager dm;
     public static long enqueue;
-	String vfilename = "video";
-	public static String composedFilename = "";
+	String videoFilename = "video";
+	public static String composedVideoFilename = "";
     public static Uri videoUri;
 	public boolean videoOnExt;
     private int icon;
@@ -139,11 +136,18 @@ public class ShareActivity extends Activity {
 	public static NotificationCompat.Builder mBuilder;
 	public static String onlineVersion;
 	public static List<Long> sequence = new ArrayList<Long>();
+	String audioFilename = "audio";
+	public static String composedAudioFilename = "";
+	private boolean audioExtractionEnabled;
 	public static Context mContext;
 	boolean showSizeListPref;
 	boolean showSizePref;
 	ContextThemeWrapper boxThemeContextWrapper = new ContextThemeWrapper(ShareActivity.this, R.style.BoxTheme);
 	public int count;
+	public String acodec = "";
+	public String extrType;
+	public String aquality;
+	private boolean audioExtrEnabled = false;
 
     @SuppressLint("CutPasteId")
 	@Override
@@ -277,7 +281,7 @@ public class ShareActivity extends Activity {
     	if (isAsyncDownloadRunning) {
     		asyncDownload.cancel(true);
     	}
-		Utils.logger("i", "_onBackPressed", DEBUG_TAG);
+		Utils.logger("v", "_onBackPressed", DEBUG_TAG);
 	}
 
     void handleSendText(Intent intent) throws IOException {
@@ -469,7 +473,14 @@ public class ShareActivity extends Activity {
                         public void onClick(DialogInterface dialog, int which) {
                         	try {
                             	Utils.logger("d", "Destination folder is available and writable", DEBUG_TAG);
-                        		composedFilename = composeFilename();
+                        		composedVideoFilename = composeFilename();
+                        		
+                        		audioExtractionEnabled = settings.getBoolean("enable_audio_extraction", false);
+                        		if (audioExtractionEnabled == true) {
+                        			composedAudioFilename = composeAudioFilename();
+                        			settings.edit().putString(composedVideoFilename + "FF", composedAudioFilename).apply();
+                        		}
+                        		
 	                            fileRenameEnabled = settings.getBoolean("enable_rename", false);
 
 	                            if (fileRenameEnabled == true) {
@@ -485,7 +496,7 @@ public class ShareActivity extends Activity {
 		                    	    adb.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
 		                    	    	public void onClick(DialogInterface dialog, int which) {
 		                    	    		title = userFilename.getText().toString();
-		                    	    		composedFilename = composeFilename();
+		                    	    		composedVideoFilename = composeFilename();
 											callDownloadManager(links.get(pos));
 		                    	    	}
 		                    	    });
@@ -505,7 +516,7 @@ public class ShareActivity extends Activity {
                         public void onClick(DialogInterface dialog, int which) {
                         	try {
                             	String wgetCmd;
-                            	composedFilename = composeFilename();
+                            	composedVideoFilename = composeFilename();
                             	
                             	wgetCmd = "REQ=`wget -q -e \"convert-links=off\" --keep-session-cookies --save-cookies /dev/null --no-check-certificate \'" + 
                             			validatedLink + "\' -O-` && urlblock=`echo $REQ | grep -oE \'url_encoded_fmt_stream_map\": \".*\' | sed -e \'s/\", \".*//\'" + 
@@ -516,7 +527,7 @@ public class ShareActivity extends Activity {
                             			" -e \'s/&signature=.*//\' -e \'s/&quality=.*//\' -e \'s/&fallback_host=.*//\'` &&" + 
                             			" sig=`echo $block | grep -oE \'signature=.{81}\'` && downloadurl=`echo $url\\&$sig | sed \'s/&itag=[0-9][0-9]&signature/\\&signature/\'` && wget -e \"convert-links=off\"" +
                             			" --keep-session-cookies --save-cookies /dev/null --tries=5 --timeout=45 --no-check-certificate \"$downloadurl\" -O " + 
-                            			composedFilename;
+                            			composedVideoFilename;
                             	
                             	//Utils.logger("d", "wgetCmd: " + wgetCmd);
                                 
@@ -580,7 +591,7 @@ public class ShareActivity extends Activity {
 				    	   //.setIcon(android.R.drawable.ic_menu_share)
 				           .setItems(R.array.long_click_entries, new DialogInterface.OnClickListener() {
 				               public void onClick(DialogInterface dialog, int which) {
-				            	   composedFilename = composeFilename();
+				            	   composedVideoFilename = composeFilename();
 				            	   switch (which) {
 				            	   case 0: // copy
 				            		    ClipData cmd = ClipData.newPlainText("simple text", links.get(position));
@@ -590,7 +601,7 @@ public class ShareActivity extends Activity {
 				            	   case 1: // share
 			            			    Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
 			            			    sharingIntent.setType("text/plain");
-			            			    sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, composedFilename);
+			            			    sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, composedVideoFilename);
 			            			    sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, links.get(position));
 			            			    startActivity(Intent.createChooser(sharingIntent, "Share YouTube link:"));
 				            	   }
@@ -612,10 +623,48 @@ public class ShareActivity extends Activity {
         }
         
         public String composeFilename() {
-        	vfilename = title + "_" + qualities.get(pos) + "." + codecs.get(pos);
-    	    if (useQualitySuffix() == false) vfilename = title + "." + codecs.get(pos);
-    	    Utils.logger("d", "filename: " + vfilename, DEBUG_TAG);
-    	    return vfilename;
+        	videoFilename = title + "_" + qualities.get(pos) + stereo.get(pos) + "." + codecs.get(pos);
+    	    if (useQualitySuffix() == false) videoFilename = title + stereo.get(pos) + "." + codecs.get(pos);
+    	    Utils.logger("d", "filename: " + videoFilename, DEBUG_TAG);
+    	    return videoFilename;
+        }
+
+        public String composeAudioFilename() {
+        	//CODEC [file EXTENSION]
+        	extrType = settings.getString("audio_extraction_type", "strip");
+    		if (extrType.equals("encode") == true) {
+    			acodec = ".mp3";
+    		} else {
+    			if (codecs.get(pos).equals("webm") && 
+    					qualities.get(pos).equals("hd1080")) acodec = ".ogg";
+    			if (codecs.get(pos).equals("webm") && 
+    					qualities.get(pos).equals("hd720")) acodec = "_192k.ogg";
+    			if (codecs.get(pos).equals("webm") && 
+    					qualities.get(pos).equals("large") ||
+    					qualities.get(pos).equals("medium")) acodec = "_128k.ogg";
+    			
+    			if (codecs.get(pos).equals("mp4")) acodec = ".aac";
+					//&& qualities.get(pos).equals("medium")) acodec = "_96k.aac";
+    			
+    			if (codecs.get(pos).equals("flv") 
+    					&& qualities.get(pos).equals("small")) acodec = ".mp3";
+    			if (codecs.get(pos).equals("flv") 
+    					&& qualities.get(pos).equals("medium")) acodec = ".aac";
+    			if (codecs.get(pos).equals("flv") 
+    					&& qualities.get(pos).equals("large")) acodec = ".aac";
+    			
+    			if (codecs.get(pos).equals("3gpp")) acodec = ".aac";
+    		}
+    		//QUALITY
+        	if (useQualitySuffix() ==  true && extrType.equals("encode") == true) {
+        		aquality = "_" + settings.getString("mp3_bitrate", "192");
+        	} else { 
+        		aquality = "";
+        	}
+        	//FINALLY
+        	audioFilename = title + aquality + acodec;
+        	Utils.logger("d", "composedAudioFilename: " + audioFilename, DEBUG_TAG);
+        	return audioFilename;
         }
 
 		void callConnectBot() {
@@ -655,7 +704,7 @@ public class ShareActivity extends Activity {
 	}
     
     void callDownloadManager(String link) {
-		videoUri = Uri.parse(path.toURI() + composedFilename);
+		videoUri = Uri.parse(path.toURI() + composedVideoFilename);
         Utils.logger("d", "videoUri: " + videoUri, DEBUG_TAG);
         
         dm = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
@@ -673,11 +722,18 @@ public class ShareActivity extends Activity {
 			vis = DownloadManager.Request.VISIBILITY_VISIBLE;
 		}
         request.setNotificationVisibility(vis);
-        request.setTitle(vfilename);
+        request.setTitle(videoFilename);
         request.setDescription(getString(R.string.ytd_video));
     	
     	Intent intent1 = new Intent(ShareActivity.this, DownloadsService.class);
     	intent1.putExtra("COPY", false);
+    	
+    	audioExtrEnabled = settings.getBoolean("enable_audio_extraction", false);
+    	if (audioExtrEnabled) {
+    		intent1.putExtra("AUDIO", true);
+    	} else {
+    		intent1.putExtra("AUDIO", false);
+    	}
     	
 		try {
 			enqueue = dm.enqueue(request);
@@ -693,12 +749,12 @@ public class ShareActivity extends Activity {
 		
     	startService(intent1);
 		
-		settings.edit().putString(String.valueOf(enqueue), composedFilename).apply();
+		settings.edit().putString(String.valueOf(enqueue), composedVideoFilename).apply();
     	
     	if (settings.getBoolean("enable_own_notification", true) == true) {
     		Utils.logger("i", "enable_own_notification: true", DEBUG_TAG);
 			sequence.add(enqueue);
-			settings.edit().putLong(composedFilename, enqueue).apply();
+			settings.edit().putLong(composedVideoFilename, enqueue).apply();
 			
 			if (videoOnExt == true) {
 				fileObserver = new Observer.delFileObserver(dir_Downloads.getAbsolutePath());
@@ -746,7 +802,7 @@ public class ShareActivity extends Activity {
     }
       
     private void tempDownloadToSdcard(Request request) {
-    	videoUri = Uri.parse(dir_Downloads.toURI() + composedFilename);
+    	videoUri = Uri.parse(dir_Downloads.toURI() + composedVideoFilename);
         Utils.logger("d", "** NEW ** videoUri: " + videoUri, DEBUG_TAG);
         request.setDestinationUri(videoUri);
         enqueue = dm.enqueue(request);
@@ -1073,7 +1129,8 @@ public class ShareActivity extends Activity {
         Pattern qualityPattern = Pattern.compile("stereo3d=1");
         Matcher qualityMatcher = qualityPattern.matcher(currentCQ);
         if (qualityMatcher.find()) {
-            stereo.add(qualityMatcher.group().replaceAll("stereo3d=1", " 3D"));
+            stereo.add(qualityMatcher.group().replaceAll("stereo3d=1", "_3D"));
+            
         } else {
             stereo.add("");
         }
@@ -1089,7 +1146,7 @@ public class ShareActivity extends Activity {
         return isFromString;
     }*/
 
-    void createLogFile(InputStream stream, String filename) {
+    /*void createLogFile(InputStream stream, String filename) {
         File file = new File(path, filename);
 
         try {
@@ -1116,7 +1173,7 @@ public class ShareActivity extends Activity {
             // Unable to create file, likely because external storage is not currently mounted.
             Log.w("ExternalStorage", "Error writing " + file, e);
         }
-    }
+    }*/
     
     void downloadThumbnail(String fileUrl) {
     	InputStream is = null;
@@ -1172,7 +1229,7 @@ public class ShareActivity extends Activity {
         public void onReceive(Context context, Intent intent) {
 			//Utils.logger("d", "inAppCompleteReceiver: onReceive CALLED");
 	        long id = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -2);
-	        if (enqueue != -1 && id != -2 && id == enqueue && videoOnExt == false) {
+	        if (enqueue != -1 && id != -2 && id == enqueue && !videoOnExt && !audioExtrEnabled) {
 	            Query query = new Query();
 	            query.setFilterById(id);
 

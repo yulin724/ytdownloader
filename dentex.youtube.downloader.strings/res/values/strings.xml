@@ -156,6 +156,18 @@
     <string name="show_thumb_summary">Download a preview image together with the video list</string>
     
     <!-- -->
+    <string name="settings_cat_audio">Audio</string>
+    <string name="enable_audio_extraction_title">Enable audio extraction</string>
+    <string name="enable_audio_extraction_summary">Strip or convert audio from downloaded video</string>
+    <string name="mp3_bitrate_title">Bitrate for mp3 encoding</string>
+    <string name="audio_extraction_type_title">Extraction type:</string>
+
+    <string-array name="audio_extraction_type_entries">
+        <item>Extract only</item>
+        <item>Extract and encode to mp3</item>
+    </string-array>
+    
+    <!-- -->
     <string name="settings_cat_notifications">Notifications</string>
     <string name="enable_own_notification_title">Enable own notification</string>
     <string name="enable_own_notification_summary">Show a comprehensive notification about all YTD downloads</string>

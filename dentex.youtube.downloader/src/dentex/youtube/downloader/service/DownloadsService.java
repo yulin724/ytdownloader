@@ -2,6 +2,8 @@ package dentex.youtube.downloader.service;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import android.app.DownloadManager;
 import android.app.DownloadManager.Query;
@@ -21,6 +23,8 @@ import android.util.Log;
 import android.widget.Toast;
 import dentex.youtube.downloader.R;
 import dentex.youtube.downloader.ShareActivity;
+import dentex.youtube.downloader.ffmpeg.FfmpegController;
+import dentex.youtube.downloader.ffmpeg.ShellUtils.ShellCallback;
 import dentex.youtube.downloader.utils.Utils;
 
 public class DownloadsService extends Service {
@@ -29,8 +33,10 @@ public class DownloadsService extends Service {
 	public static SharedPreferences settings = ShareActivity.settings;
 	public final String PREFS_NAME = ShareActivity.PREFS_NAME;
 	public boolean copy;
+	public boolean audio;
 	public static int ID;
 	public static Context nContext;
+	public String audioSuffix;
 
 	@Override
 	public IBinder onBind(Intent intent) {
@@ -57,6 +63,14 @@ public class DownloadsService extends Service {
 		} else {
 			Utils.logger("d", "Copy to extSdcard: false", DEBUG_TAG);
 		}
+		
+		audio = intent.getBooleanExtra("AUDIO", false);
+		if (audio == true) {
+			Log.d(DEBUG_TAG, "Audio extraction: true");
+		} else {
+			Log.d(DEBUG_TAG, "Audio extraction: false");
+		}
+		
 		super.onStartCommand(intent, flags, startId);
 		return START_NOT_STICKY;
 	}
@@ -77,7 +91,7 @@ public class DownloadsService extends Service {
     	public void onReceive(Context context, Intent intent) {
     		Utils.logger("d", "downloadComplete: onReceive CALLED", DEBUG_TAG);
     		long id = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
-    		String filename = settings.getString(String.valueOf(id), "file");
+    		String vfilename = settings.getString(String.valueOf(id), "video");
     		
 			Query query = new Query();
 			query.setFilterById(id);
@@ -101,13 +115,11 @@ public class DownloadsService extends Service {
 					cNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 					
 			    	cBuilder.setSmallIcon(R.drawable.icon_nb);
-					cBuilder.setContentTitle(filename);
+					cBuilder.setContentTitle(vfilename);
 					
 					if (copy == true) {
-						File src = new File(ShareActivity.dir_Downloads, filename);
-						//File src = new File("/storage/sdcard1/Video/MTB/Br_test.mp4");
-						File dst = new File(ShareActivity.path, filename);
-						//File dst = new File("/storage/sdcard1/Video/Br_test.mp4");
+						File src = new File(ShareActivity.dir_Downloads, vfilename);
+						File dst = new File(ShareActivity.path, vfilename);
 						
 						Toast.makeText(context, context.getString(R.string.copy_progress), Toast.LENGTH_SHORT).show();
 				        cBuilder.setContentText(context.getString(R.string.copy_progress));
@@ -127,7 +139,7 @@ public class DownloadsService extends Service {
 						try {
 							Utils.copyFile(src, dst, context);
 							
-							Toast.makeText(context,  filename + ": " + context.getString(R.string.copy_ok), Toast.LENGTH_SHORT).show();
+							Toast.makeText(context,  vfilename + ": " + context.getString(R.string.copy_ok), Toast.LENGTH_SHORT).show();
 					        cBuilder.setContentText(context.getString(R.string.copy_ok));
 					        intent2.setDataAndType(Uri.fromFile(dst), "video/*");
 							Utils.logger("i", "_ID " + ID + " Copy OK", DEBUG_TAG);
@@ -152,7 +164,7 @@ public class DownloadsService extends Service {
 				        				false);*/
 				        	}	        	
 						} catch (IOException e) {
-							Toast.makeText(context, filename + ": " + getString(R.string.copy_error), Toast.LENGTH_LONG).show();
+							Toast.makeText(context, vfilename + ": " + getString(R.string.copy_error), Toast.LENGTH_LONG).show();
 							cBuilder.setContentText(getString(R.string.copy_error));
 							intent2.setDataAndType(Uri.fromFile(src), "video/*");
 							Log.e(DEBUG_TAG, "_ID " + ID + "Copy to extSdCard FAILED");
@@ -162,12 +174,42 @@ public class DownloadsService extends Service {
 							cNotificationManager.notify(ID, cBuilder.build());
 						}
 					}
-					break;
 					
+					if (audio == true) {
+						Utils.logger("i", ">>>>>>>>>>> starting ffmpeg test...", DEBUG_TAG);
+						
+						/*File in = new File("/storage/sdcard0/v.mp4");
+						File out = new File("/storage/sdcard0/a.aac");*/
+						
+						File in = new File(ShareActivity.path, vfilename);
+						String afilename = settings.getString(vfilename + "FF", "audio");
+						File out = new File(ShareActivity.path, afilename);
+						
+						FfmpegController ffmpeg = null;
+
+					    try {
+					    	Log.i(DEBUG_TAG, "Loading ffmpeg...");
+					    	ffmpeg = new FfmpegController(context);
+					    } catch (IOException ioe) {
+					    	Log.e(DEBUG_TAG, "Error loading ffmpeg. " + ioe.getMessage());
+					    }
+					    
+					    ShellDummy shell = new ShellDummy();
+					    
+					    try {
+					    	ffmpeg.extractAudio(in, out, shell);
+						} catch (IOException e) {
+							Log.e(DEBUG_TAG, "IOException running ffmpeg" + e.getMessage());
+						} catch (InterruptedException e) {
+							Log.e(DEBUG_TAG, "InterruptedException running ffmpeg" + e.getMessage());
+						}
+					}
+					
+					break;
 				case DownloadManager.STATUS_FAILED:
 					Log.e(DEBUG_TAG, "_ID " + id + " FAILED (status " + status + ")");
 					Log.e(DEBUG_TAG, " Reason: " + reason);
-					Toast.makeText(context,  filename + ": " + getString(R.string.download_failed), Toast.LENGTH_LONG).show();
+					Toast.makeText(context,  vfilename + ": " + getString(R.string.download_failed), Toast.LENGTH_LONG).show();
 					break;
 					
 				default:
@@ -207,4 +249,36 @@ public class DownloadsService extends Service {
 			nContext.stopService(new Intent(DownloadsService.getContext(), DownloadsService.class));
 		}
 	}
+    
+    private class ShellDummy implements ShellCallback {
+
+		@Override
+		public void shellOut(String shellLine) {
+			Pattern audioPattern = Pattern.compile("#0:0.*: Audio: (.+), .+?(mono|stereo), (.+) kb"); // TODO non "matcha" default per i file ogg 
+			Matcher audioMatcher = audioPattern.matcher(shellLine);
+			if (audioMatcher.find()) {
+				try {
+					//if (audioMatcher.group().matches("0.0")) {
+						// TODO usare audioSuffix per rinominare il file audio dopo l'estrazione, sostituendo 
+						// un nome temporaneo ed eliminando la necessità di trovare il nome del file audio in ShareActivity
+						audioSuffix = audioMatcher.group(2) + "_" + audioMatcher.group(3) + "." +
+								audioMatcher.group(1)
+									.replaceFirst(" (.*/.*)", "")
+									.replace("vorbis", "ogg");
+						//Utils.logger("w", "audioSuffix: " + audioSuffix, DEBUG_TAG);
+						Log.e(DEBUG_TAG, "Audio:Suffix: " + audioSuffix);
+					//}
+				} catch (IllegalStateException e) {
+					Log.e(DEBUG_TAG, "one or more audioSuffix group not matched", e); 
+				}
+			}
+			Utils.logger("d", "FFmpeg cmd message: " + shellLine, DEBUG_TAG);
+		}
+
+		@Override
+		public void processComplete(int exitValue) {
+			Log.e(DEBUG_TAG, "FFmpeg process exit value: " + exitValue);
+		}
+    	
+    }
 }

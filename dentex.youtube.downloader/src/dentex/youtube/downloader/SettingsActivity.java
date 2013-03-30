@@ -104,7 +104,6 @@ public class SettingsActivity extends Activity {
 		private Preference up;
 		private CheckBoxPreference ownNot;
 		private Preference th;
-		private Preference lang;
 
 		//TODO fix for release
 		public static final int YTD_SIG_HASH = -1892118308; // final string
@@ -125,6 +124,7 @@ public class SettingsActivity extends Activity {
             }
             initSwapPreference();
             initSizePreference();
+            initBitratePreference();
             
             for(int i=0;i<getPreferenceScreen().getPreferenceCount();i++){
                 initSummary(getPreferenceScreen().getPreference(i));
@@ -194,30 +194,16 @@ public class SettingsActivity extends Activity {
 			    		thisActivity.setTheme(R.style.AppThemeLight);
 			    	}
 			    	
-			    	if (!theme.equals(newValue)) reload();
-					return true;
-				}
-			});
-			
-			lang = (Preference) findPreference("lang");
-			lang.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
-				
-				public boolean onPreferenceChange(Preference preference, Object newValue) {
-					reload();
+			    	if (!theme.equals(newValue)) {
+			    		thisActivity.finish();
+			    		thisActivity.startActivity(new Intent(thisActivity, SettingsActivity.class));
+			    	}
 					return true;
 				}
 			});
  
 			updateInit();
 		}
-        
-        public void reload() {
-        	Activity thisActivity = SettingsFragment.this.getActivity();
-        	Intent intent = thisActivity.getIntent();
-    		thisActivity.finish();
-    		thisActivity.overridePendingTransition(0, 0);
-    		startActivity(intent);
-        }
 
 		public void updateInit() {
 			int prefSig = settings.getInt("APP_SIGNATURE", 0);
@@ -276,6 +262,16 @@ public class SettingsActivity extends Activity {
             	s.setEnabled(true);
             }
 		}
+		
+		private void initBitratePreference() {
+			String encode = settings.getString("audio_extraction_type", "strip");
+			Preference p = (Preference) findPreference("mp3_bitrate");
+				if (encode.equals("encode") == true) {
+					p.setEnabled(true);
+				} else {
+					p.setEnabled(false);
+				}
+		}
         
 		/*@Override
 	    public void onStart() {
@@ -309,6 +305,7 @@ public class SettingsActivity extends Activity {
         	updatePrefSummary(findPreference(key));
         	initSwapPreference();
         	initSizePreference();
+        	initBitratePreference();
         }
 
 		private void initSummary(Preference p){
@@ -390,7 +387,7 @@ public class SettingsActivity extends Activity {
         public static void autoUpdate(Context context) {
         	//TODO fix for release
 	        long storedTime = settings.getLong("time", 0); // final string
-	        //long storedTime = 10000; // dev test: forces auto update
+	        //long storedTime = 10000; // dev test: forces auto update for testing purposes
 	        
 	        boolean shouldCheckForUpdate = !DateUtils.isToday(storedTime);
 	        Utils.logger("i", "shouldCheckForUpdate: " + shouldCheckForUpdate, DEBUG_TAG);
