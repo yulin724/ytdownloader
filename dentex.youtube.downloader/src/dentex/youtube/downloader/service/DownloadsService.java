@@ -254,17 +254,16 @@ public class DownloadsService extends Service {
 
 		@Override
 		public void shellOut(String shellLine) {
-			Pattern audioPattern = Pattern.compile("#0:0.*: Audio: (.+), .+?(mono|stereo), (.+) kb"); // TODO non "matcha" default per i file ogg 
+			Pattern audioPattern = Pattern.compile("#0:0.*: Audio: (.+), .+?(mono|stereo), (.+) kb"); 
+			// TODO audioPattern non intercetta la stringa "default" in uso per i file ogg 
 			Matcher audioMatcher = audioPattern.matcher(shellLine);
 			if (audioMatcher.find()) {
 				try {
 					//if (audioMatcher.group().matches("0.0")) {
 						// TODO usare audioSuffix per rinominare il file audio dopo l'estrazione, sostituendo 
 						// un nome temporaneo ed eliminando la necessità di trovare il nome del file audio in ShareActivity
-						audioSuffix = audioMatcher.group(2) + "_" + audioMatcher.group(3) + "." +
-								audioMatcher.group(1)
-									.replaceFirst(" (.*/.*)", "")
-									.replace("vorbis", "ogg");
+						audioSuffix = audioMatcher.group(2) + "_" + audioMatcher.group(3) + "k." +
+								audioMatcher.group(1).replaceFirst(" (.*/.*)", "").replace("vorbis", "ogg");
 						//Utils.logger("w", "audioSuffix: " + audioSuffix, DEBUG_TAG);
 						Log.e(DEBUG_TAG, "Audio:Suffix: " + audioSuffix);
 					//}
