@@ -14,6 +14,7 @@ import android.util.Log;
 
 import dentex.youtube.downloader.utils.Utils;
 
+@SuppressWarnings("unused")
 public class ShellUtils {
 
 	private final static String DEBUG_TAG = "ShellUtils";
@@ -27,7 +28,7 @@ public class ShellUtils {
 
 	public final static String CHMOD_EXE_VALUE = "700";
 	
-	public static boolean isRootPossible() {
+	/*public static boolean isRootPossible() {
 		try {
 			// Check if Superuser.apk exists
 			File fileSU = new File("/system/app/Superuser.apk");
@@ -150,7 +151,7 @@ public class ShellUtils {
         	}
         }
         return procId;
-	}
+	}*/
 	
 	public static int doShellCommand(String[] cmds, ShellCallback sc, 
 			boolean runAsRoot, boolean waitFor) throws Exception {

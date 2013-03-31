@@ -8,7 +8,7 @@
     <EditText
         android:id="@+id/input_filename"
         android:singleLine="true"
-        android:inputType="text"
+        android:inputType="textNoSuggestions"
         android:textColor="@android:color/white"
         android:textCursorDrawable="@drawable/cursor"
         android:longClickable="true"

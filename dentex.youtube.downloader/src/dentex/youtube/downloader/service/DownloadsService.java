@@ -36,7 +36,10 @@ public class DownloadsService extends Service {
 	public boolean audio;
 	public static int ID;
 	public static Context nContext;
-	public String audioSuffix;
+	public String aSuffix = ".audio";
+	public String vfilename;
+	protected File out;
+	protected String aBaseName;
 
 	@Override
 	public IBinder onBind(Intent intent) {
@@ -66,9 +69,9 @@ public class DownloadsService extends Service {
 		
 		audio = intent.getBooleanExtra("AUDIO", false);
 		if (audio == true) {
-			Log.d(DEBUG_TAG, "Audio extraction: true");
+			Utils.logger("d", "Audio extraction: true", DEBUG_TAG);
 		} else {
-			Log.d(DEBUG_TAG, "Audio extraction: false");
+			Utils.logger("d", "Audio extraction: false", DEBUG_TAG);
 		}
 		
 		super.onStartCommand(intent, flags, startId);
@@ -91,7 +94,7 @@ public class DownloadsService extends Service {
     	public void onReceive(Context context, Intent intent) {
     		Utils.logger("d", "downloadComplete: onReceive CALLED", DEBUG_TAG);
     		long id = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
-    		String vfilename = settings.getString(String.valueOf(id), "video");
+    		vfilename = settings.getString(String.valueOf(id), "video");
     		
 			Query query = new Query();
 			query.setFilterById(id);
@@ -103,7 +106,7 @@ public class DownloadsService extends Service {
 				int status = c.getInt(statusIndex);
 				int reason = c.getInt(reasonIndex);
 				
-				//long size = c.getLong(c.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES)); // see TODO below
+				//long size = c.getLong(c.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES));
 
 				switch (status) {
 				
@@ -151,11 +154,11 @@ public class DownloadsService extends Service {
 				        	} else { 
 				        		Utils.logger("v", "temp download file removed", DEBUG_TAG);
 				        		
-				        		// TODO fix: `dst` seems not to return a valid `File`
-				        		// Uri dstUri = Uri.fromFile(dst); // <-- tried also this (1)
+				        		// TODO dm.addCompletedDownload to add the completed file on extSdCard into the dm list; NOT working
+				        		//Uri dstUri = Uri.fromFile(dst); // <-- tried also this; see (1)
 
-				        		/*Utils.logger("i", "dst: " + dst.getAbsolutePath());
-				        		ShareActivity.dm.addCompletedDownload(filename, 
+				        		/*Utils.logger("i", "dst: " + dst.getAbsolutePath(), DEBUG_TAG);
+				        		ShareActivity.dm.addCompletedDownload(vfilename, 
 				        				getString(R.string.ytd_video), 
 				        				true, 
 				        				"video/*", 
@@ -176,19 +179,18 @@ public class DownloadsService extends Service {
 					}
 					
 					if (audio == true) {
-						Utils.logger("i", ">>>>>>>>>>> starting ffmpeg test...", DEBUG_TAG);
-						
 						/*File in = new File("/storage/sdcard0/v.mp4");
 						File out = new File("/storage/sdcard0/a.aac");*/
 						
 						File in = new File(ShareActivity.path, vfilename);
-						String afilename = settings.getString(vfilename + "FF", "audio");
-						File out = new File(ShareActivity.path, afilename);
+						
+						String acodec = settings.getString(vfilename + "FFext", ".audio");
+						aBaseName = settings.getString(vfilename + "FFbase", ".audio");
+						out = new File(ShareActivity.path, aBaseName + acodec);
 						
 						FfmpegController ffmpeg = null;
 
 					    try {
-					    	Log.i(DEBUG_TAG, "Loading ffmpeg...");
 					    	ffmpeg = new FfmpegController(context);
 					    } catch (IOException ioe) {
 					    	Log.e(DEBUG_TAG, "Error loading ffmpeg. " + ioe.getMessage());
@@ -244,7 +246,7 @@ public class DownloadsService extends Service {
 		} else {
 			ShareActivity.mBuilder.setContentText(ShareActivity.noDownloads);
 			ShareActivity.mNotificationManager.notify(ShareActivity.mId, ShareActivity.mBuilder.build());
-			Utils.logger("i", "No downloads in progress; stopping FileObserver and DownloadsService", DEBUG_TAG);
+			Utils.logger("d", "No downloads in progress; stopping FileObserver and DownloadsService", DEBUG_TAG);
 			ShareActivity.fileObserver.stopWatching();
 			nContext.stopService(new Intent(DownloadsService.getContext(), DownloadsService.class));
 		}
@@ -254,30 +256,59 @@ public class DownloadsService extends Service {
 
 		@Override
 		public void shellOut(String shellLine) {
-			Pattern audioPattern = Pattern.compile("#0:0.*: Audio: (.+), .+?(mono|stereo), (.+) kb"); 
-			// TODO audioPattern non intercetta la stringa "default" in uso per i file ogg 
+			Pattern audioPattern = Pattern.compile("#0:0.*: Audio: (.+), .+?(mono|stereo .default.|stereo)(, .+ kb|)"); 
 			Matcher audioMatcher = audioPattern.matcher(shellLine);
 			if (audioMatcher.find()) {
 				try {
-					//if (audioMatcher.group().matches("0.0")) {
-						// TODO usare audioSuffix per rinominare il file audio dopo l'estrazione, sostituendo 
-						// un nome temporaneo ed eliminando la necessità di trovare il nome del file audio in ShareActivity
-						audioSuffix = audioMatcher.group(2) + "_" + audioMatcher.group(3) + "k." +
-								audioMatcher.group(1).replaceFirst(" (.*/.*)", "").replace("vorbis", "ogg");
-						//Utils.logger("w", "audioSuffix: " + audioSuffix, DEBUG_TAG);
-						Log.e(DEBUG_TAG, "Audio:Suffix: " + audioSuffix);
-					//}
+					String oggBr = "a";
+					String groupTwo = "n";
+					if (audioMatcher.group(2).equals("stereo (default)")) {
+						if (vfilename.contains("hd")) {
+							oggBr = "192kb";
+						} else {
+							oggBr = "128kb";
+						}
+						groupTwo = "stereo";
+					} else {
+						oggBr = "";
+						groupTwo = audioMatcher.group(2);
+					}
+					
+					aSuffix = "_" +
+							groupTwo + 
+							"_" + 
+							audioMatcher.group(3).replace(", ", "").replace(" kb", "kb") + 
+							oggBr + 
+							"." +
+							audioMatcher.group(1).replaceFirst(" (.*/.*)", "").replace("vorbis", "ogg");
+					
+					Utils.logger("i", "AudioSuffix: " + aSuffix, DEBUG_TAG);
+					
 				} catch (IllegalStateException e) {
 					Log.e(DEBUG_TAG, "one or more audioSuffix group not matched", e); 
 				}
 			}
-			Utils.logger("d", "FFmpeg cmd message: " + shellLine, DEBUG_TAG);
+			Utils.logger("d", /*"FFmpeg cmd message: " + */shellLine, DEBUG_TAG);
 		}
 
 		@Override
 		public void processComplete(int exitValue) {
-			Log.e(DEBUG_TAG, "FFmpeg process exit value: " + exitValue);
+			Utils.logger("i", "FFmpeg process exit value: " + exitValue, DEBUG_TAG);
+			if (exitValue == 0) {
+				renameAudioFile(aBaseName, out);
+			}
 		}
-    	
     }
+    
+	public void renameAudioFile(String aBaseName, File out) {
+		// Rename audio file to add a more detailed suffix, 
+		// but only if it has been matched from the ffmpeg console output
+		if (out.exists() && !aSuffix.equals(".audio")) {
+			if (out.renameTo(new File(ShareActivity.path, aBaseName + aSuffix))) {
+				Utils.logger("i", out.getName() + " renamed to: " + aBaseName + aSuffix, DEBUG_TAG);
+			} else {
+				Log.e(DEBUG_TAG, "Unable to rename " + out.getName() + " to: " + aSuffix);
+			}
+		}
+	}
 }

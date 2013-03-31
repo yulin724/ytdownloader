@@ -14,6 +14,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.res.Configuration;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Parcelable;
@@ -70,6 +71,9 @@ public class SettingsActivity extends Activity {
         getFragmentManager().beginTransaction()
                 .replace(android.R.id.content, new SettingsFragment())
                 .commit();
+        
+        // TODO check cpu arch prior to download ffmpeg binary and enable audio extraction feature
+        Utils.logger("d", Build.CPU_ABI, DEBUG_TAG); 
     }
     
     @Override

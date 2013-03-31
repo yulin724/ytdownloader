@@ -27,8 +27,6 @@ public class FfmpegController {
 	private Context mContext;
 	public String mFfmpegBinPath;
 	public String mLiblamePath;
-	
-	private final static String TAG = "FFMPEG";
 
 	public FfmpegController(Context cxt) throws FileNotFoundException, IOException {
 		mContext = cxt;
@@ -38,18 +36,18 @@ public class FfmpegController {
 		if (!new File(mBinFileDir, LIB_ASSETS[0]).exists())  {
 			BinaryInstaller bi = new BinaryInstaller(mContext, mBinFileDir);
 			if (bi.installFromRaw()) {
-				Log.v(TAG, "ffmpeg binary installed");
+				Utils.logger("v", "ffmpeg binary installed", DEBUG_TAG);
 			} else {
-				Log.e(TAG, "ffmpeg binary NOT installed");
+				Log.e(DEBUG_TAG, "ffmpeg binary NOT installed");
 			}
 		}
 		
 		/*if (!new File(mBinFileDir, LIB_ASSETS[1]).exists())  {
 			LibInstaller li = new LibInstaller(mContext, mLibFileDir);
 			if (li.installFromRaw()) { 
-				Log.v(TAG, "liblame library installed");
+				Utils.logger("v", "liblame library installed", DEBUG_TAG);
 			} else {
-				Log.e(TAG, "liblame library NOT installed");
+				Log.e(DEBUG_TAG, "liblame library NOT installed");
 			}
 		}*/
 		
@@ -64,11 +62,11 @@ public class FfmpegController {
 	}
 	
 	public  void execChmod(String filepath, String code) {
-		Log.d(TAG, "Trying to chmod '" + filepath + "' to: " + code);
+		Utils.logger("d", "Trying to chmod '" + filepath + "' to: " + code, DEBUG_TAG);
 		try {
 			Runtime.getRuntime().exec("chmod " + code + " " + filepath);
 		} catch (IOException e) {
-			Log.e(TAG, "Error changing file permissions!", e);
+			Log.e(DEBUG_TAG, "Error changing file permissions!", e);
 		}
 	}
 	
@@ -78,7 +76,7 @@ public class FfmpegController {
 			cmdlog.append(cmd);
 			cmdlog.append(' ');
 		}
-		Log.v(TAG, cmdlog.toString());
+		Utils.logger("v", cmdlog.toString(), DEBUG_TAG);
 		
 		ProcessBuilder pb = new ProcessBuilder();
 		pb.directory(mBinFileDir);
@@ -106,7 +104,7 @@ public class FfmpegController {
     		sc.processComplete(exitVal);
         
     	} catch (Exception e) {
-    		Log.e(TAG, "Error executing ffmpeg command!", e);
+    		Log.e(DEBUG_TAG, "Error executing ffmpeg command!", e);
     	} finally {
     		if (process != null) {
     			Utils.logger("w", "destroyng process", DEBUG_TAG);
@@ -125,12 +123,12 @@ public class FfmpegController {
 		/*try {
 			System.load(mLiblamePath);
 		} catch (Exception e) {
-			Log.e(TAG, "Error loading library.", e);
+			Log.e(DEBUG_TAG, "Error loading library.", e);
 		}*/
 		try {
 			execProcess(cmds, sc);
 		} catch (Exception e) {
-			Log.e(TAG, "Error running command.", e);
+			Log.e(DEBUG_TAG, "Error running command.", e);
 		}
 	}
 	
@@ -209,7 +207,7 @@ public class FfmpegController {
 	            	}
 	            }
 	        } catch (IOException ioe) {
-	                Log.e(TAG,"error reading shell log", ioe);
+	                Log.e(DEBUG_TAG,"error reading shell log", ioe);
 	        }
 	    }
 	}

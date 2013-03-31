@@ -19,8 +19,8 @@ import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.pm.Signature;
 import android.util.Log;
-import dentex.youtube.downloader.SettingsActivity.SettingsFragment;
 import dentex.youtube.downloader.R;
+import dentex.youtube.downloader.SettingsActivity.SettingsFragment;
 import dentex.youtube.downloader.ShareActivity;
 
 public class Utils extends Activity {

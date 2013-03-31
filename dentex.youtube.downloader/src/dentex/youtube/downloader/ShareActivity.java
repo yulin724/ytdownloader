@@ -137,7 +137,7 @@ public class ShareActivity extends Activity {
 	public static String onlineVersion;
 	public static List<Long> sequence = new ArrayList<Long>();
 	String audioFilename = "audio";
-	public static String composedAudioFilename = "";
+	public static String audioCodec = "";
 	private boolean audioExtractionEnabled;
 	public static Context mContext;
 	boolean showSizeListPref;
@@ -432,7 +432,7 @@ public class ShareActivity extends Activity {
             
             lv.setOnItemClickListener(new OnItemClickListener() {
 				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-					Utils.logger("i", "Selected link: " + links.get(pos), DEBUG_TAG);
+					//Utils.logger("i", "Selected link: " + links.get(pos), DEBUG_TAG);
 					assignPath();
                     //createLogFile(stringToIs(links[position]), "ytd_FINAL_LINK.txt");
 					
@@ -472,19 +472,8 @@ public class ShareActivity extends Activity {
                     helpBuilder.setPositiveButton(getString(R.string.list_click_download_local), new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                         	try {
-                            	Utils.logger("d", "Destination folder is available and writable", DEBUG_TAG);
-                        		composedVideoFilename = composeFilename();
-                        		
-                        		audioExtractionEnabled = settings.getBoolean("enable_audio_extraction", false);
-                        		if (audioExtractionEnabled == true) {
-                        			composedAudioFilename = composeAudioFilename();
-                        			settings.edit().putString(composedVideoFilename + "FF", composedAudioFilename).apply();
-                        		}
-                        		
-	                            fileRenameEnabled = settings.getBoolean("enable_rename", false);
-
+                        		fileRenameEnabled = settings.getBoolean("enable_rename", false);
 	                            if (fileRenameEnabled == true) {
-	                            	
 									AlertDialog.Builder adb = new AlertDialog.Builder(boxThemeContextWrapper);
 	                            	LayoutInflater adbInflater = LayoutInflater.from(ShareActivity.this);
 		                    	    View inputFilename = adbInflater.inflate(R.layout.dialog_input_filename, null);
@@ -497,17 +486,29 @@ public class ShareActivity extends Activity {
 		                    	    	public void onClick(DialogInterface dialog, int which) {
 		                    	    		title = userFilename.getText().toString();
 		                    	    		composedVideoFilename = composeFilename();
+		                    	    		manageAudioFeature();
 											callDownloadManager(links.get(pos));
 		                    	    	}
 		                    	    });
 		                    	    adb.show();
 	                            } else {
+	                            	composedVideoFilename = composeFilename();
+	                            	manageAudioFeature();
 									callDownloadManager(links.get(pos));
 	                            }
                         	} catch (IndexOutOfBoundsException e) {
     							Toast.makeText(ShareActivity.this, getString(R.string.video_list_error_toast), Toast.LENGTH_SHORT).show();
     						}
                         }
+
+						public void manageAudioFeature() {
+							audioExtractionEnabled = settings.getBoolean("enable_audio_extraction", false);
+							if (audioExtractionEnabled == true) {
+								audioCodec = findAudioCodec();
+								settings.edit().putString(composedVideoFilename + "FFext", audioCodec).apply();
+							}
+							settings.edit().putString(composedVideoFilename + "FFbase", title).apply();
+						}
                     });
 					
 
@@ -584,10 +585,10 @@ public class ShareActivity extends Activity {
             lv.setOnItemLongClickListener(new OnItemLongClickListener() {
 
             	@Override
-				public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
+            	public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
             		pos = position;
-					AlertDialog.Builder builder = new AlertDialog.Builder(boxThemeContextWrapper);
-				    builder.setTitle(R.string.long_click_title)
+            		AlertDialog.Builder builder = new AlertDialog.Builder(boxThemeContextWrapper);
+            		builder.setTitle(R.string.long_click_title)
 				    	   //.setIcon(android.R.drawable.ic_menu_share)
 				           .setItems(R.array.long_click_entries, new DialogInterface.OnClickListener() {
 				               public void onClick(DialogInterface dialog, int which) {
@@ -606,11 +607,11 @@ public class ShareActivity extends Activity {
 			            			    startActivity(Intent.createChooser(sharingIntent, "Share YouTube link:"));
 				            	   }
 				           }
-				    });
-				    builder.create().show();
+				           });
+            		builder.create().show();
 				    return true;
-				}
-    		});
+            	}
+            });
         }
         
         public boolean useQualitySuffix() {
@@ -629,31 +630,18 @@ public class ShareActivity extends Activity {
     	    return videoFilename;
         }
 
-        public String composeAudioFilename() {
+        public String findAudioCodec() {
         	//CODEC [file EXTENSION]
         	extrType = settings.getString("audio_extraction_type", "strip");
     		if (extrType.equals("encode") == true) {
     			acodec = ".mp3";
     		} else {
-    			if (codecs.get(pos).equals("webm") && 
-    					qualities.get(pos).equals("hd1080")) acodec = ".ogg";
-    			if (codecs.get(pos).equals("webm") && 
-    					qualities.get(pos).equals("hd720")) acodec = "_192k.ogg";
-    			if (codecs.get(pos).equals("webm") && 
-    					qualities.get(pos).equals("large") ||
-    					qualities.get(pos).equals("medium")) acodec = "_128k.ogg";
-    			
-    			if (codecs.get(pos).equals("mp4")) acodec = ".aac";
-					//&& qualities.get(pos).equals("medium")) acodec = "_96k.aac";
-    			
-    			if (codecs.get(pos).equals("flv") 
-    					&& qualities.get(pos).equals("small")) acodec = ".mp3";
-    			if (codecs.get(pos).equals("flv") 
-    					&& qualities.get(pos).equals("medium")) acodec = ".aac";
-    			if (codecs.get(pos).equals("flv") 
-    					&& qualities.get(pos).equals("large")) acodec = ".aac";
-    			
-    			if (codecs.get(pos).equals("3gpp")) acodec = ".aac";
+    			if (codecs.get(pos).equals("webm")) acodec = ".ogg";
+    		    if (codecs.get(pos).equals("mp4")) acodec = ".aac";
+    		    if (codecs.get(pos).equals("flv") && qualities.get(pos).equals("small")) acodec = ".mp3";
+    		    if (codecs.get(pos).equals("flv") && qualities.get(pos).equals("medium")) acodec = ".aac";
+    		    if (codecs.get(pos).equals("flv") && qualities.get(pos).equals("large")) acodec = ".aac";
+    		    if (codecs.get(pos).equals("3gpp")) acodec = ".aac";
     		}
     		//QUALITY
         	if (useQualitySuffix() ==  true && extrType.equals("encode") == true) {
@@ -662,9 +650,10 @@ public class ShareActivity extends Activity {
         		aquality = "";
         	}
         	//FINALLY
-        	audioFilename = title + aquality + acodec;
-        	Utils.logger("d", "composedAudioFilename: " + audioFilename, DEBUG_TAG);
-        	return audioFilename;
+        	//audioFilename = title + aquality + acodec;
+        	//Utils.logger("d", "composedAudioFilename: " + audioFilename, DEBUG_TAG);
+        	//return audioFilename;
+        	return acodec;
         }
 
 		void callConnectBot() {
@@ -889,7 +878,7 @@ public class ShareActivity extends Activity {
 			return "Cancelled!";
 		}
 		
-        findVideoFilename(content);
+        findVideoFilenameBase(content);
 
         Pattern pattern = Pattern.compile("url_encoded_fmt_stream_map\\\": \\\"(.*?)\\\"");
         Matcher matcher = pattern.matcher(content);
@@ -915,7 +904,7 @@ public class ShareActivity extends Activity {
                     qualityMatcher(CQS[index], index);
                     stereoMatcher(CQS[index], index);
                     linkComposer(CQS[index], index);
-                    //Utils.logger("v", "block " + index + ": " + CQS[index]);
+                    Utils.logger("v", "block " + index + ": " + CQS[index], DEBUG_TAG);
                     index++;
                 }
                 listEntriesBuilder();
@@ -931,7 +920,7 @@ public class ShareActivity extends Activity {
         }
     }
 
-	private void findVideoFilename(String content) {
+	private void findVideoFilenameBase(String content) {
         Pattern titlePattern = Pattern.compile("<title>(.*?)</title>");
         Matcher titleMatcher = titlePattern.matcher(content);
         if (titleMatcher.find()) {
@@ -944,7 +933,7 @@ public class ShareActivity extends Activity {
         } else {
             title = "Youtube Video";
         }
-        Utils.logger("d", "findVideoFilename: " + title, DEBUG_TAG);
+        Utils.logger("d", "findVideoFilenameBase: " + title, DEBUG_TAG);
     }
 
     private void listEntriesBuilder() {
@@ -1000,13 +989,13 @@ public class ShareActivity extends Activity {
     		Matcher sigMatcher2 = sigPattern2.matcher(block);
     		if (sigMatcher2.find()) {
     			sig = "signature=" + sigMatcher2.group(1);
-    			Utils.logger("i", "sig found on step 2 ($)", DEBUG_TAG);
+    			Utils.logger("d", "sig found on step 2 ($)", DEBUG_TAG);
         	} else {
-        		Pattern sigPattern3 = Pattern.compile("sig=([[0-9][A-Z]]{38,40}\\.[[0-9][A-Z]]{38,40})");
+        		Pattern sigPattern3 = Pattern.compile("sig=([[0-9][A-Z]]{38,41}\\.[[0-9][A-Z]]{38,41})");
         		Matcher sigMatcher3 = sigPattern3.matcher(block);
         		if (sigMatcher3.find()) {
         			sig = "signature=" + sigMatcher3.group(1);
-        			Utils.logger("w", "sig found on step 3 ([[0-9][A-Z]]{38,40})", DEBUG_TAG);
+        			Utils.logger("i", "sig found on step 3 ([[0-9][A-Z]]{38,41})", DEBUG_TAG);
         		} else {
         			Log.e(DEBUG_TAG, "sig: " + sig);
         		}
