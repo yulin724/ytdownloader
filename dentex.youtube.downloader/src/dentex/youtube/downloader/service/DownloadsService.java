@@ -295,20 +295,25 @@ public class DownloadsService extends Service {
 		public void processComplete(int exitValue) {
 			Utils.logger("i", "FFmpeg process exit value: " + exitValue, DEBUG_TAG);
 			if (exitValue == 0) {
-				renameAudioFile(aBaseName, out);
+				if (renameAudioFile(aBaseName, out)) {
+					Toast.makeText(nContext,  "YTD: audio extraction completed", Toast.LENGTH_LONG).show();
+				}
 			}
 		}
     }
     
-	public void renameAudioFile(String aBaseName, File out) {
+	public boolean renameAudioFile(String aBaseName, File out) {
 		// Rename audio file to add a more detailed suffix, 
 		// but only if it has been matched from the ffmpeg console output
 		if (out.exists() && !aSuffix.equals(".audio")) {
 			if (out.renameTo(new File(ShareActivity.path, aBaseName + aSuffix))) {
 				Utils.logger("i", out.getName() + " renamed to: " + aBaseName + aSuffix, DEBUG_TAG);
+				return true;
 			} else {
 				Log.e(DEBUG_TAG, "Unable to rename " + out.getName() + " to: " + aSuffix);
+				return false;
 			}
 		}
+		return false;
 	}
 }

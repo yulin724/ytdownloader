@@ -72,7 +72,8 @@ public class SettingsActivity extends Activity {
                 .replace(android.R.id.content, new SettingsFragment())
                 .commit();
         
-        // TODO check cpu arch prior to download ffmpeg binary and enable audio extraction feature
+        // TODO 
+        // preparing cpu arch check (prior to download ffmpeg binary, when enabling audio extraction feature in prefs)
         Utils.logger("d", Build.CPU_ABI, DEBUG_TAG); 
     }
     
@@ -108,6 +109,7 @@ public class SettingsActivity extends Activity {
 		private Preference up;
 		private CheckBoxPreference ownNot;
 		private Preference th;
+		private Preference lang;
 
 		//TODO fix for release
 		public static final int YTD_SIG_HASH = -1892118308; // final string
@@ -198,16 +200,32 @@ public class SettingsActivity extends Activity {
 			    		thisActivity.setTheme(R.style.AppThemeLight);
 			    	}
 			    	
-			    	if (!theme.equals(newValue)) {
-			    		thisActivity.finish();
-			    		thisActivity.startActivity(new Intent(thisActivity, SettingsActivity.class));
-			    	}
+			    	if (!theme.equals(newValue)) reload();
+					return true;
+				}
+			});
+			
+			lang = (Preference) findPreference("lang");
+			lang.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+				
+				public boolean onPreferenceChange(Preference preference, Object newValue) {
+					reload();
 					return true;
 				}
 			});
  
 			updateInit();
 		}
+        
+        public void reload() {
+        	Activity thisActivity = SettingsFragment.this.getActivity();
+        	Intent intent = thisActivity.getIntent();
+        	intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+    		thisActivity.finish();
+    		thisActivity.overridePendingTransition(0, 0);
+    		startActivity(intent);
+    		thisActivity.overridePendingTransition(0, 0);
+        }
 
 		public void updateInit() {
 			int prefSig = settings.getInt("APP_SIGNATURE", 0);
@@ -391,7 +409,7 @@ public class SettingsActivity extends Activity {
         public static void autoUpdate(Context context) {
         	//TODO fix for release
 	        long storedTime = settings.getLong("time", 0); // final string
-	        //long storedTime = 10000; // dev test: forces auto update for testing purposes
+	        //long storedTime = 10000; // dev test: forces auto update
 	        
 	        boolean shouldCheckForUpdate = !DateUtils.isToday(storedTime);
 	        Utils.logger("i", "shouldCheckForUpdate: " + shouldCheckForUpdate, DEBUG_TAG);
