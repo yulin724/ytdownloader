@@ -991,13 +991,20 @@ public class ShareActivity extends Activity {
     			sig = "signature=" + sigMatcher2.group(1);
     			Utils.logger("d", "sig found on step 2 ($)", DEBUG_TAG);
         	} else {
-        		Pattern sigPattern3 = Pattern.compile("sig=([[0-9][A-Z]]{38,41}\\.[[0-9][A-Z]]{38,41})");
+        		Pattern sigPattern3 = Pattern.compile("sig=([[0-9][A-Z]]{39,40}\\.[[0-9][A-Z]]{39,40})");
         		Matcher sigMatcher3 = sigPattern3.matcher(block);
         		if (sigMatcher3.find()) {
         			sig = "signature=" + sigMatcher3.group(1);
-        			Utils.logger("i", "sig found on step 3 ([[0-9][A-Z]]{38,41})", DEBUG_TAG);
+        			Utils.logger("i", "sig found on step 3 ([[0-9][A-Z]]{39,40})", DEBUG_TAG);
         		} else {
-        			Log.e(DEBUG_TAG, "sig: " + sig);
+        			Pattern sigPattern4 = Pattern.compile("s=([[0-9][A-Z]]{43}\\.[[0-9][A-Z]]{40})");
+        			Matcher sigMatcher4 = sigPattern4.matcher(block);
+        			if (sigMatcher4.find()) {
+        				sig = "signature=" + sigMatcher4.group(1);
+        				Utils.logger("i", "sig found on step 4 (s=)", DEBUG_TAG);
+        			} else {
+        				Log.e(DEBUG_TAG, "sig: " + sig);
+        			}
         		}
         	}
     	}

@@ -157,6 +157,10 @@ public class FfmpegController {
 		cmd.add("-vn");
 		cmd.add("-acodec");
 		cmd.add("copy");
+		
+		// test mp3
+		//cmd.add("-acodec"); cmd.add("libmp3lame"); cmd.add("-ab"); cmd.add("192k");
+		
 		cmd.add(audioOut.getAbsolutePath());
 
 		execFFMPEG(cmd, sc);
