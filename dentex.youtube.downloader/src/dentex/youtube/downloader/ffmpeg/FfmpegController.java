@@ -12,10 +12,9 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import dentex.youtube.downloader.utils.Utils;
-
 import android.content.Context;
 import android.util.Log;
+import dentex.youtube.downloader.utils.Utils;
 
 public class FfmpegController {
 
@@ -23,24 +22,26 @@ public class FfmpegController {
 	public static final String[] LIB_ASSETS = {"ffmpeg", "liblame.so"};
 	
 	private File mBinFileDir;
-	private File mLibFileDir;
-	private Context mContext;
+	//private File mLibFileDir;
 	public String mFfmpegBinPath;
-	public String mLiblamePath;
+	//public String mLiblameSoPath;
 
-	public FfmpegController(Context cxt) throws FileNotFoundException, IOException {
-		mContext = cxt;
-		mBinFileDir = mContext.getDir("bin", 0);
-		mLibFileDir = mContext.getDir("lib", 0);
+	public FfmpegController(Context context) throws FileNotFoundException, IOException {
+		mBinFileDir = context.getDir("bin", 0);
+		
+		final String LAME_LIB = "lame";
+	    System.loadLibrary(LAME_LIB);
+	    
+		//mLibFileDir = context.getDir("lib", 0);
 
-		if (!new File(mBinFileDir, LIB_ASSETS[0]).exists())  {
+		/*if (!new File(mBinFileDir, LIB_ASSETS[0]).exists())  {
 			BinaryInstaller bi = new BinaryInstaller(mContext, mBinFileDir);
 			if (bi.installFromRaw()) {
 				Utils.logger("v", "ffmpeg binary installed", DEBUG_TAG);
 			} else {
 				Log.e(DEBUG_TAG, "ffmpeg binary NOT installed");
 			}
-		}
+		}*/
 		
 		/*if (!new File(mBinFileDir, LIB_ASSETS[1]).exists())  {
 			LibInstaller li = new LibInstaller(mContext, mLibFileDir);
@@ -52,12 +53,13 @@ public class FfmpegController {
 		}*/
 		
 		mFfmpegBinPath = new File(mBinFileDir, LIB_ASSETS[0]).getAbsolutePath();
-		mLiblamePath = new File(mLibFileDir, LIB_ASSETS[1]).getAbsolutePath();
+		//mLiblameSoPath = new File(mBinFileDir, LIB_ASSETS[1]).getAbsolutePath();
 	}
 	
-	public  void execFFMPEG (List<String> cmd, ShellUtils.ShellCallback sc) {
+	public void execFFMPEG (List<String> cmd, ShellUtils.ShellCallback sc) {
 		execChmod(mFfmpegBinPath, "755");
-		//execChmod(mLiblamePath, "755");
+		//execChmod(mLiblameSoPath, "755");
+		//System.load(mLiblameSoPath);
 		execProcess(cmd, sc);
 	}
 	
@@ -81,7 +83,7 @@ public class FfmpegController {
 		ProcessBuilder pb = new ProcessBuilder();
 		pb.directory(mBinFileDir);
 		pb.command(cmds);
-		
+
     	Process process = null;
     	int exitVal = 1; // Default error
     	try {

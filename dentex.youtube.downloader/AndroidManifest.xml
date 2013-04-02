@@ -83,6 +83,7 @@
         </activity>
         <service android:name="dentex.youtube.downloader.service.DownloadsService" />
         <service android:name="dentex.youtube.downloader.service.AutoUpgradeApkService" />
+        <service android:name="dentex.youtube.downloader.service.FfmpegDownloadService" />
     </application>
 
 </manifest>

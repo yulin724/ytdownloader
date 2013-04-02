@@ -158,8 +158,8 @@ public class AutoUpgradeApkService extends Service {
         @Override
         protected void onPostExecute(Integer result) {
      
-	        if (matchedVersion.contentEquals("n.a.")) {
-	        }
+	        /*if (matchedVersion.contentEquals("n.a.")) {
+	        }*/
 	        
 	        if (compRes.contentEquals(">")) {
 		        Utils.logger("d", "version comparison: downloading latest version...", DEBUG_TAG);

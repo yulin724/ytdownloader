@@ -74,6 +74,8 @@
     <string name="failed_download">Failed download removed</string>
     <string name="new_v_download">found. Downloading&#8230;</string>
     <string name="new_v_install">downloaded. Click to install.</string>
+    <string name="ffmpeg_download_dialog_title">File needed</string>
+    <string name="ffmpeg_download_dialog_msg">Download ffmpeg binary?</string>
     
     <!-- ### UpgradeApkActivity ### -->
     

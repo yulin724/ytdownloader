@@ -9,7 +9,9 @@ import java.util.List;
 import java.util.Locale;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
@@ -32,6 +34,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 import dentex.youtube.downloader.service.AutoUpgradeApkService;
+import dentex.youtube.downloader.service.FfmpegDownloadService;
 import dentex.youtube.downloader.utils.PopUps;
 import dentex.youtube.downloader.utils.Utils;
 
@@ -71,10 +74,6 @@ public class SettingsActivity extends Activity {
         getFragmentManager().beginTransaction()
                 .replace(android.R.id.content, new SettingsFragment())
                 .commit();
-        
-        // TODO 
-        // preparing cpu arch check (prior to download ffmpeg binary, when enabling audio extraction feature in prefs)
-        Utils.logger("d", Build.CPU_ABI, DEBUG_TAG); 
     }
     
     @Override
@@ -110,8 +109,9 @@ public class SettingsActivity extends Activity {
 		private CheckBoxPreference ownNot;
 		private Preference th;
 		private Preference lang;
+		private CheckBoxPreference audio;
+		protected int cpuVers;
 
-		//TODO fix for release
 		public static final int YTD_SIG_HASH = -1892118308; // final string
 		//public static final int YTD_SIG_HASH = -118685648; // dev test: desktop
 		//public static final int YTD_SIG_HASH = 1922021506; // dev test: laptop
@@ -161,7 +161,7 @@ public class SettingsActivity extends Activity {
             quickStart.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 				
 				public boolean onPreferenceClick(Preference preference) {
-					PopUps.showPopUpInFragment(getString(R.string.quick_start_title), getString(R.string.quick_start_text), "info", SettingsFragment.this);
+					PopUps.showPopUp(getString(R.string.quick_start_title), getString(R.string.quick_start_text), "info", getActivity());
 					return true;
 				}
 			});
@@ -175,6 +175,8 @@ public class SettingsActivity extends Activity {
 		            return true;
                 }
             });
+            
+            initUpdate();
             
             ownNot = (CheckBoxPreference) findPreference("enable_own_notification");
             ownNot.setOnPreferenceClickListener(new OnPreferenceClickListener() {
@@ -193,11 +195,10 @@ public class SettingsActivity extends Activity {
 				
 				public boolean onPreferenceChange(Preference preference, Object newValue) {
 					String theme = settings.getString("choose_theme", "D");
-					Activity thisActivity = SettingsFragment.this.getActivity();
 			    	if (theme.equals("D")) {
-			    		thisActivity.setTheme(R.style.AppThemeDark);
+			    		getActivity().setTheme(R.style.AppThemeDark);
 			    	} else {
-			    		thisActivity.setTheme(R.style.AppThemeLight);
+			    		getActivity().setTheme(R.style.AppThemeLight);
 			    	}
 			    	
 			    	if (!theme.equals(newValue)) reload();
@@ -209,25 +210,89 @@ public class SettingsActivity extends Activity {
 			lang.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 				
 				public boolean onPreferenceChange(Preference preference, Object newValue) {
-					reload();
+					String language = settings.getString("lang", "default");
+					if (!language.equals(newValue)) reload();
 					return true;
 				}
 			});
  
-			updateInit();
+			audio = (CheckBoxPreference) findPreference("enable_audio_extraction");
+			audio.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+				
+				public boolean onPreferenceChange(Preference preference, Object newValue) {
+					boolean audioExtrEnabled = settings.getBoolean("enable_audio_extraction", false);
+					if (!audioExtrEnabled) {
+						cpuVers = armCpuVersion();
+						boolean isCpuSupported = (cpuVers > 0) ? true : false;
+						Utils.logger("d", "isCpuSupported: " + isCpuSupported, DEBUG_TAG);
+						if (!isCpuSupported) {
+							audio.setChecked(false);
+							audio.setEnabled(false);
+							PopUps.showPopUp("alert", "CPU not yet supported", "alert", getActivity()); //TODO strings 
+							// TODO ...or make dialog to send mail to developer?
+						}
+						
+						File binDir = getActivity().getDir("bin", 0);
+						boolean ffmpegInstalled = new File(binDir, "ffmpeg").exists();
+						Utils.logger("d", "ffmpegInstalled: " + ffmpegInstalled, DEBUG_TAG);
+					
+						if (!ffmpegInstalled && isCpuSupported) {
+							AlertDialog.Builder adb = new AlertDialog.Builder(getActivity());
+	                        adb.setIcon(android.R.drawable.ic_dialog_info);
+	                        adb.setTitle(getString(R.string.ffmpeg_download_dialog_title)); // TODO strings * 2
+	                        adb.setMessage(getString(R.string.ffmpeg_download_dialog_msg));
+	                        adb.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+	
+	                            public void onClick(DialogInterface dialog, int which) {
+	                            	Intent intent = new Intent(getActivity(), FfmpegDownloadService.class);
+	                            	intent.putExtra("CPU", cpuVers);
+	                            	getActivity().startService(intent);
+	                            }
+	                        });
+	
+	                        adb.setNegativeButton(getString(R.string.dialogs_negative), new DialogInterface.OnClickListener() {
+	
+	                            public void onClick(DialogInterface dialog, int which) {
+	                            	// cancel and disable audio pref
+	                            	audio.setChecked(false);
+	                            }
+	                        });
+	
+	                        AlertDialog helpDialog = adb.create();
+	                        if (! (getActivity()).isFinishing()) { //TODO check
+	                        	helpDialog.show();
+	                        }
+						}
+					}
+					return true;
+				}
+			});
+
 		}
         
-        public void reload() {
-        	Activity thisActivity = SettingsFragment.this.getActivity();
-        	Intent intent = thisActivity.getIntent();
+        private int armCpuVersion() {
+			// TODO Auto-generated method stub
+        	String cpuAbi = Build.CPU_ABI;
+			Utils.logger("d", "CPU_ABI: " + cpuAbi, DEBUG_TAG);
+			if (cpuAbi.equals("armeabi-v7a")) {
+				return 7;
+			} else if (cpuAbi.equals("armeabi")) {
+				return 5;
+			} else {
+				return 0;
+			}
+		}
+
+		public void reload() {
+        	Intent intent = getActivity().getIntent();
         	intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-    		thisActivity.finish();
-    		thisActivity.overridePendingTransition(0, 0);
+    		getActivity().finish();
+    		getActivity().overridePendingTransition(0, 0);
     		startActivity(intent);
-    		thisActivity.overridePendingTransition(0, 0);
+    		getActivity().overridePendingTransition(0, 0);
         }
 
-		public void updateInit() {
+		public void initUpdate() {
 			int prefSig = settings.getInt("APP_SIGNATURE", 0);
 			Utils.logger("d", "prefSig: " + prefSig, DEBUG_TAG);
 			
@@ -372,12 +437,12 @@ public class SettingsActivity extends Activity {
                 			// Path not writable
                 			chooserSummary = ShareActivity.dir_Downloads.getAbsolutePath();
                 			setChooserPrefAndSummary();
-                			PopUps.showPopUp(getString(R.string.system_warning_title), getString(R.string.system_warning_msg), "alert", SettingsFragment.this.getActivity());
-                			//Toast.makeText(SettingsFragment.this.getActivity(), getString(R.string.system_warning), Toast.LENGTH_SHORT).show();
+                			PopUps.showPopUp(getString(R.string.system_warning_title), getString(R.string.system_warning_msg), "alert", getActivity());
+                			//Toast.makeText(fragContext, getString(R.string.system_warning), Toast.LENGTH_SHORT).show();
                 			break;
                 		case 2:
                 			// Path not mounted
-                			Toast.makeText(SettingsFragment.this.getActivity(), getString(R.string.sdcard_unmounted_warning), Toast.LENGTH_SHORT).show();
+                			Toast.makeText(getActivity(), getString(R.string.sdcard_unmounted_warning), Toast.LENGTH_SHORT).show();
                 	}
                 }
                 break;
@@ -407,7 +472,6 @@ public class SettingsActivity extends Activity {
         }
         
         public static void autoUpdate(Context context) {
-        	//TODO fix for release
 	        long storedTime = settings.getLong("time", 0); // final string
 	        //long storedTime = 10000; // dev test: forces auto update
 	        
