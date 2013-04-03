@@ -110,8 +110,10 @@ public class SettingsActivity extends Activity {
 		private Preference th;
 		private Preference lang;
 		private CheckBoxPreference audio;
+		
 		protected int cpuVers;
-
+		public static String link;
+		
 		public static final int YTD_SIG_HASH = -1892118308; // final string
 		//public static final int YTD_SIG_HASH = -118685648; // dev test: desktop
 		//public static final int YTD_SIG_HASH = 1922021506; // dev test: laptop
@@ -239,8 +241,14 @@ public class SettingsActivity extends Activity {
 						if (!ffmpegInstalled && isCpuSupported) {
 							AlertDialog.Builder adb = new AlertDialog.Builder(getActivity());
 	                        adb.setIcon(android.R.drawable.ic_dialog_info);
-	                        adb.setTitle(getString(R.string.ffmpeg_download_dialog_title)); // TODO strings * 2
-	                        adb.setMessage(getString(R.string.ffmpeg_download_dialog_msg));
+	                        adb.setTitle(getString(R.string.ffmpeg_download_dialog_title));
+	                        
+	                        link = getString(R.string.ffmpeg_download_dialog_msg_link, cpuVers);
+	                        String msg = getString(R.string.ffmpeg_download_dialog_msg);
+	                        String size = getString(R.string.size) + " 6.6 MB";
+	                        
+	                        adb.setMessage(msg + " " + link + "\n" + size);
+	                        
 	                        adb.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
 	
 	                            public void onClick(DialogInterface dialog, int which) {

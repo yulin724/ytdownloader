@@ -101,8 +101,8 @@
         	android:defaultValue="false" />
         
         <ListPreference
-            android:dependency="enable_audio_extraction"
             android:key="audio_extraction_type"
+            android:dependency="enable_audio_extraction"
             android:title="@string/audio_extraction_type_title"
             android:dialogTitle="@string/audio_extraction_type_title"
             android:entries="@array/audio_extraction_type_entries"
@@ -110,8 +110,8 @@
             android:defaultValue="@string/audio_extraction_type_default" />
         
         <ListPreference
-            android:dependency="enable_audio_extraction"
             android:key="mp3_bitrate"
+            android:dependency="enable_audio_extraction"
             android:title="@string/mp3_bitrate_title"
             android:dialogTitle="@string/mp3_bitrate_title"
             android:entries="@array/mp3_bitrate_entries"

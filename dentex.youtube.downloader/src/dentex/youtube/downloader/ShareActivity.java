@@ -616,7 +616,7 @@ public class ShareActivity extends Activity {
         
         public boolean useQualitySuffix() {
         	boolean qualitySuffixEnabled = settings.getBoolean("enable_q_suffix", true);
-        	if (qualitySuffixEnabled == true) {
+        	if (qualitySuffixEnabled) {
         		return true;
         	} else {
         		return false;
@@ -625,15 +625,15 @@ public class ShareActivity extends Activity {
         
         public String composeFilename() {
         	videoFilename = title + "_" + qualities.get(pos) + stereo.get(pos) + "." + codecs.get(pos);
-    	    if (useQualitySuffix() == false) videoFilename = title + stereo.get(pos) + "." + codecs.get(pos);
+    	    if (!useQualitySuffix()) videoFilename = title + stereo.get(pos) + "." + codecs.get(pos);
     	    Utils.logger("d", "filename: " + videoFilename, DEBUG_TAG);
     	    return videoFilename;
         }
 
         public String findAudioCodec() {
         	//CODEC [file EXTENSION]
-        	extrType = settings.getString("audio_extraction_type", "strip");
-    		if (extrType.equals("encode") == true) {
+        	extrType = settings.getString("audio_extraction_type", "extr");
+    		if (extrType.equals("conv")) {
     			acodec = ".mp3";
     		} else {
     			if (codecs.get(pos).equals("webm")) acodec = ".ogg";
@@ -644,8 +644,8 @@ public class ShareActivity extends Activity {
     		    if (codecs.get(pos).equals("3gpp")) acodec = ".aac";
     		}
     		//QUALITY
-        	if (useQualitySuffix() ==  true && extrType.equals("encode") == true) {
-        		aquality = "_" + settings.getString("mp3_bitrate", "192");
+        	if (useQualitySuffix()&& extrType.equals("conv")) {
+        		aquality = "_" + settings.getString("mp3_bitrate", "192k");
         	} else { 
         		aquality = "";
         	}
@@ -653,7 +653,7 @@ public class ShareActivity extends Activity {
         	//audioFilename = title + aquality + acodec;
         	//Utils.logger("d", "composedAudioFilename: " + audioFilename, DEBUG_TAG);
         	//return audioFilename;
-        	return acodec;
+        	return aquality + acodec;
         }
 
 		void callConnectBot() {
@@ -719,9 +719,9 @@ public class ShareActivity extends Activity {
     	
     	audioExtrEnabled = settings.getBoolean("enable_audio_extraction", false);
     	if (audioExtrEnabled) {
-    		intent1.putExtra("AUDIO", true);
+    		intent1.putExtra("AUDIO", extrType);
     	} else {
-    		intent1.putExtra("AUDIO", false);
+    		intent1.putExtra("AUDIO", extrType);
     	}
     	
 		try {

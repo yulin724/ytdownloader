@@ -33,7 +33,7 @@ public class DownloadsService extends Service {
 	public static SharedPreferences settings = ShareActivity.settings;
 	public final String PREFS_NAME = ShareActivity.PREFS_NAME;
 	public boolean copy;
-	public boolean audio;
+	public String audio;
 	public static int ID;
 	public static Context nContext;
 	public String aSuffix = ".audio";
@@ -61,18 +61,10 @@ public class DownloadsService extends Service {
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		copy = intent.getBooleanExtra("COPY", false);
-		if (copy == true) {
-			Utils.logger("d", "Copy to extSdcard: true", DEBUG_TAG);
-		} else {
-			Utils.logger("d", "Copy to extSdcard: false", DEBUG_TAG);
-		}
+		Utils.logger("d", "Copy to extSdcard: " + copy, DEBUG_TAG);
 		
-		audio = intent.getBooleanExtra("AUDIO", false);
-		if (audio == true) {
-			Utils.logger("d", "Audio extraction: true", DEBUG_TAG);
-		} else {
-			Utils.logger("d", "Audio extraction: false", DEBUG_TAG);
-		}
+		audio = intent.getStringExtra("AUDIO");
+		Utils.logger("d", "Audio extraction: " + audio, DEBUG_TAG);
 		
 		super.onStartCommand(intent, flags, startId);
 		return START_NOT_STICKY;
@@ -178,7 +170,7 @@ public class DownloadsService extends Service {
 						}
 					}
 					
-					if (audio == true) {
+					if (!audio.equals("none")) {
 						/*File in = new File("/storage/sdcard0/v.mp4");
 						File out = new File("/storage/sdcard0/a.aac");*/
 						
@@ -198,16 +190,20 @@ public class DownloadsService extends Service {
 					    
 					    ShellDummy shell = new ShellDummy();
 					    
+					    String mp3BitRate = settings.getString("mp3_bitrate", getString(R.string.mp3_bitrate_default));
+					    
 					    try {
-					    	ffmpeg.extractAudio(in, out, shell);
-						} catch (IOException e) {
+					    	if (audio.equals("extr")) ffmpeg.extractAudio(in, out, shell);
+							if (audio.equals("conv")) ffmpeg.extractAudioAndConvertToMp3(in, out, mp3BitRate, shell);
+						
+					    } catch (IOException e) {
 							Log.e(DEBUG_TAG, "IOException running ffmpeg" + e.getMessage());
 						} catch (InterruptedException e) {
 							Log.e(DEBUG_TAG, "InterruptedException running ffmpeg" + e.getMessage());
 						}
 					}
-					
 					break;
+					
 				case DownloadManager.STATUS_FAILED:
 					Log.e(DEBUG_TAG, "_ID " + id + " FAILED (status " + status + ")");
 					Log.e(DEBUG_TAG, " Reason: " + reason);
@@ -258,7 +254,7 @@ public class DownloadsService extends Service {
 		public void shellOut(String shellLine) {
 			Pattern audioPattern = Pattern.compile("#0:0.*: Audio: (.+), .+?(mono|stereo .default.|stereo)(, .+ kb|)"); 
 			Matcher audioMatcher = audioPattern.matcher(shellLine);
-			if (audioMatcher.find()) {
+			if (audioMatcher.find()  && audio.equals("conv")) {
 				try {
 					String oggBr = "a";
 					String groupTwo = "n";

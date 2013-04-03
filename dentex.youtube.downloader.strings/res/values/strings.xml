@@ -74,8 +74,8 @@
     <string name="failed_download">Failed download removed</string>
     <string name="new_v_download">found. Downloading&#8230;</string>
     <string name="new_v_install">downloaded. Click to install.</string>
-    <string name="ffmpeg_download_dialog_title">File needed</string>
-    <string name="ffmpeg_download_dialog_msg">Download ffmpeg binary?</string>
+    <string name="ffmpeg_download_dialog_title">An additional file is needed. Download it now?</string>
+    <string name="ffmpeg_download_dialog_msg">Web link:</string>
     
     <!-- ### UpgradeApkActivity ### -->
     
@@ -92,7 +92,7 @@
     <string name="upgrade_network_error">Unable to retrieve update data.\nRetry later.</string>
     <string name="upgrade_bad_md5_dialog_msg">Downloaded package corrupted.\nWill be deleted now.\nPress OK to download it again.</string>
     
-    <!-- ### DownloadService ### -->
+    <!-- ### DownloadsService ### -->
     
     <string name="ytd_video">YTD video</string>
     <string name="copy_error">Error during copy</string>
@@ -106,6 +106,9 @@
     <string name="paypal_item_name">YTD Donation</string>
     <string name="paypal_title">PayPal</string>
 	<string name="paypal_summary">Support YTD\'s developer with a donation</string>
+	
+	<!-- ### FfmpegDownloadService ### -->
+	<string name="ffmpeg_install_failed">FFmpeg installation failde.</string>
 
     <!-- ### preferences ### -->
 

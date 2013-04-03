@@ -1,16 +1,14 @@
 package dentex.youtube.downloader.ffmpeg;
 
-import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import android.content.Context;
 import android.util.Log;
@@ -19,47 +17,21 @@ import dentex.youtube.downloader.utils.Utils;
 public class FfmpegController {
 
 	private final static String DEBUG_TAG = "FfmpegController";
-	public static final String[] LIB_ASSETS = {"ffmpeg", "liblame.so"};
+	public static final String LIB_ASSETS = "ffmpeg";
 	
 	private File mBinFileDir;
-	//private File mLibFileDir;
 	public String mFfmpegBinPath;
-	//public String mLiblameSoPath;
 
 	public FfmpegController(Context context) throws FileNotFoundException, IOException {
 		mBinFileDir = context.getDir("bin", 0);
 		
-		final String LAME_LIB = "lame";
-	    System.loadLibrary(LAME_LIB);
-	    
-		//mLibFileDir = context.getDir("lib", 0);
-
-		/*if (!new File(mBinFileDir, LIB_ASSETS[0]).exists())  {
-			BinaryInstaller bi = new BinaryInstaller(mContext, mBinFileDir);
-			if (bi.installFromRaw()) {
-				Utils.logger("v", "ffmpeg binary installed", DEBUG_TAG);
-			} else {
-				Log.e(DEBUG_TAG, "ffmpeg binary NOT installed");
-			}
-		}*/
+	    System.loadLibrary("lame");
 		
-		/*if (!new File(mBinFileDir, LIB_ASSETS[1]).exists())  {
-			LibInstaller li = new LibInstaller(mContext, mLibFileDir);
-			if (li.installFromRaw()) { 
-				Utils.logger("v", "liblame library installed", DEBUG_TAG);
-			} else {
-				Log.e(DEBUG_TAG, "liblame library NOT installed");
-			}
-		}*/
-		
-		mFfmpegBinPath = new File(mBinFileDir, LIB_ASSETS[0]).getAbsolutePath();
-		//mLiblameSoPath = new File(mBinFileDir, LIB_ASSETS[1]).getAbsolutePath();
+		mFfmpegBinPath = new File(mBinFileDir, LIB_ASSETS).getAbsolutePath();
 	}
 	
 	public void execFFMPEG (List<String> cmd, ShellUtils.ShellCallback sc) {
 		execChmod(mFfmpegBinPath, "755");
-		//execChmod(mLiblameSoPath, "755");
-		//System.load(mLiblameSoPath);
 		execProcess(cmd, sc);
 	}
 	
@@ -80,13 +52,18 @@ public class FfmpegController {
 		}
 		Utils.logger("v", cmdlog.toString(), DEBUG_TAG);
 		
-		ProcessBuilder pb = new ProcessBuilder();
+		ProcessBuilder pb = new ProcessBuilder("liblame.so");
+		
+		Map<String, String> envMap = pb.environment();
+		envMap.put("LD_LIBRARY_PATH", "/data/app-lib/dentex.youtube.downloader-1/");
+
 		pb.directory(mBinFileDir);
 		pb.command(cmds);
 
     	Process process = null;
     	int exitVal = 1; // Default error
     	try {
+    		
     		process = pb.start();    
     	
     		// any error message?
@@ -116,24 +93,6 @@ public class FfmpegController {
         return exitVal;
 	}
 	
-	public void testCommands(String command, ShellUtils.ShellCallback sc) {
-		String[] commands = command.split(" ");
-		List<String> cmds = new ArrayList<String>(commands.length);
-		for (String com : commands) {
-			cmds.add(com);
-		}
-		/*try {
-			System.load(mLiblamePath);
-		} catch (Exception e) {
-			Log.e(DEBUG_TAG, "Error loading library.", e);
-		}*/
-		try {
-			execProcess(cmds, sc);
-		} catch (Exception e) {
-			Log.e(DEBUG_TAG, "Error running command.", e);
-		}
-	}
-	
 	public void extractAudio (File videoIn, File audioOut, 
 			ShellUtils.ShellCallback sc) throws IOException, InterruptedException {
 		
@@ -143,52 +102,31 @@ public class FfmpegController {
 		cmd.add("-y");
 		cmd.add("-i");
 		cmd.add(videoIn.getAbsolutePath());
-
-		/*if (mdesc.startTime != null) {
-			cmd.add("-ss");
-			cmd.add(mdesc.startTime);
-		}
-		
-		if (mdesc.duration != null) {
-			cmd.add("-t");
-			cmd.add(mdesc.duration);
-		}*/
-		
 		cmd.add("-vn");
 		cmd.add("-acodec");
 		cmd.add("copy");
-		
-		// test mp3
-		//cmd.add("-acodec"); cmd.add("libmp3lame"); cmd.add("-ab"); cmd.add("192k");
-		
 		cmd.add(audioOut.getAbsolutePath());
 
 		execFFMPEG(cmd, sc);
 	}
 	
-	class FileMover {
+	public void extractAudioAndConvertToMp3 (File videoIn, File audioOut, String mp3BitRate, 
+			ShellUtils.ShellCallback sc) throws IOException, InterruptedException {
+		
+		List<String> cmd = new ArrayList<String>();
 
-		InputStream inputStream;
-		File destination;
-		
-		public FileMover(InputStream _inputStream, File _destination) {
-			inputStream = _inputStream;
-			destination = _destination;
-		}
-		
-		public void moveIt() throws IOException {
-		
-			OutputStream destinationOut = new BufferedOutputStream(new FileOutputStream(destination));
-				
-			int numRead;
-			byte[] buf = new byte[1024];
-			while ((numRead = inputStream.read(buf) ) >= 0) {
-				destinationOut.write(buf, 0, numRead);
-			}
-			    
-			destinationOut.flush();
-			destinationOut.close();
-		}
+		cmd.add(mFfmpegBinPath);
+		cmd.add("-y");
+		cmd.add("-i");
+		cmd.add(videoIn.getAbsolutePath());
+		cmd.add("-vn");
+		cmd.add("-acodec"); 
+		cmd.add("libmp3lame"); 
+		cmd.add("-ab"); 
+		cmd.add(mp3BitRate);
+		cmd.add(audioOut.getAbsolutePath());
+
+		execFFMPEG(cmd, sc);
 	}
 	
 	class StreamGobbler extends Thread {

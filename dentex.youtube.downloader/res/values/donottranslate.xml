@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="changelog">
-        \n v2.0 - Xxx XX 2013
+        \n v2.0 - Apr XX 2013
         \n-----------------------------------
-        \n[x] audio extraction
+        \n[x] audio extraction from 
+        \n    downloaded video with optional 
+        \n    conversion to mp3
         \n[x] PayPal donation menu
         \n[x] on the fly language switch
         \n 
@@ -209,25 +211,30 @@
     <string name="choose_theme_default">D</string>
     
     <string-array name="audio_extraction_type_entry_values">
-        <item>strip</item>
-        <item>encode</item>
+        <item>extr</item>
+        <item>conv</item>
     </string-array>
     
     <string name="audio_extraction_type_default">strip</string>
 
     <string-array name="mp3_bitrate_entries">
         <item>128</item>
+        <item>160</item>
         <item>192</item>
         <item>256</item>
+        <item>320</item>
     </string-array>
     
     <string-array name="mp3_bitrate_entry_values">
-        <item>128</item>
-        <item>192</item>
-        <item>256</item>
+        <item>128k</item>
+        <item>160k</item>
+        <item>192k</item>
+        <item>256k</item>
+        <item>320k</item>
     </string-array>
     
-    <string name="mp3_bitrate_default">192</string>
+    <string name="mp3_bitrate_default">192k</string>
+    <string name="ffmpeg_download_dialog_msg_link">http://sourceforge.net/projects/ytdownloader/files/ffmpeg_arm%1$s/download</string>
 
     <string-array name="lang_entries">
         <item>Default</item>
