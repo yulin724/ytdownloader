@@ -110,10 +110,9 @@ public class SettingsActivity extends Activity {
 		private Preference th;
 		private Preference lang;
 		private CheckBoxPreference audio;
-		
 		protected int cpuVers;
 		public static String link;
-		
+
 		public static final int YTD_SIG_HASH = -1892118308; // final string
 		//public static final int YTD_SIG_HASH = -118685648; // dev test: desktop
 		//public static final int YTD_SIG_HASH = 1922021506; // dev test: laptop
@@ -230,7 +229,7 @@ public class SettingsActivity extends Activity {
 						if (!isCpuSupported) {
 							audio.setChecked(false);
 							audio.setEnabled(false);
-							PopUps.showPopUp("alert", "CPU not yet supported", "alert", getActivity()); //TODO strings 
+							PopUps.showPopUp("alert", getString(R.string.ffmpeg_device_not_supported), "alert", getActivity());
 							// TODO ...or make dialog to send mail to developer?
 						}
 						
@@ -246,9 +245,8 @@ public class SettingsActivity extends Activity {
 	                        link = getString(R.string.ffmpeg_download_dialog_msg_link, cpuVers);
 	                        String msg = getString(R.string.ffmpeg_download_dialog_msg);
 	                        String size = getString(R.string.size) + " 6.6 MB";
-	                        
 	                        adb.setMessage(msg + " " + link + "\n" + size);
-	                        
+
 	                        adb.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
 	
 	                            public void onClick(DialogInterface dialog, int which) {
@@ -261,25 +259,23 @@ public class SettingsActivity extends Activity {
 	                        adb.setNegativeButton(getString(R.string.dialogs_negative), new DialogInterface.OnClickListener() {
 	
 	                            public void onClick(DialogInterface dialog, int which) {
-	                            	// cancel and disable audio pref
-	                            	audio.setChecked(false);
+	                            	// cancel
 	                            }
 	                        });
 	
 	                        AlertDialog helpDialog = adb.create();
-	                        if (! (getActivity()).isFinishing()) { //TODO check
+	                        if (! (getActivity()).isFinishing()) {
 	                        	helpDialog.show();
 	                        }
 						}
 					}
-					return true;
+					return false; //TODO enable option with downloaded and installed binary only, from FfmpegDownloadService
 				}
 			});
 
 		}
         
         private int armCpuVersion() {
-			// TODO Auto-generated method stub
         	String cpuAbi = Build.CPU_ABI;
 			Utils.logger("d", "CPU_ABI: " + cpuAbi, DEBUG_TAG);
 			if (cpuAbi.equals("armeabi-v7a")) {
@@ -359,9 +355,9 @@ public class SettingsActivity extends Activity {
 		}
 		
 		private void initBitratePreference() {
-			String encode = settings.getString("audio_extraction_type", "strip");
+			String encode = settings.getString("audio_extraction_type", "extr");
 			Preference p = (Preference) findPreference("mp3_bitrate");
-				if (encode.equals("encode") == true) {
+				if (encode.equals("conv") == true) {
 					p.setEnabled(true);
 				} else {
 					p.setEnabled(false);

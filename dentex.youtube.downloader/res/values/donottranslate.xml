@@ -215,7 +215,7 @@
         <item>conv</item>
     </string-array>
     
-    <string name="audio_extraction_type_default">strip</string>
+    <string name="audio_extraction_type_default">extr</string>
 
     <string-array name="mp3_bitrate_entries">
         <item>128</item>

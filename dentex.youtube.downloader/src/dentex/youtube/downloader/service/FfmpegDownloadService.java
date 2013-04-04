@@ -25,7 +25,7 @@ public class FfmpegDownloadService extends Service {
 	private static final String DEBUG_TAG = "FfmpegDownloadService";
 	public static Context nContext;
 	public long enqueue;
-	public String ffmpegFilename = FfmpegController.LIB_ASSETS;
+	public String ffmpegBinName = FfmpegController.ffmpegBinName;
 	private int cpuVers;
 	private DownloadManager dm;
 
@@ -68,7 +68,7 @@ public class FfmpegDownloadService extends Service {
 		Utils.logger("d", "FFmpeg download link: " + link, DEBUG_TAG);
 		
         Request request = new Request(Uri.parse(link));
-        request.setDestinationInExternalFilesDir(nContext, null, ffmpegFilename);
+        request.setDestinationInExternalFilesDir(nContext, null, ffmpegBinName);
         request.allowScanningByMediaScanner();
         request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE);
         request.setTitle("Downloading FFmpeg binary");
@@ -100,10 +100,11 @@ public class FfmpegDownloadService extends Service {
 					
 					case DownloadManager.STATUS_SUCCESSFUL:
 	    		
-						File src = new File(nContext.getExternalFilesDir(null), ffmpegFilename);
-						File dst = new File(nContext.getDir("bin", 0), ffmpegFilename);
+						File src = new File(nContext.getExternalFilesDir(null), ffmpegBinName);
+						File dst = new File(nContext.getDir("bin", 0), ffmpegBinName);
 						try {
 							Utils.copyFile(src, dst, nContext);
+							Utils.logger("i", "trying to copy FFmpeg binary to private App dir", DEBUG_TAG);
 						} catch (IOException e) {
 							Toast.makeText(context, getString(R.string.ffmpeg_install_failed), Toast.LENGTH_LONG).show();
 							Log.e(DEBUG_TAG, "ffmpeg copy to app_bin failed. " + e.getMessage());
@@ -111,13 +112,13 @@ public class FfmpegDownloadService extends Service {
 						break;
 						
 					case DownloadManager.STATUS_FAILED:
-						Log.e(DEBUG_TAG, ffmpegFilename + ", _ID " + id + " FAILED (status " + status + ")");
+						Log.e(DEBUG_TAG, ffmpegBinName + ", _ID " + id + " FAILED (status " + status + ")");
 						Log.e(DEBUG_TAG, " Reason: " + reason);
-						Toast.makeText(context,  ffmpegFilename + ": " + getString(R.string.download_failed), Toast.LENGTH_LONG).show();
+						Toast.makeText(context,  ffmpegBinName + ": " + getString(R.string.download_failed), Toast.LENGTH_LONG).show();
 						break;
 						
 					default:
-						Utils.logger("w", ffmpegFilename + ", _ID " + id + " completed with status " + status, DEBUG_TAG);
+						Utils.logger("w", ffmpegBinName + ", _ID " + id + " completed with status " + status, DEBUG_TAG);
 					}
 				}
     		}

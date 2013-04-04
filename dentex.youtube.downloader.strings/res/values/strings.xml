@@ -76,6 +76,7 @@
     <string name="new_v_install">downloaded. Click to install.</string>
     <string name="ffmpeg_download_dialog_title">An additional file is needed. Download it now?</string>
     <string name="ffmpeg_download_dialog_msg">Web link:</string>
+    <string name="ffmpeg_device_not_supported">Device not supported yet.</string>
     
     <!-- ### UpgradeApkActivity ### -->
     
@@ -108,7 +109,7 @@
 	<string name="paypal_summary">Support YTD\'s developer with a donation</string>
 	
 	<!-- ### FfmpegDownloadService ### -->
-	<string name="ffmpeg_install_failed">FFmpeg installation failde.</string>
+	<string name="ffmpeg_install_failed">FFmpeg installation failed.</string>
 
     <!-- ### preferences ### -->
 
@@ -163,9 +164,9 @@
     <!-- -->
     <string name="settings_cat_audio">Audio</string>
     <string name="enable_audio_extraction_title">Enable audio extraction</string>
-    <string name="enable_audio_extraction_summary">Strip or convert audio from downloaded video</string>
-    <string name="mp3_bitrate_title">Bitrate for mp3 encoding</string>
-    <string name="audio_extraction_type_title">Extraction type:</string>
+    <string name="enable_audio_extraction_summary">Extract and convert audio from downloaded video</string>
+    <string name="mp3_bitrate_title">Bitrate for mp3 encoding (kbps)</string>
+    <string name="audio_extraction_type_title">Extraction type</string>
 
     <string-array name="audio_extraction_type_entries">
         <item>Extract only</item>

@@ -254,7 +254,7 @@ public class DownloadsService extends Service {
 		public void shellOut(String shellLine) {
 			Pattern audioPattern = Pattern.compile("#0:0.*: Audio: (.+), .+?(mono|stereo .default.|stereo)(, .+ kb|)"); 
 			Matcher audioMatcher = audioPattern.matcher(shellLine);
-			if (audioMatcher.find()  && audio.equals("conv")) {
+			if (audioMatcher.find() && audio.equals("extr")) {
 				try {
 					String oggBr = "a";
 					String groupTwo = "n";
@@ -273,7 +273,7 @@ public class DownloadsService extends Service {
 					aSuffix = "_" +
 							groupTwo + 
 							"_" + 
-							audioMatcher.group(3).replace(", ", "").replace(" kb", "kb") + 
+							audioMatcher.group(3).replace(", ", "").replace(" kb", "k") + 
 							oggBr + 
 							"." +
 							audioMatcher.group(1).replaceFirst(" (.*/.*)", "").replace("vorbis", "ogg");
@@ -284,7 +284,7 @@ public class DownloadsService extends Service {
 					Log.e(DEBUG_TAG, "one or more audioSuffix group not matched", e); 
 				}
 			}
-			Utils.logger("d", /*"FFmpeg cmd message: " + */shellLine, DEBUG_TAG);
+			Utils.logger("d", "shell: " + shellLine, DEBUG_TAG);
 		}
 
 		@Override

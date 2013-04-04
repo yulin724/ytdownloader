@@ -17,17 +17,17 @@ import dentex.youtube.downloader.utils.Utils;
 public class FfmpegController {
 
 	private final static String DEBUG_TAG = "FfmpegController";
-	public static final String LIB_ASSETS = "ffmpeg";
+	public static final String ffmpegBinName = "ffmpeg";
 	
-	private File mBinFileDir;
+	public File mBinFileDir;
 	public String mFfmpegBinPath;
+	private Context mContext;
 
 	public FfmpegController(Context context) throws FileNotFoundException, IOException {
+		mContext = context;
+		
 		mBinFileDir = context.getDir("bin", 0);
-		
-	    System.loadLibrary("lame");
-		
-		mFfmpegBinPath = new File(mBinFileDir, LIB_ASSETS).getAbsolutePath();
+		mFfmpegBinPath = new File(mBinFileDir, ffmpegBinName).getAbsolutePath();
 	}
 	
 	public void execFFMPEG (List<String> cmd, ShellUtils.ShellCallback sc) {
@@ -52,10 +52,10 @@ public class FfmpegController {
 		}
 		Utils.logger("v", cmdlog.toString(), DEBUG_TAG);
 		
-		ProcessBuilder pb = new ProcessBuilder("liblame.so");
+		ProcessBuilder pb = new ProcessBuilder(/*"liblame.so"*/);
 		
 		Map<String, String> envMap = pb.environment();
-		envMap.put("LD_LIBRARY_PATH", "/data/app-lib/dentex.youtube.downloader-1/");
+		envMap.put("LD_LIBRARY_PATH", mContext.getApplicationInfo().nativeLibraryDir);
 
 		pb.directory(mBinFileDir);
 		pb.command(cmds);
