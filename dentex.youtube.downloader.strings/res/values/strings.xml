@@ -77,6 +77,8 @@
     <string name="ffmpeg_download_dialog_title">An additional file is needed. Download it now?</string>
     <string name="ffmpeg_download_dialog_msg">Web link:</string>
     <string name="ffmpeg_device_not_supported">Device not supported yet.</string>
+    <string name="ffmpeg_download_notification">Downloading FFmpeg</string>
+    <string name="ffmpeg_install">Installing FFmpeg binary&#8230;</string>
     
     <!-- ### UpgradeApkActivity ### -->
     

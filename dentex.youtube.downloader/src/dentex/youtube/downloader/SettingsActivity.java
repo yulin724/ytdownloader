@@ -45,6 +45,7 @@ public class SettingsActivity extends Activity {
 	public static String chooserSummary;
     public static SharedPreferences settings = ShareActivity.settings;
 	public final String PREFS_NAME = ShareActivity.PREFS_NAME;
+	public static Activity mActivity;
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +54,7 @@ public class SettingsActivity extends Activity {
         this.setTitle(R.string.title_activity_settings);
         
     	settings = getSharedPreferences(PREFS_NAME, 0);
-        
+
     	// Theme init
     	Utils.themeInit(this);
     	
@@ -109,7 +110,7 @@ public class SettingsActivity extends Activity {
 		private CheckBoxPreference ownNot;
 		private Preference th;
 		private Preference lang;
-		private CheckBoxPreference audio;
+		private static CheckBoxPreference audio;
 		protected int cpuVers;
 		public static String link;
 
@@ -122,6 +123,8 @@ public class SettingsActivity extends Activity {
             super.onCreate(savedInstanceState);
 
             addPreferencesFromResource(R.xml.settings);
+            
+            mActivity = getActivity();
 
             String cf = settings.getString("CHOOSER_FOLDER", "");
             if (cf.isEmpty()) {
@@ -222,19 +225,18 @@ public class SettingsActivity extends Activity {
 				
 				public boolean onPreferenceChange(Preference preference, Object newValue) {
 					boolean audioExtrEnabled = settings.getBoolean("enable_audio_extraction", false);
+					File binDir = getActivity().getDir("bin", 0);
+					boolean ffmpegInstalled = new File(binDir, "ffmpeg").exists();
 					if (!audioExtrEnabled) {
 						cpuVers = armCpuVersion();
 						boolean isCpuSupported = (cpuVers > 0) ? true : false;
 						Utils.logger("d", "isCpuSupported: " + isCpuSupported, DEBUG_TAG);
 						if (!isCpuSupported) {
-							audio.setChecked(false);
 							audio.setEnabled(false);
-							PopUps.showPopUp("alert", getString(R.string.ffmpeg_device_not_supported), "alert", getActivity());
+							audio.setChecked(false);
+							PopUps.showPopUp(getString(R.string.error), getString(R.string.ffmpeg_device_not_supported), "alert", getActivity());
 							// TODO ...or make dialog to send mail to developer?
 						}
-						
-						File binDir = getActivity().getDir("bin", 0);
-						boolean ffmpegInstalled = new File(binDir, "ffmpeg").exists();
 						Utils.logger("d", "ffmpegInstalled: " + ffmpegInstalled, DEBUG_TAG);
 					
 						if (!ffmpegInstalled && isCpuSupported) {
@@ -250,9 +252,16 @@ public class SettingsActivity extends Activity {
 	                        adb.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
 	
 	                            public void onClick(DialogInterface dialog, int which) {
-	                            	Intent intent = new Intent(getActivity(), FfmpegDownloadService.class);
-	                            	intent.putExtra("CPU", cpuVers);
-	                            	getActivity().startService(intent);
+	                            	File sdcardAppDir = getActivity().getExternalFilesDir(null);
+	                            	if (sdcardAppDir != null) {
+		                            	Intent intent = new Intent(getActivity(), FfmpegDownloadService.class);
+		                            	intent.putExtra("CPU", cpuVers);
+		                            	intent.putExtra("DIR", sdcardAppDir.getAbsolutePath());
+		                            	getActivity().startService(intent);
+	                            	} else {
+	                            		Utils.logger("w", getString(R.string.unable_save_dialog_msg), DEBUG_TAG);
+	                            		PopUps.showPopUp(getString(R.string.error), getString(R.string.unable_save_dialog_msg), "alert", getActivity());
+	                            	}
 	                            }
 	                        });
 	
@@ -269,7 +278,11 @@ public class SettingsActivity extends Activity {
 	                        }
 						}
 					}
-					return false; //TODO enable option with downloaded and installed binary only, from FfmpegDownloadService
+					if (ffmpegInstalled) {
+						return true;
+					} else {
+						return false;
+					}
 				}
 			});
 
@@ -488,6 +501,16 @@ public class SettingsActivity extends Activity {
 	        
 	        long time = System.currentTimeMillis();
 	        if (settings.edit().putLong("time", time).commit()) Utils.logger("i", "time written in prefs", DEBUG_TAG);
+		}
+
+		public static void touchAudioExtrPref(final boolean enable, final boolean check) {
+			mActivity.runOnUiThread(new Runnable() {
+				public void run() {
+					Utils.logger("d", "audio-extraction-checkbox: " + "enabled: " + enable + " - checked: " + check, DEBUG_TAG);
+					audio.setEnabled(enable);
+					audio.setChecked(check);
+			    }
+			});
 		}
 	}
 }

@@ -17,7 +17,9 @@ import android.os.IBinder;
 import android.util.Log;
 import android.widget.Toast;
 import dentex.youtube.downloader.R;
+import dentex.youtube.downloader.SettingsActivity;
 import dentex.youtube.downloader.ffmpeg.FfmpegController;
+import dentex.youtube.downloader.utils.Observer;
 import dentex.youtube.downloader.utils.Utils;
 
 public class FfmpegDownloadService extends Service {
@@ -27,7 +29,10 @@ public class FfmpegDownloadService extends Service {
 	public long enqueue;
 	public String ffmpegBinName = FfmpegController.ffmpegBinName;
 	private int cpuVers;
+	private String sdCardAppDir;
+	public static String DIR;
 	private DownloadManager dm;
+	public Observer.YtdFileObserver ffmpegBinObserver;
 
 	@Override
 	public IBinder onBind(Intent intent) {
@@ -37,6 +42,7 @@ public class FfmpegDownloadService extends Service {
 	@Override
 	public void onCreate() {
 		nContext = getBaseContext();
+		
 		Utils.logger("d", "service created", DEBUG_TAG);
 		registerReceiver(ffmpegReceiver, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
 	}
@@ -49,6 +55,9 @@ public class FfmpegDownloadService extends Service {
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		cpuVers = intent.getIntExtra("CPU", 7);
 		Utils.logger("d", "arm CPU version: " + cpuVers, DEBUG_TAG);
+		
+		sdCardAppDir = intent.getStringExtra("DIR");
+		DIR = sdCardAppDir;
 		
 		downloadFfmpeg();
 		
@@ -69,11 +78,13 @@ public class FfmpegDownloadService extends Service {
 		
         Request request = new Request(Uri.parse(link));
         request.setDestinationInExternalFilesDir(nContext, null, ffmpegBinName);
-        request.allowScanningByMediaScanner();
         request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE);
-        request.setTitle("Downloading FFmpeg binary");
+        request.setTitle(getString(R.string.ffmpeg_download_notification));
         dm = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
         enqueue = dm.enqueue(request);
+        
+		ffmpegBinObserver = new Observer.YtdFileObserver(DIR);
+        ffmpegBinObserver.startWatching();
 	}
 	
 	BroadcastReceiver ffmpegReceiver = new BroadcastReceiver() {
@@ -83,7 +94,7 @@ public class FfmpegDownloadService extends Service {
 			Utils.logger("d", "ffmpegReceiver: onReceive CALLED", DEBUG_TAG);
     		long id = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
     		
-    		if (enqueue != -1 && id == enqueue) {
+    		//if (enqueue != -1 && id != -2 && id == enqueue) {
 	    		Query query = new Query();
 				query.setFilterById(id);
 				Cursor c = dm.query(query);
@@ -93,9 +104,7 @@ public class FfmpegDownloadService extends Service {
 					int reasonIndex = c.getColumnIndex(DownloadManager.COLUMN_REASON);
 					int status = c.getInt(statusIndex);
 					int reason = c.getInt(reasonIndex);
-					
-					//long size = c.getLong(c.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES));
-	
+
 					switch (status) {
 					
 					case DownloadManager.STATUS_SUCCESSFUL:
@@ -104,24 +113,30 @@ public class FfmpegDownloadService extends Service {
 						File dst = new File(nContext.getDir("bin", 0), ffmpegBinName);
 						try {
 							Utils.copyFile(src, dst, nContext);
+							Toast.makeText(context, getString(R.string.ffmpeg_install), Toast.LENGTH_LONG).show();
 							Utils.logger("i", "trying to copy FFmpeg binary to private App dir", DEBUG_TAG);
+							SettingsActivity.SettingsFragment.touchAudioExtrPref(true, true);
 						} catch (IOException e) {
 							Toast.makeText(context, getString(R.string.ffmpeg_install_failed), Toast.LENGTH_LONG).show();
 							Log.e(DEBUG_TAG, "ffmpeg copy to app_bin failed. " + e.getMessage());
-						}
+							SettingsActivity.SettingsFragment.touchAudioExtrPref(true, false);
+						} // TODO remove completed file after successful copy
 						break;
 						
 					case DownloadManager.STATUS_FAILED:
 						Log.e(DEBUG_TAG, ffmpegBinName + ", _ID " + id + " FAILED (status " + status + ")");
 						Log.e(DEBUG_TAG, " Reason: " + reason);
 						Toast.makeText(context,  ffmpegBinName + ": " + getString(R.string.download_failed), Toast.LENGTH_LONG).show();
+						
+						SettingsActivity.SettingsFragment.touchAudioExtrPref(true, false);
 						break;
 						
 					default:
 						Utils.logger("w", ffmpegBinName + ", _ID " + id + " completed with status " + status, DEBUG_TAG);
 					}
 				}
-    		}
+    		//}
+    		ffmpegBinObserver.stopWatching();
     		stopSelf();
 		}
 	};

@@ -243,7 +243,7 @@ public class DownloadsService extends Service {
 			ShareActivity.mBuilder.setContentText(ShareActivity.noDownloads);
 			ShareActivity.mNotificationManager.notify(ShareActivity.mId, ShareActivity.mBuilder.build());
 			Utils.logger("d", "No downloads in progress; stopping FileObserver and DownloadsService", DEBUG_TAG);
-			ShareActivity.fileObserver.stopWatching();
+			ShareActivity.videoFileObserver.stopWatching();
 			nContext.stopService(new Intent(DownloadsService.getContext(), DownloadsService.class));
 		}
 	}

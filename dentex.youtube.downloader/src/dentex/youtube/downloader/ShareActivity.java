@@ -130,7 +130,7 @@ public class ShareActivity extends Activity {
 	public static String pt1;
 	public static String pt2;
 	public static String noDownloads;
-	public static Observer.delFileObserver fileObserver;
+	public static Observer.YtdFileObserver videoFileObserver;
 	public static int mId = 0;
 	public static NotificationManager mNotificationManager;
 	public static NotificationCompat.Builder mBuilder;
@@ -746,11 +746,11 @@ public class ShareActivity extends Activity {
 			settings.edit().putLong(composedVideoFilename, enqueue).apply();
 			
 			if (videoOnExt == true) {
-				fileObserver = new Observer.delFileObserver(dir_Downloads.getAbsolutePath());
+				videoFileObserver = new Observer.YtdFileObserver(dir_Downloads.getAbsolutePath());
 			} else {
-				fileObserver = new Observer.delFileObserver(path.getAbsolutePath());
+				videoFileObserver = new Observer.YtdFileObserver(path.getAbsolutePath());
 			}
-			fileObserver.startWatching();
+			videoFileObserver.startWatching();
 			
 			//NotificationHelper();
 		}
@@ -1228,7 +1228,6 @@ public class ShareActivity extends Activity {
 	        if (enqueue != -1 && id != -2 && id == enqueue && !videoOnExt && !audioExtrEnabled) {
 	            Query query = new Query();
 	            query.setFilterById(id);
-
 	            Cursor c = dm.query(query);
 	            if (c.moveToFirst()) {
 	                int columnIndex = c.getColumnIndex(DownloadManager.COLUMN_STATUS);
