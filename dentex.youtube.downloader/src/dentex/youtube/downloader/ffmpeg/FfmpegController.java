@@ -93,7 +93,7 @@ public class FfmpegController {
         return exitVal;
 	}
 	
-	public void extractAudio (File videoIn, File audioOut, 
+	public void extractAudio (File videoIn, File audioOut, String type, String mp3BitRate, 
 			ShellUtils.ShellCallback sc) throws IOException, InterruptedException {
 		
 		List<String> cmd = new ArrayList<String>();
@@ -104,26 +104,15 @@ public class FfmpegController {
 		cmd.add(videoIn.getAbsolutePath());
 		cmd.add("-vn");
 		cmd.add("-acodec");
-		cmd.add("copy");
-		cmd.add(audioOut.getAbsolutePath());
-
-		execFFMPEG(cmd, sc);
-	}
-	
-	public void extractAudioAndConvertToMp3 (File videoIn, File audioOut, String mp3BitRate, 
-			ShellUtils.ShellCallback sc) throws IOException, InterruptedException {
 		
-		List<String> cmd = new ArrayList<String>();
-
-		cmd.add(mFfmpegBinPath);
-		cmd.add("-y");
-		cmd.add("-i");
-		cmd.add(videoIn.getAbsolutePath());
-		cmd.add("-vn");
-		cmd.add("-acodec"); 
-		cmd.add("libmp3lame"); 
-		cmd.add("-ab"); 
-		cmd.add(mp3BitRate);
+		if (type.equals("extr")) {
+			cmd.add("libmp3lame"); 
+			cmd.add("-ab"); 
+			cmd.add(mp3BitRate);
+		} else {
+			cmd.add("copy");
+		}
+		
 		cmd.add(audioOut.getAbsolutePath());
 
 		execFFMPEG(cmd, sc);

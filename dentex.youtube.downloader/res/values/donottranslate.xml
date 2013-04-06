@@ -170,8 +170,8 @@
     <string name="ytd_code_hg_summary">https://sourceforge.net/projects/ytdownloader/</string>
     <string name="chooser_code_summary">https://code.google.com/p/android-filechooser/</string>
     
-    <item name="paypal_user" format="string" type="string">samuele.rini76@gmail.com</item>
-    <item name="paypal_currency_code" format="string" type="string">EUR</item>
+    <string name="paypal_user">samuele.rini76\@gmail.com</string>
+    <string name="paypal_currency_code">EUR</string>
     
     <string name="tweet_title">Twitter</string>
     <string name="tweet_summary">\@twidentex</string>    
@@ -234,8 +234,10 @@
     </string-array>
     
     <string name="mp3_bitrate_default">192k</string>
-    <string name="ffmpeg_download_dialog_msg_link">http://sourceforge.net/projects/ytdownloader/files/ffmpeg_arm%1$s/download</string>
-
+    <string name="ffmpeg_download_dialog_msg_link">http://sourceforge.net/projects/ytdownloader/files/ffmpeg/ffmpeg_arm%1$s/download</string>
+    <string name="ffmpeg_size_arm7">6.6 MB</string>
+    <string name="ffmpeg_size_arm5">6.8 MB</string>
+    
     <string-array name="lang_entries">
         <item>Default</item>
         <item>English</item>

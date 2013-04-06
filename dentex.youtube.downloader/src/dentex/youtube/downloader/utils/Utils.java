@@ -1,11 +1,15 @@
 package dentex.youtube.downloader.utils;
 
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.math.BigInteger;
 import java.nio.channels.FileChannel;
 import java.security.MessageDigest;
@@ -18,7 +22,9 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.pm.Signature;
+import android.os.Build;
 import android.util.Log;
+import android.widget.Toast;
 import dentex.youtube.downloader.R;
 import dentex.youtube.downloader.SettingsActivity.SettingsFragment;
 import dentex.youtube.downloader.ShareActivity;
@@ -28,6 +34,7 @@ public class Utils extends Activity {
 	static final String DEBUG_TAG = "Utils";
 	public static SharedPreferences settings = ShareActivity.settings;
 	public final static String PREFS_NAME = ShareActivity.PREFS_NAME;
+	public InputStream isFromString;
 
 	static String onlineVersion;
     
@@ -161,7 +168,7 @@ public class Utils extends Activity {
         }
     }
     
-    /* method copyFile(File src, File dst, Context context) from Stack Overflow:
+    /* method copyFile(File src, File dst, Context context) adapted from Stack Overflow:
 	 * 
 	 * http://stackoverflow.com/questions/4770004/how-to-move-rename-file-from-internal-app-storage-to-external-storage-on-android
 	 * 
@@ -173,13 +180,45 @@ public class Utils extends Activity {
 	public static void copyFile(File src, File dst, Context context) throws IOException {
 	    FileChannel inChannel = new FileInputStream(src).getChannel();
 	    FileChannel outChannel = new FileOutputStream(dst).getChannel();
-	    try {
-	        inChannel.transferTo(0, inChannel.size(), outChannel);
-	    } finally {
-	        if (inChannel != null) inChannel.close();
-	        if (outChannel != null) outChannel.close();
-	    }
+	    //if (!dst.exists()) {
+		    try {
+		        inChannel.transferTo(0, inChannel.size(), outChannel);
+		        Toast.makeText(context, "YTD: " + context.getString(R.string.ready), Toast.LENGTH_LONG).show();
+		    } finally {
+		        if (inChannel != null) inChannel.close();
+		        if (outChannel != null) outChannel.close();
+		    }
+	    /*} else {
+	    	logger("w", "copyFile: destination already exists", DEBUG_TAG);
+	    }*/
 	}
+    
+    /*
+     * getCpuInfo() from:
+     *   http://www.roman10.net/how-to-get-cpu-information-on-android/
+     * by:
+     *   Liu Feipeng 
+     */
+    
+    public static String getCpuInfo() {
+    	StringBuffer sb = new StringBuffer();
+    	sb.append("abi: ").append(Build.CPU_ABI).append("\n");
+    	if (new File("/proc/cpuinfo").exists()) {
+        	try {
+        		BufferedReader br = new BufferedReader(new FileReader(new File("/proc/cpuinfo")));
+	        	String aLine;
+				while ((aLine = br.readLine()) != null) {
+					sb.append(aLine + "\n");
+				}
+				if (br != null) {
+		    		br.close();
+		    	}
+			} catch (IOException e) {
+				e.printStackTrace();
+			} 
+        }
+    	return sb.toString();
+    }
     
     public static void themeInit(Context context) {
     	settings = context.getSharedPreferences(PREFS_NAME, 0);
@@ -190,6 +229,7 @@ public class Utils extends Activity {
     		context.setTheme(R.style.AppThemeLight);
     	}
 	}
+    
     public static void logger(String type, String msg, String tag) {
     	if (settings.getBoolean("enable_logging", false)) {
 	    	if (type.equals("v")) {
@@ -203,4 +243,15 @@ public class Utils extends Activity {
 	    	}
     	}
     }
+    
+    public static void createLogFile(File destDir, String filename, String content) throws IOException {
+    	File file = new File(destDir, filename);
+        InputStream is = new ByteArrayInputStream(content.getBytes("UTF-8"));
+        OutputStream os = new FileOutputStream(file);
+        byte[] data = new byte[is.available()];
+        is.read(data);
+        os.write(data);
+        is.close();
+        os.close();
+	}
 }

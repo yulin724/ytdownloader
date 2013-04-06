@@ -87,6 +87,19 @@ public class FfmpegDownloadService extends Service {
         ffmpegBinObserver.startWatching();
 	}
 	
+	public static void copyFfmpegToAppDataDir(Context context, File src, File dst) {
+		try {
+			Toast.makeText(context, "YTD: " + context.getString(R.string.ffmpeg_install), Toast.LENGTH_LONG).show();
+			Utils.logger("i", "trying to copy FFmpeg binary to private App dir", DEBUG_TAG);
+			Utils.copyFile(src, dst, context);
+			SettingsActivity.SettingsFragment.touchAudioExtrPref(true, true);
+		} catch (IOException e) {
+			Toast.makeText(context, "YTD: " + context.getString(R.string.ffmpeg_install_failed), Toast.LENGTH_LONG).show();
+			Log.e(DEBUG_TAG, "ffmpeg copy to app_bin failed. " + e.getMessage());
+			SettingsActivity.SettingsFragment.touchAudioExtrPref(true, false);
+		}
+	}
+
 	BroadcastReceiver ffmpegReceiver = new BroadcastReceiver() {
 
 		@Override
@@ -111,16 +124,7 @@ public class FfmpegDownloadService extends Service {
 	    		
 						File src = new File(nContext.getExternalFilesDir(null), ffmpegBinName);
 						File dst = new File(nContext.getDir("bin", 0), ffmpegBinName);
-						try {
-							Utils.copyFile(src, dst, nContext);
-							Toast.makeText(context, getString(R.string.ffmpeg_install), Toast.LENGTH_LONG).show();
-							Utils.logger("i", "trying to copy FFmpeg binary to private App dir", DEBUG_TAG);
-							SettingsActivity.SettingsFragment.touchAudioExtrPref(true, true);
-						} catch (IOException e) {
-							Toast.makeText(context, getString(R.string.ffmpeg_install_failed), Toast.LENGTH_LONG).show();
-							Log.e(DEBUG_TAG, "ffmpeg copy to app_bin failed. " + e.getMessage());
-							SettingsActivity.SettingsFragment.touchAudioExtrPref(true, false);
-						} // TODO remove completed file after successful copy
+						copyFfmpegToAppDataDir(context, src, dst);
 						break;
 						
 					case DownloadManager.STATUS_FAILED:

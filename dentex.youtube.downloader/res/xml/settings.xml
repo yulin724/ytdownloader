@@ -117,6 +117,13 @@
             android:entries="@array/mp3_bitrate_entries"
             android:entryValues="@array/mp3_bitrate_entry_values"
             android:defaultValue="@string/mp3_bitrate_default" />
+        
+        <CheckBoxPreference
+        	android:key="enable_audio_q_suffix"
+        	android:dependency="enable_audio_extraction"
+        	android:title="@string/enable_audio_q_suffix_title"
+        	android:summary="@string/enable_audio_q_suffix_summary"
+        	android:defaultValue="false" />
             
 	</PreferenceCategory>
 

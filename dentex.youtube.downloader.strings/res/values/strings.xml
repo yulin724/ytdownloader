@@ -47,7 +47,7 @@
     <string name="download_complete_dialog_positive">Open</string>
     <string name="downloading">Downloading&#8230;</string>
     <string name="cancel_download_dialog_title">Cancel download?</string>
-    <string name="video_list_error_toast">Error in video list</string>
+    <string name="video_list_error_toast">Error in video list.</string>
     <string name="codec">\n\n\tCodec:</string>
     <string name="quality">\n\tQuality:</string>
     <string name="size">\n\tSize:</string>
@@ -57,6 +57,7 @@
     <string name="long_click_title">Handle selected link:</string>
     <string name="extsdcard_info_title">Non standard destination path</string>
     <string name="extsdcard_info_msg">File is being downloaded initially in the standard Download folder and then will be moved to the selected destination.</string>
+    <string name="ready">Ready.</string>
     
     <string-array name="long_click_entries">
         <item>Copy to clipboard</item>
@@ -77,8 +78,11 @@
     <string name="ffmpeg_download_dialog_title">An additional file is needed. Download it now?</string>
     <string name="ffmpeg_download_dialog_msg">Web link:</string>
     <string name="ffmpeg_device_not_supported">Device not supported yet.</string>
+    <string name="ffmpeg_support_mail">Send email to the developer?
+        \nYou will review all information in your email application before sending any data.</string>
     <string name="ffmpeg_download_notification">Downloading FFmpeg</string>
     <string name="ffmpeg_install">Installing FFmpeg binary&#8230;</string>
+    <string name="email_via">Send email via:</string>
     
     <!-- ### UpgradeApkActivity ### -->
     
@@ -99,10 +103,12 @@
     
     <string name="ytd_video">YTD video</string>
     <string name="copy_error">Error during copy</string>
-    <string name="copy_progress">YTD file copy in progress&#8230;</string>
+    <string name="copy_progress">File copy in progress&#8230;</string>
     <string name="copy_ok">Copy completed.</string>
     <string name="download_remove_failed">Error: temporary downloaded file not removed!</string>
     <string name="download_failed">Download failed!</string>
+    <string name="audio_extr_completed">Audio extraction completed.</string>
+    <string name="audio_conv_completed">Audio conversion to mp3 completed.</string>
     
     <!-- ### DonateActivity ### -->
     
@@ -153,7 +159,7 @@
     <!-- -->
     <string name="settings_cat_files">Video files</string>
     <string name="enable_q_suffix_title">Append quality suffix</string>
-    <string name="enable_q_suffix_summary">Append the video quality type to the file name</string>
+    <string name="enable_q_suffix_summary">Append the video quality to the file name</string>
     <string name="enable_rename_title">Enable file rename</string>
     <string name="enable_rename_summary">Rename the video file before downloading it (for the local download only)</string>
     <string name="show_size_title">Show file size</string>
@@ -169,6 +175,8 @@
     <string name="enable_audio_extraction_summary">Extract and convert audio from downloaded video</string>
     <string name="mp3_bitrate_title">Bitrate for mp3 encoding (kbps)</string>
     <string name="audio_extraction_type_title">Extraction type</string>
+    <string name="enable_audio_q_suffix_title">Append audio quality suffix</string>
+    <string name="enable_audio_q_suffix_summary">Append the audio quality to the file name</string>
 
     <string-array name="audio_extraction_type_entries">
         <item>Extract only</item>

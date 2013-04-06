@@ -83,7 +83,6 @@ public class ShareActivity extends Activity {
     private TextView tv;
     private ListView lv;
     public ArrayAdapter<String> aA;
-    //private InputStream isFromString;
     List<String> links = new ArrayList<String>();
     List<String> codecs = new ArrayList<String>();
     List<String> qualities = new ArrayList<String>();
@@ -721,7 +720,7 @@ public class ShareActivity extends Activity {
     	if (audioExtrEnabled) {
     		intent1.putExtra("AUDIO", extrType);
     	} else {
-    		intent1.putExtra("AUDIO", extrType);
+    		intent1.putExtra("AUDIO", "none");
     	}
     	
 		try {
@@ -1132,44 +1131,6 @@ public class ShareActivity extends Activity {
         }
         //Utils.logger("d", "CQ index: " + i + ", Quality: " + qualities.get(i));
     }
-
-    /*public InputStream stringToIs(String text) {
-        try {
-            isFromString = new ByteArrayInputStream(text.getBytes("UTF-8"));
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        return isFromString;
-    }*/
-
-    /*void createLogFile(InputStream stream, String filename) {
-        File file = new File(path, filename);
-
-        try {
-            path.mkdirs();
-
-            // If external storage is not currently mounted this will silently fail.
-            InputStream is = stream;
-            OutputStream os = new FileOutputStream(file);
-            byte[] data = new byte[is.available()];
-            is.read(data);
-            os.write(data);
-            is.close();
-            os.close();
-
-            MediaScannerConnection.scanFile(this,
-                                            new String[] { file.toString() }, null,
-            new MediaScannerConnection.OnScanCompletedListener() {
-                public void onScanCompleted(String path, Uri uri) {
-                    Log.i("ExternalStorage", "Scanned " + path + ":");
-                    Log.i("ExternalStorage", "-> uri=" + uri);
-                }
-            });
-        } catch (IOException e) {
-            // Unable to create file, likely because external storage is not currently mounted.
-            Log.w("ExternalStorage", "Error writing " + file, e);
-        }
-    }*/
     
     void downloadThumbnail(String fileUrl) {
     	InputStream is = null;

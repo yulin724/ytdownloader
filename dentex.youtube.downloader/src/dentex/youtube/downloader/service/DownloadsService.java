@@ -116,7 +116,7 @@ public class DownloadsService extends Service {
 						File src = new File(ShareActivity.dir_Downloads, vfilename);
 						File dst = new File(ShareActivity.path, vfilename);
 						
-						Toast.makeText(context, context.getString(R.string.copy_progress), Toast.LENGTH_SHORT).show();
+						Toast.makeText(context,"YTD: " + context.getString(R.string.copy_progress), Toast.LENGTH_SHORT).show();
 				        cBuilder.setContentText(context.getString(R.string.copy_progress));
 						cNotificationManager.notify(ID, cBuilder.build());
 						Utils.logger("i", "_ID " + ID + " Copy in progress...", DEBUG_TAG);
@@ -140,7 +140,7 @@ public class DownloadsService extends Service {
 							Utils.logger("i", "_ID " + ID + " Copy OK", DEBUG_TAG);
 							
 							if (ShareActivity.dm.remove(id) == 0) {
-								Toast.makeText(context, getString(R.string.download_remove_failed), Toast.LENGTH_LONG).show();
+								Toast.makeText(context, "YTD: " + getString(R.string.download_remove_failed), Toast.LENGTH_LONG).show();
 								Log.e(DEBUG_TAG, "temp download file NOT removed");
 								
 				        	} else { 
@@ -193,8 +193,7 @@ public class DownloadsService extends Service {
 					    String mp3BitRate = settings.getString("mp3_bitrate", getString(R.string.mp3_bitrate_default));
 					    
 					    try {
-					    	if (audio.equals("extr")) ffmpeg.extractAudio(in, out, shell);
-							if (audio.equals("conv")) ffmpeg.extractAudioAndConvertToMp3(in, out, mp3BitRate, shell);
+							ffmpeg.extractAudio(in, out, audio, mp3BitRate, shell);
 						
 					    } catch (IOException e) {
 							Log.e(DEBUG_TAG, "IOException running ffmpeg" + e.getMessage());
@@ -252,36 +251,41 @@ public class DownloadsService extends Service {
 
 		@Override
 		public void shellOut(String shellLine) {
-			Pattern audioPattern = Pattern.compile("#0:0.*: Audio: (.+), .+?(mono|stereo .default.|stereo)(, .+ kb|)"); 
-			Matcher audioMatcher = audioPattern.matcher(shellLine);
-			if (audioMatcher.find() && audio.equals("extr")) {
-				try {
-					String oggBr = "a";
-					String groupTwo = "n";
-					if (audioMatcher.group(2).equals("stereo (default)")) {
-						if (vfilename.contains("hd")) {
-							oggBr = "192kb";
+			boolean audioQualitySuffixEnabled = settings.getBoolean("enable_audio_quality_suffix", true);
+			if (audioQualitySuffixEnabled) {
+				Utils.logger("d", "audioQualitySuffixEnabled: " + audioQualitySuffixEnabled, DEBUG_TAG);
+				
+				Pattern audioPattern = Pattern.compile("#0:0.*: Audio: (.+), .+?(mono|stereo .default.|stereo)(, .+ kb|)"); 
+				Matcher audioMatcher = audioPattern.matcher(shellLine);
+				if (audioMatcher.find() && audio.equals("extr")) {
+					try {
+						String oggBr = "a";
+						String groupTwo = "n";
+						if (audioMatcher.group(2).equals("stereo (default)")) {
+							if (vfilename.contains("hd")) {
+								oggBr = "192kb";
+							} else {
+								oggBr = "128kb";
+							}
+							groupTwo = "stereo";
 						} else {
-							oggBr = "128kb";
+							oggBr = "";
+							groupTwo = audioMatcher.group(2);
 						}
-						groupTwo = "stereo";
-					} else {
-						oggBr = "";
-						groupTwo = audioMatcher.group(2);
+						
+						aSuffix = "_" +
+								groupTwo + 
+								"_" + 
+								audioMatcher.group(3).replace(", ", "").replace(" kb", "k") + 
+								oggBr + 
+								"." +
+								audioMatcher.group(1).replaceFirst(" (.*/.*)", "").replace("vorbis", "ogg");
+						
+						Utils.logger("i", "AudioSuffix: " + aSuffix, DEBUG_TAG);
+						
+					} catch (IllegalStateException e) {
+						Log.e(DEBUG_TAG, "one or more audioSuffix group not matched", e); 
 					}
-					
-					aSuffix = "_" +
-							groupTwo + 
-							"_" + 
-							audioMatcher.group(3).replace(", ", "").replace(" kb", "k") + 
-							oggBr + 
-							"." +
-							audioMatcher.group(1).replaceFirst(" (.*/.*)", "").replace("vorbis", "ogg");
-					
-					Utils.logger("i", "AudioSuffix: " + aSuffix, DEBUG_TAG);
-					
-				} catch (IllegalStateException e) {
-					Log.e(DEBUG_TAG, "one or more audioSuffix group not matched", e); 
 				}
 			}
 			Utils.logger("d", "shell: " + shellLine, DEBUG_TAG);
@@ -292,7 +296,7 @@ public class DownloadsService extends Service {
 			Utils.logger("i", "FFmpeg process exit value: " + exitValue, DEBUG_TAG);
 			if (exitValue == 0) {
 				if (renameAudioFile(aBaseName, out)) {
-					Toast.makeText(nContext,  "YTD: audio extraction completed", Toast.LENGTH_LONG).show();
+					Toast.makeText(nContext,  "YTD: " + getString(R.string.audio_extr_completed), Toast.LENGTH_LONG).show();
 				}
 			}
 		}

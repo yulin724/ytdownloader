@@ -7,6 +7,7 @@ import group.pals.android.lib.ui.filechooser.services.IFileProvider;
 import java.io.File;
 import java.util.List;
 import java.util.Locale;
+import java.util.Stack;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -15,7 +16,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+import android.content.pm.ResolveInfo;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -33,6 +36,7 @@ import android.text.format.DateUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
+import dentex.youtube.downloader.ffmpeg.FfmpegController;
 import dentex.youtube.downloader.service.AutoUpgradeApkService;
 import dentex.youtube.downloader.service.FfmpegDownloadService;
 import dentex.youtube.downloader.utils.PopUps;
@@ -134,7 +138,6 @@ public class SettingsActivity extends Activity {
             }
             initSwapPreference();
             initSizePreference();
-            initBitratePreference();
             
             for(int i=0;i<getPreferenceScreen().getPreferenceCount();i++){
                 initSummary(getPreferenceScreen().getPreference(i));
@@ -231,12 +234,60 @@ public class SettingsActivity extends Activity {
 						cpuVers = armCpuVersion();
 						boolean isCpuSupported = (cpuVers > 0) ? true : false;
 						Utils.logger("d", "isCpuSupported: " + isCpuSupported, DEBUG_TAG);
+						
+						isCpuSupported = false; // TODO dev test !!!!
+						
 						if (!isCpuSupported) {
 							audio.setEnabled(false);
 							audio.setChecked(false);
-							PopUps.showPopUp(getString(R.string.error), getString(R.string.ffmpeg_device_not_supported), "alert", getActivity());
-							// TODO ...or make dialog to send mail to developer?
+							settings.edit().putBoolean("FFMPEG_SUPPORTED", false).commit();
+
+							AlertDialog.Builder adb = new AlertDialog.Builder(getActivity());
+	                        adb.setIcon(android.R.drawable.ic_dialog_alert);
+	                        adb.setTitle(getString(R.string.ffmpeg_device_not_supported));
+	                        adb.setMessage(getString(R.string.ffmpeg_support_mail));
+	                        
+	                        adb.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+	                        	
+	                            public void onClick(DialogInterface dialog, int which) {
+	                            	/*
+	                            	 * adapted form same source as createEmailOnlyChooserIntent below
+	                            	 */
+	                            	Intent i = new Intent(Intent.ACTION_SEND);
+	                                i.setType("*/*");
+	                                
+	                                String content = Utils.getCpuInfo();
+	                                /*File destDir = getActivity().getExternalFilesDir(null); 
+	                                String filename = "cpuInfo.txt";
+	                                try {
+										Utils.createLogFile(destDir, filename, content);
+										i.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(new File(destDir, filename)));*/
+		                                i.putExtra(Intent.EXTRA_EMAIL, new String[] { "samuele.rini@enav.it" });
+		                                i.putExtra(Intent.EXTRA_SUBJECT, "Crash report");
+		                                i.putExtra(Intent.EXTRA_TEXT, content);
+
+		                                startActivity(createEmailOnlyChooserIntent(i, "Send via email"));
+									/*} catch (IOException e) {
+										Log.e(DEBUG_TAG, "IOException on creating cpuInfo Log file ", e);
+									}*/
+	                            }
+	                        });
+	                        
+	                        adb.setNegativeButton(getString(R.string.dialogs_negative), new DialogInterface.OnClickListener() {
+	                        	
+	                            public void onClick(DialogInterface dialog, int which) {
+	                            	// cancel
+	                            }
+	                        });
+	
+	                        AlertDialog helpDialog = adb.create();
+	                        if (! (getActivity()).isFinishing()) {
+	                        	helpDialog.show();
+	                        }	                            
+						} else {
+							settings.edit().putBoolean("FFMPEG_SUPPORTED", true).commit();
 						}
+						
 						Utils.logger("d", "ffmpegInstalled: " + ffmpegInstalled, DEBUG_TAG);
 					
 						if (!ffmpegInstalled && isCpuSupported) {
@@ -246,7 +297,16 @@ public class SettingsActivity extends Activity {
 	                        
 	                        link = getString(R.string.ffmpeg_download_dialog_msg_link, cpuVers);
 	                        String msg = getString(R.string.ffmpeg_download_dialog_msg);
-	                        String size = getString(R.string.size) + " 6.6 MB";
+	                        
+	                        String ffmpegSize;
+	                        if (cpuVers == 5) {
+	                        	ffmpegSize = getString(R.string.ffmpeg_size_arm5);
+	                        } else if (cpuVers == 7) {
+	                        	ffmpegSize = getString(R.string.ffmpeg_size_arm7);
+	                        } else {
+	                        	ffmpegSize = "n.a.";
+	                        }
+	                        String size = getString(R.string.size) + " " + ffmpegSize;
 	                        adb.setMessage(msg + " " + link + "\n" + size);
 
 	                        adb.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
@@ -254,10 +314,16 @@ public class SettingsActivity extends Activity {
 	                            public void onClick(DialogInterface dialog, int which) {
 	                            	File sdcardAppDir = getActivity().getExternalFilesDir(null);
 	                            	if (sdcardAppDir != null) {
-		                            	Intent intent = new Intent(getActivity(), FfmpegDownloadService.class);
-		                            	intent.putExtra("CPU", cpuVers);
-		                            	intent.putExtra("DIR", sdcardAppDir.getAbsolutePath());
-		                            	getActivity().startService(intent);
+	                            		File src = new File(getActivity().getExternalFilesDir(null), FfmpegController.ffmpegBinName);
+	                            		File dst = new File(getActivity().getDir("bin", 0), FfmpegController.ffmpegBinName);
+	                            		if (!src.exists()) {
+			                            	Intent intent = new Intent(getActivity(), FfmpegDownloadService.class);
+			                            	intent.putExtra("CPU", cpuVers);
+			                            	intent.putExtra("DIR", sdcardAppDir.getAbsolutePath());
+			                            	getActivity().startService(intent);
+	                            		} else {
+	                            			FfmpegDownloadService.copyFfmpegToAppDataDir(mActivity, src, dst);
+	                            		}
 	                            	} else {
 	                            		Utils.logger("w", getString(R.string.unable_save_dialog_msg), DEBUG_TAG);
 	                            		PopUps.showPopUp(getString(R.string.error), getString(R.string.unable_save_dialog_msg), "alert", getActivity());
@@ -285,6 +351,8 @@ public class SettingsActivity extends Activity {
 					}
 				}
 			});
+			
+			initAudioPreference();
 
 		}
         
@@ -367,14 +435,19 @@ public class SettingsActivity extends Activity {
             }
 		}
 		
-		private void initBitratePreference() {
-			String encode = settings.getString("audio_extraction_type", "extr");
-			Preference p = (Preference) findPreference("mp3_bitrate");
+		private void initAudioPreference() {
+			boolean ffmpegSupported = settings.getBoolean("FFMPEG_SUPPORTED", true);
+			if (ffmpegSupported) {
+				String encode = settings.getString("audio_extraction_type", "extr");
+				Preference p = (Preference) findPreference("mp3_bitrate");
 				if (encode.equals("conv") == true) {
 					p.setEnabled(true);
 				} else {
 					p.setEnabled(false);
 				}
+			} else {
+				touchAudioExtrPref(false, false);
+			}
 		}
         
 		/*@Override
@@ -409,7 +482,7 @@ public class SettingsActivity extends Activity {
         	updatePrefSummary(findPreference(key));
         	initSwapPreference();
         	initSizePreference();
-        	initBitratePreference();
+        	initAudioPreference();
         }
 
 		private void initSummary(Preference p){
@@ -506,11 +579,43 @@ public class SettingsActivity extends Activity {
 		public static void touchAudioExtrPref(final boolean enable, final boolean check) {
 			mActivity.runOnUiThread(new Runnable() {
 				public void run() {
-					Utils.logger("d", "audio-extraction-checkbox: " + "enabled: " + enable + " - checked: " + check, DEBUG_TAG);
+					Utils.logger("d", "audio-extraction-checkbox: " + "enabled: " + enable + " / checked: " + check, DEBUG_TAG);
 					audio.setEnabled(enable);
 					audio.setChecked(check);
 			    }
 			});
+		}
+		
+		/* Intent createEmailOnlyChooserIntent from Stack Overflow:
+		 * 
+		 * http://stackoverflow.com/questions/2197741/how-to-send-email-from-my-android-application/12804063#12804063
+		 * 
+		 * Q: http://stackoverflow.com/users/138030/rakesh
+		 * A: http://stackoverflow.com/users/1473663/nobu-games
+		 */
+		public Intent createEmailOnlyChooserIntent(Intent source, CharSequence chooserTitle) {
+			Stack<Intent> intents = new Stack<Intent>();
+	        Intent i = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto",
+	        		"info@domain.com", null));
+	        List<ResolveInfo> activities = getActivity().getPackageManager()
+	                .queryIntentActivities(i, 0);
+
+	        for(ResolveInfo ri : activities) {
+	            Intent target = new Intent(source);
+	            target.setPackage(ri.activityInfo.packageName);
+	            intents.add(target);
+	        }
+
+	        if(!intents.isEmpty()) {
+	            Intent chooserIntent = Intent.createChooser(intents.remove(0),
+	                    chooserTitle);
+	            chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS,
+	                    intents.toArray(new Parcelable[intents.size()]));
+
+	            return chooserIntent;
+	        } else {
+	        	return Intent.createChooser(source, chooserTitle);
+	        }
 		}
 	}
 }
