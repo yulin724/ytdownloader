@@ -24,7 +24,6 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.pm.Signature;
 import android.os.Build;
 import android.util.Log;
-import android.widget.Toast;
 import dentex.youtube.downloader.R;
 import dentex.youtube.downloader.SettingsActivity.SettingsFragment;
 import dentex.youtube.downloader.ShareActivity;
@@ -177,13 +176,12 @@ public class Utils extends Activity {
 	 */
     
     @SuppressWarnings("resource")
-	public static void copyFile(File src, File dst, Context context) throws IOException {
+	public static void copyFile(File src, File dst) throws IOException {
 	    FileChannel inChannel = new FileInputStream(src).getChannel();
 	    FileChannel outChannel = new FileOutputStream(dst).getChannel();
 	    //if (!dst.exists()) {
 		    try {
 		        inChannel.transferTo(0, inChannel.size(), outChannel);
-		        Toast.makeText(context, "YTD: " + context.getString(R.string.ready), Toast.LENGTH_LONG).show();
 		    } finally {
 		        if (inChannel != null) inChannel.close();
 		        if (outChannel != null) outChannel.close();

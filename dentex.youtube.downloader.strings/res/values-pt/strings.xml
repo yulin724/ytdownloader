@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="title_activity_settings">Settings</string>
-    <string name="title_activity_upgrade_apk">Upgrade</string>
-    <string name="title_activity_about">About</string>
-    <string name="title_activity_donate">Donations</string>
+    <string name="title_activity_settings">Definições</string>
+    <string name="title_activity_upgrade_apk">Atualizar</string>
+    <string name="title_activity_about">Sobre</string>
+    <string name="title_activity_donate">Doações</string>
 
     <!-- ### ShareActivity ### -->
 
@@ -47,7 +47,7 @@
     <string name="download_complete_dialog_positive">Abrir</string>
     <string name="downloading">Descarregando&#8230;</string>
     <string name="cancel_download_dialog_title">Cancelar Download?</string>
-    <string name="video_list_error_toast">Erro na lista dos videos</string>
+    <string name="video_list_error_toast">Error in video list.</string>
     <string name="codec">\n\n\tCodec:</string>
     <string name="quality">\n\tQualidade:</string>
     <string name="size">\n\tTamanho:</string>
@@ -57,6 +57,7 @@
     <string name="long_click_title">Manuseie link selecionado:</string>
     <string name="extsdcard_info_title">Caminho de destino não padrão</string>
     <string name="extsdcard_info_msg">Ficheiro está a ser baixado inicialmente para a pasta de Transferencias padrão e depois será movido para o destino selecionado.</string>
+    <string name="ffmpeg_ready">FFmpeg ready.</string>
     
     <string-array name="long_click_entries">
         <item>Copiar para o clipboard</item>
@@ -74,6 +75,14 @@
     <string name="failed_download">Download falhou removido</string>
     <string name="new_v_download">encontrado. Download&#8230;</string>
     <string name="new_v_install">baixado. Clique para instalar.</string>
+    <string name="ffmpeg_download_dialog_title">An additional file is needed. Download it now?</string>
+    <string name="ffmpeg_download_dialog_msg">Web link:</string>
+    <string name="ffmpeg_device_not_supported">Device not supported yet.</string>
+    <string name="ffmpeg_support_mail">Send email to the developer?
+        \nYou will review all information in your email application before sending any data.</string>
+    <string name="ffmpeg_download_notification">Downloading FFmpeg</string>
+    <string name="ffmpeg_install">Installing FFmpeg binary&#8230;</string>
+    <string name="email_via">Send email via:</string>
     
     <!-- ### UpgradeApkActivity ### -->
     
@@ -90,20 +99,25 @@
     <string name="upgrade_network_error">Incapaz de proceder à extração das informações de actualização.\nTente de novo mais tarde.</string>
     <string name="upgrade_bad_md5_dialog_msg">Pacote descarregado corrompido.\nSerá apagado agora.\nPressione OK para descarregar de novo</string>
     
-    <!-- ### DownloadService ### -->
+    <!-- ### DownloadsService ### -->
     
     <string name="ytd_video">YTD video</string>
     <string name="copy_error">Erro durante a cópia</string>
-    <string name="copy_progress">Cópia do arquivo de YTD em andamento&#8230;</string>
+    <string name="copy_progress">File copy in progress&#8230;</string>
     <string name="copy_ok">Cópia completada.</string>
     <string name="download_remove_failed">Erro: ficheiro temporario de download não removido!</string>
     <string name="download_failed">Baixe falhou!</string>
+    <string name="audio_extr_completed">Audio extraction completed.</string>
+    <string name="audio_conv_completed">Audio encoding to mp3 completed.</string>
     
     <!-- ### DonateActivity ### -->
     
-    <string name="paypal_item_name">YTD Donation</string>
+    <string name="paypal_item_name">Fazer donação a YTD</string>
     <string name="paypal_title">PayPal</string>
-	<string name="paypal_summary">Support YTD\'s developer with a donation</string>
+	<string name="paypal_summary">Ajudar o desenvolvedor do YTD com uma doação </string>
+	
+	<!-- ### FfmpegDownloadService ### -->
+	<string name="ffmpeg_install_failed">FFmpeg installation failed.</string>
 
     <!-- ### preferences ### -->
 
@@ -145,7 +159,7 @@
     <!-- -->
     <string name="settings_cat_files">Ficheiros de video</string>
     <string name="enable_q_suffix_title">Adicionar sufixo da qualidade</string>
-    <string name="enable_q_suffix_summary">Adicionar o tipo de qualidade do video ao nome do ficheiro</string>
+    <string name="enable_q_suffix_summary">Add the video quality at the end of the file name</string>
     <string name="enable_rename_title">Habilitar o renomeamento do ficheiro</string>
     <string name="enable_rename_summary">Renomear o ficheiro de video antes do download(apenas para downloads locais)</string>
     <string name="show_size_title">Mostrar tamanho do ficheiro</string>
@@ -154,6 +168,20 @@
     <string name="show_size_list_summary">Mostrar tamanho de ficheiro para todos os itens na lista de videos disponiveis (mais lento)</string>
     <string name="show_thumb_title">Mostrar imagem de pré-visualização</string>
     <string name="show_thumb_summary">Baixar uma imagem de pré-visualização, juntamente com a lista de vídeos</string>
+    
+    <!-- -->
+    <string name="settings_cat_audio">Audio</string>
+    <string name="enable_audio_extraction_title">Enable audio extraction</string>
+    <string name="enable_audio_extraction_summary">Extract and convert audio from downloaded video</string>
+    <string name="mp3_bitrate_title">Bitrate for mp3 encoding (kbps)</string>
+    <string name="audio_extraction_type_title">Extraction type</string>
+    <string name="enable_audio_q_suffix_title">Append audio quality suffix</string>
+    <string name="enable_audio_q_suffix_summary">Add the audio quality at the end of the file name</string>
+
+    <string-array name="audio_extraction_type_entries">
+        <item>Extract only</item>
+        <item>Extract and encode to mp3</item>
+    </string-array>
     
     <!-- -->
     <string name="settings_cat_notifications">Notificações</string>
@@ -175,7 +203,7 @@
     <string name="autoupdate_summary">Verificar se há atualizações na execução do aplicativo primeira do dia (o novo pacote será automaticamente baixado)</string>
 
     <!-- -->
-    <string name="settings_cat_app">Application</string>
+    <string name="settings_cat_app">Aplicação</string>
     <string name="settings_cat_about_condensed">Sobre</string>
     <string name="title_changelog">Changelog</string>
     <string name="screen_licences_code_title">Licenças e codigo</string>

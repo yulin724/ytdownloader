@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="title_activity_settings">Settings</string>
-    <string name="title_activity_upgrade_apk">Upgrade</string>
-    <string name="title_activity_about">About</string>
-    <string name="title_activity_donate">Donations</string>
+    <string name="title_activity_settings">Ayarlar</string>
+    <string name="title_activity_upgrade_apk">Yükselt</string>
+    <string name="title_activity_about">Hakkinda</string>
+    <string name="title_activity_donate">Bağışlar</string>
 
     <!-- ### ShareActivity ### -->
 
@@ -47,7 +47,7 @@
     <string name="download_complete_dialog_positive">Aç</string>
     <string name="downloading">İndiriliyor&#8230;</string>
     <string name="cancel_download_dialog_title">İndirmeyi iptal et?</string>
-    <string name="video_list_error_toast">Video listesinde hata var</string>
+    <string name="video_list_error_toast">Error in video list.</string>
     <string name="codec">\n\n\tKodek:</string>
     <string name="quality">\n\tKalite:</string>
     <string name="size">\n\tBoyut:</string>
@@ -57,6 +57,7 @@
     <string name="long_click_title">Seçilen bağlantı kolu:</string>
     <string name="extsdcard_info_title">Standart olmayan hedefyolu</string>
     <string name="extsdcard_info_msg">Dosya, standart indirme klasörüne indiriliyor daha sonra seçtiğiniz hedefe taşınacak.</string>
+    <string name="ffmpeg_ready">FFmpeg ready.</string>
     
     <string-array name="long_click_entries">
         <item>Panoya kopyala</item>
@@ -74,6 +75,14 @@
     <string name="failed_download">Başarısız indirme temizlendi</string>
     <string name="new_v_download">bulundu. İndiriliyor&#8230;</string>
     <string name="new_v_install">indirildi. Yüklemek için tıklayın.</string>
+    <string name="ffmpeg_download_dialog_title">An additional file is needed. Download it now?</string>
+    <string name="ffmpeg_download_dialog_msg">Web link:</string>
+    <string name="ffmpeg_device_not_supported">Device not supported yet.</string>
+    <string name="ffmpeg_support_mail">Send email to the developer?
+        \nYou will review all information in your email application before sending any data.</string>
+    <string name="ffmpeg_download_notification">Downloading FFmpeg</string>
+    <string name="ffmpeg_install">Installing FFmpeg binary&#8230;</string>
+    <string name="email_via">Send email via:</string>
     
     <!-- ### UpgradeApkActivity ### -->
     
@@ -90,25 +99,30 @@
     <string name="upgrade_network_error">Güncelleme verisi alınamadı.\nDaha sonra tekrar deneyiniz.</string>
     <string name="upgrade_bad_md5_dialog_msg">İndirilen paket bozuk.\nŞimdi silinecek.\nYeniden indirmek için OK tıklayın.</string>
     
-    <!-- ### DownloadService ### -->
+    <!-- ### DownloadsService ### -->
     
     <string name="ytd_video">YTD video</string>
     <string name="copy_error">Kopyalama sırasında hata oluştu</string>
-    <string name="copy_progress">YTD ilerleme sırasında&#8230;</string>
+    <string name="copy_progress">File copy in progress&#8230;</string>
     <string name="copy_ok">Kopyalama tamamlandı.</string>
     <string name="download_remove_failed">Hata: Geçici indirilen dosya silinemedi!</string>
     <string name="download_failed">İndirme Başarısız!</string>
+    <string name="audio_extr_completed">Audio extraction completed.</string>
+    <string name="audio_conv_completed">Audio encoding to mp3 completed.</string>
     
     <!-- ### DonateActivity ### -->
     
-    <string name="paypal_item_name">YTD Donation</string>
+    <string name="paypal_item_name">YTD Bağış Yapma</string>
     <string name="paypal_title">PayPal</string>
-	<string name="paypal_summary">Support YTD\'s developer with a donation</string>
+	<string name="paypal_summary">YTD\'nin geliştiricisine bağış yaparak destek ol</string>
+	
+	<!-- ### FfmpegDownloadService ### -->
+	<string name="ffmpeg_install_failed">FFmpeg installation failed.</string>
 
     <!-- ### preferences ### -->
 
     <!-- -->
-    <string name="dm_title">Downloads</string>
+    <string name="dm_title">İndirmeler</string>
     <string name="dm_summary">Sistem İndirme Yöneticisini Aç</string>
 
     <!-- -->
@@ -145,7 +159,7 @@
     <!-- -->
     <string name="settings_cat_files">Video dosyaları</string>
     <string name="enable_q_suffix_title">Quality soneki ekleyin</string>
-    <string name="enable_q_suffix_summary">Dosya ismine video türü ekleyin</string>
+    <string name="enable_q_suffix_summary">Add the video quality at the end of the file name</string>
     <string name="enable_rename_title">Dosya yeniden adlandırmayı etkinleştir</string>
     <string name="enable_rename_summary">Video dosyasını indirmeden önce yeniden adlandır (sadece yerel indirmeler için)</string>
     <string name="show_size_title">Dosya boyutunu göster</string>
@@ -154,6 +168,20 @@
     <string name="show_size_list_summary">Kullanılabilir video listesindeki dosyaların  boyutlarını al (çok yavaş)</string>
     <string name="show_thumb_title">Önizleme resmi göster</string>
     <string name="show_thumb_summary">Video listesi ile birlikte bir önizleme resmi indir</string>
+    
+    <!-- -->
+    <string name="settings_cat_audio">Audio</string>
+    <string name="enable_audio_extraction_title">Enable audio extraction</string>
+    <string name="enable_audio_extraction_summary">Extract and convert audio from downloaded video</string>
+    <string name="mp3_bitrate_title">Bitrate for mp3 encoding (kbps)</string>
+    <string name="audio_extraction_type_title">Extraction type</string>
+    <string name="enable_audio_q_suffix_title">Append audio quality suffix</string>
+    <string name="enable_audio_q_suffix_summary">Add the audio quality at the end of the file name</string>
+
+    <string-array name="audio_extraction_type_entries">
+        <item>Extract only</item>
+        <item>Extract and encode to mp3</item>
+    </string-array>
     
     <!-- -->
     <string name="settings_cat_notifications">Bildirimler</string>
@@ -175,7 +203,7 @@
     <string name="autoupdate_summary">Uygulamayı çalıştırdığınız zaman güncellemeleri kontrol et (her gün sadece ilk çalıştırmada, ve güncelleme otomatik indirilir)</string>
 
     <!-- -->
-    <string name="settings_cat_app">Application</string>
+    <string name="settings_cat_app">Uygulama</string>
     <string name="settings_cat_about_condensed">Hakkında</string>
     <string name="title_changelog">Değişiklikler</string>
     <string name="screen_licences_code_title">Lisans ve Kodlama</string>

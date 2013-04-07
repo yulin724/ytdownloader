@@ -132,7 +132,7 @@ public class DownloadsService extends Service {
 						intent2 = new Intent(Intent.ACTION_VIEW);
 
 						try {
-							Utils.copyFile(src, dst, context);
+							Utils.copyFile(src, dst);
 							
 							Toast.makeText(context,  vfilename + ": " + context.getString(R.string.copy_ok), Toast.LENGTH_SHORT).show();
 					        cBuilder.setContentText(context.getString(R.string.copy_ok));
@@ -171,9 +171,6 @@ public class DownloadsService extends Service {
 					}
 					
 					if (!audio.equals("none")) {
-						/*File in = new File("/storage/sdcard0/v.mp4");
-						File out = new File("/storage/sdcard0/a.aac");*/
-						
 						File in = new File(ShareActivity.path, vfilename);
 						
 						String acodec = settings.getString(vfilename + "FFext", ".audio");
@@ -253,8 +250,6 @@ public class DownloadsService extends Service {
 		public void shellOut(String shellLine) {
 			boolean audioQualitySuffixEnabled = settings.getBoolean("enable_audio_quality_suffix", true);
 			if (audioQualitySuffixEnabled) {
-				Utils.logger("d", "audioQualitySuffixEnabled: " + audioQualitySuffixEnabled, DEBUG_TAG);
-				
 				Pattern audioPattern = Pattern.compile("#0:0.*: Audio: (.+), .+?(mono|stereo .default.|stereo)(, .+ kb|)"); 
 				Matcher audioMatcher = audioPattern.matcher(shellLine);
 				if (audioMatcher.find() && audio.equals("extr")) {
@@ -288,7 +283,7 @@ public class DownloadsService extends Service {
 					}
 				}
 			}
-			Utils.logger("d", "shell: " + shellLine, DEBUG_TAG);
+			Utils.logger("d", shellLine, DEBUG_TAG);
 		}
 
 		@Override

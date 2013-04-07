@@ -47,7 +47,7 @@ COLLEZ la commande (utilisez le bouton menu) et pressez ENTRÉE.</string>
     <string name="download_complete_dialog_positive">Ouvrir</string>
     <string name="downloading">Téléchargement&#8230;</string>
     <string name="cancel_download_dialog_title">Annuler le téléchargement?</string>
-    <string name="video_list_error_toast">Erreur dans la liste des vidéos</string>
+    <string name="video_list_error_toast">Error in video list.</string>
     <string name="codec">\n\n\tCodec:</string>
     <string name="quality">\n\tQualité:</string>
     <string name="size">\n\tPoids:</string>
@@ -57,6 +57,7 @@ COLLEZ la commande (utilisez le bouton menu) et pressez ENTRÉE.</string>
     <string name="long_click_title">Gérer le lien sélectionné:</string>
     <string name="extsdcard_info_title">Chemin de destination non standard</string>
     <string name="extsdcard_info_msg">Le fichier est d\'abord téléchargé dans le dossier Download, puis sera déplacé vers la destination sélectionnée.</string>
+    <string name="ffmpeg_ready">FFmpeg ready.</string>
     
     <string-array name="long_click_entries">
         <item>Copier dans le presse-papier</item>
@@ -74,6 +75,14 @@ COLLEZ la commande (utilisez le bouton menu) et pressez ENTRÉE.</string>
     <string name="failed_download">Téléchargement échoué retiré</string>
     <string name="new_v_download">trouvé. Téléchargement&#8230;</string>
     <string name="new_v_install">téléchargé. Cliquez pour installer.</string>
+    <string name="ffmpeg_download_dialog_title">An additional file is needed. Download it now?</string>
+    <string name="ffmpeg_download_dialog_msg">Web link:</string>
+    <string name="ffmpeg_device_not_supported">Device not supported yet.</string>
+    <string name="ffmpeg_support_mail">Send email to the developer?
+        \nYou will review all information in your email application before sending any data.</string>
+    <string name="ffmpeg_download_notification">Downloading FFmpeg</string>
+    <string name="ffmpeg_install">Installing FFmpeg binary&#8230;</string>
+    <string name="email_via">Send email via:</string>
     
     <!-- ### UpgradeApkActivity ### -->
     
@@ -90,20 +99,25 @@ COLLEZ la commande (utilisez le bouton menu) et pressez ENTRÉE.</string>
     <string name="upgrade_network_error">Impossible de récupérer les informations de mise à jour.\nRéessayez plus tard.</string>
     <string name="upgrade_bad_md5_dialog_msg">Le package téléchargé est corrompu.\nIl va être supprimé.\nAppuyez sur OK pour le télécharger de nouveau.</string>
     
-    <!-- ### DownloadService ### -->
+    <!-- ### DownloadsService ### -->
     
     <string name="ytd_video">Vidéo YTD</string>
     <string name="copy_error">Erreur pendant la copie</string>
-    <string name="copy_progress">Copie du fichier YTD en cours&#8230;</string>
+    <string name="copy_progress">File copy in progress&#8230;</string>
     <string name="copy_ok">Copie terminée.</string>
     <string name="download_remove_failed">Erreur: fichier temporaire téléchargé non supprimé.</string>
     <string name="download_failed">Téléchargement échoué!</string>
+    <string name="audio_extr_completed">Audio extraction completed.</string>
+    <string name="audio_conv_completed">Audio encoding to mp3 completed.</string>
     
     <!-- ### DonateActivity ### -->
     
     <string name="paypal_item_name">Don à YTD</string>
     <string name="paypal_title">PayPal</string>
 	<string name="paypal_summary">Supporter le travail du développeur par un don</string>
+	
+	<!-- ### FfmpegDownloadService ### -->
+	<string name="ffmpeg_install_failed">FFmpeg installation failed.</string>
 
     <!-- ### preferences ### -->
 
@@ -145,7 +159,7 @@ COLLEZ la commande (utilisez le bouton menu) et pressez ENTRÉE.</string>
     <!-- -->
     <string name="settings_cat_files">Fichiers vidéo</string>
     <string name="enable_q_suffix_title">Ajouter la qualité en suffixe</string>
-    <string name="enable_q_suffix_summary">Ajouter la qualité de la vidéo à la fin du nom du fichier</string>
+    <string name="enable_q_suffix_summary">Add the video quality at the end of the file name</string>
     <string name="enable_rename_title">Activer le renommage des fichiers</string>
     <string name="enable_rename_summary">Renommer le fichier avant de le télécharger (téléchargement local seulement)</string>
     <string name="show_size_title">Montrer le poids des fichiers</string>
@@ -154,6 +168,20 @@ COLLEZ la commande (utilisez le bouton menu) et pressez ENTRÉE.</string>
     <string name="show_size_list_summary">Récupère le poids des fichiers pour chaque élément de la liste des vidéos disponibles (beaucoup plus lent)</string>
     <string name="show_thumb_title">Montrer l\'aperçu</string>
     <string name="show_thumb_summary">Télécharger une image d\'aperçu avec la liste des vidéos</string>
+    
+    <!-- -->
+    <string name="settings_cat_audio">Audio</string>
+    <string name="enable_audio_extraction_title">Enable audio extraction</string>
+    <string name="enable_audio_extraction_summary">Extract and convert audio from downloaded video</string>
+    <string name="mp3_bitrate_title">Bitrate for mp3 encoding (kbps)</string>
+    <string name="audio_extraction_type_title">Extraction type</string>
+    <string name="enable_audio_q_suffix_title">Append audio quality suffix</string>
+    <string name="enable_audio_q_suffix_summary">Add the audio quality at the end of the file name</string>
+
+    <string-array name="audio_extraction_type_entries">
+        <item>Extract only</item>
+        <item>Extract and encode to mp3</item>
+    </string-array>
     
     <!-- -->
     <string name="settings_cat_notifications">Notifications</string>

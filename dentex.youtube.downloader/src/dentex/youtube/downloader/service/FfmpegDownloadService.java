@@ -91,7 +91,9 @@ public class FfmpegDownloadService extends Service {
 		try {
 			Toast.makeText(context, "YTD: " + context.getString(R.string.ffmpeg_install), Toast.LENGTH_LONG).show();
 			Utils.logger("i", "trying to copy FFmpeg binary to private App dir", DEBUG_TAG);
-			Utils.copyFile(src, dst, context);
+			Utils.copyFile(src, dst);
+			
+			Toast.makeText(context, "YTD: " + context.getString(R.string.ffmpeg_ready), Toast.LENGTH_LONG).show();
 			SettingsActivity.SettingsFragment.touchAudioExtrPref(true, true);
 		} catch (IOException e) {
 			Toast.makeText(context, "YTD: " + context.getString(R.string.ffmpeg_install_failed), Toast.LENGTH_LONG).show();

@@ -47,7 +47,7 @@
     <string name="download_complete_dialog_positive">Apri</string>
     <string name="downloading">In download&#8230;</string>
     <string name="cancel_download_dialog_title">Annullare il download?</string>
-    <string name="video_list_error_toast">Errore nella lista dei video</string>
+    <string name="video_list_error_toast">Errore nella lista dei video.</string>
     <string name="codec">\n\n\tCodec:</string>
     <string name="quality">\n\tQualità:</string>
     <string name="size">\n\tDimensioni:</string>
@@ -57,6 +57,7 @@
     <string name="long_click_title">Gestisci il link selezionato:</string>
     <string name="extsdcard_info_title">Percorso di destinazione non standard</string>
     <string name="extsdcard_info_msg">Il file è in scaricamento inizialmente nella cartella dei Download standard e poi verrà spostato nella destinazione selezionata.</string>
+    <string name="ffmpeg_ready">FFmpeg pronto.</string>
     
     <string-array name="long_click_entries">
         <item>Copia nella clipboard</item>
@@ -74,6 +75,14 @@
     <string name="failed_download">Download fallito e rimosso</string>
     <string name="new_v_download">trovata. In download&#8230;</string>
     <string name="new_v_install">scaricata. Click per installare.</string>
+    <string name="ffmpeg_download_dialog_title">E\' richiesto un file addizionale. Scaricarlo ora?</string>
+    <string name="ffmpeg_download_dialog_msg">Link web:</string>
+    <string name="ffmpeg_device_not_supported">Dispositivo non ancora supportato.</string>
+    <string name="ffmpeg_support_mail">Mandare un\'email allo sviluppatore?
+\nPotrai rivedere tutte le informazioni nell\'applicazione di posta elettronica prima di inviare qualsiasi dato.</string>
+    <string name="ffmpeg_download_notification">FFmpeg in download</string>
+    <string name="ffmpeg_install">Installazione di FFmpeg&#8230;</string>
+    <string name="email_via">Manda email con:</string>
     
     <!-- ### UpgradeApkActivity ### -->
     
@@ -90,20 +99,25 @@
     <string name="upgrade_network_error">Impossibile ottenere dati sull\'aggiornamento.\nRiprova più tardi.</string>
     <string name="upgrade_bad_md5_dialog_msg">Il pacchetto scaricato è corrotto.\nVerrà cancellato adesso.\nPremi OK per scaricare di nuovo.</string>
     
-    <!-- ### DownloadService ### -->
+    <!-- ### DownloadsService ### -->
     
     <string name="ytd_video">YTD video</string>
     <string name="copy_error">Errore durante la copia</string>
-    <string name="copy_progress">YTD: copia del file in corso&#8230;</string>
+    <string name="copy_progress">Copia del file in corso&#8230;</string>
     <string name="copy_ok">Copia completata.</string>
     <string name="download_remove_failed">Errore: file temporaneo scaricato non rimosso!</string>
     <string name="download_failed">Il download è fallito!</string>
+    <string name="audio_extr_completed">Estrazione dell\'audio completata.</string>
+    <string name="audio_conv_completed">Codifica dell\'audio in mp3 completata.</string>
     
     <!-- ### DonateActivity ### -->
     
     <string name="paypal_item_name">Donazione per YTD</string>
     <string name="paypal_title">PayPal</string>
 	<string name="paypal_summary">Supporta lo sviluppatore di YTD con una donazione</string>
+	
+	<!-- ### FfmpegDownloadService ### -->
+	<string name="ffmpeg_install_failed">Installazione di FFmpeg non riuscita.</string>
 
     <!-- ### preferences ### -->
 
@@ -145,7 +159,7 @@
     <!-- -->
     <string name="settings_cat_files">File video</string>
     <string name="enable_q_suffix_title">Apponi suffisso qualità</string>
-    <string name="enable_q_suffix_summary">Aggiungi il tipo di qualità del video alla fine del nome del file</string>
+    <string name="enable_q_suffix_summary">Aggiungi la qualità del video alla fine del nome del file</string>
     <string name="enable_rename_title">Abilita rinomina file</string>
     <string name="enable_rename_summary">Rinomina il file video prima di scaricarlo (solo per il download locale)</string>
     <string name="show_size_title">Mostra dimensioni file</string>
@@ -154,6 +168,20 @@
     <string name="show_size_list_summary">Recupera le dimensioni dei file per ogni elemento nella lista dei video disponibili (ancora più lento)</string>
     <string name="show_thumb_title">Mostra un\'immagine di anteprima</string>
     <string name="show_thumb_summary">Scarica un\'immagine di anteprima, insieme alla lista dei video</string>
+    
+    <!-- -->
+    <string name="settings_cat_audio">Audio</string>
+    <string name="enable_audio_extraction_title">Abilita estrazione dell\'audio</string>
+    <string name="enable_audio_extraction_summary">Estrai e converti l\'audio dai video scaricati</string>
+    <string name="mp3_bitrate_title">Bitrate per la codifica in mp3 (kbps)</string>
+    <string name="audio_extraction_type_title">Tipo di estrazione</string>
+    <string name="enable_audio_q_suffix_title">Apponi un suffisso con la qualità dell\'audio</string>
+    <string name="enable_audio_q_suffix_summary">Aggiungi la qualità dell\'audio alla fine del nome del file</string>
+
+    <string-array name="audio_extraction_type_entries">
+        <item>Solo estrazione</item>
+        <item>Estrazione e codifica in mp3</item>
+    </string-array>
     
     <!-- -->
     <string name="settings_cat_notifications">Notifiche</string>

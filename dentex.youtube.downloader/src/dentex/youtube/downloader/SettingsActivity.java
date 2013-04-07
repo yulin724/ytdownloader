@@ -235,8 +235,6 @@ public class SettingsActivity extends Activity {
 						boolean isCpuSupported = (cpuVers > 0) ? true : false;
 						Utils.logger("d", "isCpuSupported: " + isCpuSupported, DEBUG_TAG);
 						
-						isCpuSupported = false; // TODO dev test !!!!
-						
 						if (!isCpuSupported) {
 							audio.setEnabled(false);
 							audio.setChecked(false);
@@ -263,10 +261,10 @@ public class SettingsActivity extends Activity {
 										Utils.createLogFile(destDir, filename, content);
 										i.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(new File(destDir, filename)));*/
 		                                i.putExtra(Intent.EXTRA_EMAIL, new String[] { "samuele.rini@enav.it" });
-		                                i.putExtra(Intent.EXTRA_SUBJECT, "Crash report");
+		                                i.putExtra(Intent.EXTRA_SUBJECT, "YTD: device info report");
 		                                i.putExtra(Intent.EXTRA_TEXT, content);
 
-		                                startActivity(createEmailOnlyChooserIntent(i, "Send via email"));
+		                                startActivity(createEmailOnlyChooserIntent(i, getString(R.string.email_via)));
 									/*} catch (IOException e) {
 										Log.e(DEBUG_TAG, "IOException on creating cpuInfo Log file ", e);
 									}*/

@@ -105,7 +105,7 @@ public class FfmpegController {
 		cmd.add("-vn");
 		cmd.add("-acodec");
 		
-		if (type.equals("extr")) {
+		if (type.equals("conv")) {
 			cmd.add("libmp3lame"); 
 			cmd.add("-ab"); 
 			cmd.add(mp3BitRate);
