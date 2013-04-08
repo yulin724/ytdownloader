@@ -107,8 +107,12 @@
     <string name="copy_ok">Copia completata.</string>
     <string name="download_remove_failed">Errore: file temporaneo scaricato non rimosso!</string>
     <string name="download_failed">Il download è fallito!</string>
+    <string name="audio_extr_progress">Estrazione audio in corso&#8230;</string>
+    <string name="audio_conv_progress">Codifica audio in mp3 in corso&#8230;</string>
     <string name="audio_extr_completed">Estrazione dell\'audio completata.</string>
     <string name="audio_conv_completed">Codifica dell\'audio in mp3 completata.</string>
+    <string name="audio_extr_error">Errore durante l\'estrazione audio</string>
+    <string name="audio_conv_error">Errore durante la codifica audio in mp3</string>
     
     <!-- ### DonateActivity ### -->
     
@@ -175,7 +179,7 @@
     <string name="enable_audio_extraction_summary">Estrai e converti l\'audio dai video scaricati</string>
     <string name="mp3_bitrate_title">Bitrate per la codifica in mp3 (kbps)</string>
     <string name="audio_extraction_type_title">Tipo di estrazione</string>
-    <string name="enable_audio_q_suffix_title">Apponi un suffisso con la qualità dell\'audio</string>
+    <string name="enable_audio_q_suffix_title">Apponi suffisso qualità audio</string>
     <string name="enable_audio_q_suffix_summary">Aggiungi la qualità dell\'audio alla fine del nome del file</string>
 
     <string-array name="audio_extraction_type_entries">

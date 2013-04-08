@@ -245,7 +245,7 @@ public class SettingsActivity extends Activity {
 	                        adb.setTitle(getString(R.string.ffmpeg_device_not_supported));
 	                        adb.setMessage(getString(R.string.ffmpeg_support_mail));
 	                        
-	                        adb.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+	                        adb.setPositiveButton("OK", new DialogInterface.OnClickListener() {
 	                        	
 	                            public void onClick(DialogInterface dialog, int which) {
 	                            	/*
@@ -307,7 +307,7 @@ public class SettingsActivity extends Activity {
 	                        String size = getString(R.string.size) + " " + ffmpegSize;
 	                        adb.setMessage(msg + " " + link + "\n" + size);
 
-	                        adb.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+	                        adb.setPositiveButton("OK", new DialogInterface.OnClickListener() {
 	
 	                            public void onClick(DialogInterface dialog, int which) {
 	                            	File sdcardAppDir = getActivity().getExternalFilesDir(null);

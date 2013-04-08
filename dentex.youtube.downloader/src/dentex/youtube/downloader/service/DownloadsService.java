@@ -40,6 +40,11 @@ public class DownloadsService extends Service {
 	public String vfilename;
 	protected File out;
 	protected String aBaseName;
+	private NotificationManager cNotificationManager;
+	private NotificationCompat.Builder cBuilder;
+	protected String acodec;
+	protected String aFileName;
+	public boolean audioQualitySuffixEnabled;
 
 	@Override
 	public IBinder onBind(Intent intent) {
@@ -77,9 +82,7 @@ public class DownloadsService extends Service {
 	}
 
 	BroadcastReceiver downloadComplete = new BroadcastReceiver() {
-    	
-    	private NotificationManager cNotificationManager;
-		private NotificationCompat.Builder cBuilder;
+
 		private Intent intent2;
 
 		@Override
@@ -112,14 +115,12 @@ public class DownloadsService extends Service {
 			    	cBuilder.setSmallIcon(R.drawable.icon_nb);
 					cBuilder.setContentTitle(vfilename);
 					
+					/*
+					 *  Copy to extSdCard enabled
+					 */
 					if (copy == true) {
 						File src = new File(ShareActivity.dir_Downloads, vfilename);
 						File dst = new File(ShareActivity.path, vfilename);
-						
-						Toast.makeText(context,"YTD: " + context.getString(R.string.copy_progress), Toast.LENGTH_SHORT).show();
-				        cBuilder.setContentText(context.getString(R.string.copy_progress));
-						cNotificationManager.notify(ID, cBuilder.build());
-						Utils.logger("i", "_ID " + ID + " Copy in progress...", DEBUG_TAG);
 						
 						if (settings.getBoolean("enable_own_notification", true) == true) {
 							try {
@@ -132,9 +133,16 @@ public class DownloadsService extends Service {
 						intent2 = new Intent(Intent.ACTION_VIEW);
 
 						try {
+							// Toast + Notification + Log ::: Copy in progress...
+							Toast.makeText(context,"YTD: " + context.getString(R.string.copy_progress), Toast.LENGTH_LONG).show();
+					        cBuilder.setContentText(context.getString(R.string.copy_progress));
+							cNotificationManager.notify(ID, cBuilder.build());
+							Utils.logger("i", "_ID " + ID + " Copy in progress...", DEBUG_TAG);
+							
 							Utils.copyFile(src, dst);
 							
-							Toast.makeText(context,  vfilename + ": " + context.getString(R.string.copy_ok), Toast.LENGTH_SHORT).show();
+							// Toast + Notification + Log ::: Copy OK
+							Toast.makeText(context,  vfilename + ": " + context.getString(R.string.copy_ok), Toast.LENGTH_LONG).show();
 					        cBuilder.setContentText(context.getString(R.string.copy_ok));
 					        intent2.setDataAndType(Uri.fromFile(dst), "video/*");
 							Utils.logger("i", "_ID " + ID + " Copy OK", DEBUG_TAG);
@@ -159,6 +167,7 @@ public class DownloadsService extends Service {
 				        				false);*/
 				        	}	        	
 						} catch (IOException e) {
+							// Toast + Notification + Log ::: Copy FAILED
 							Toast.makeText(context, vfilename + ": " + getString(R.string.copy_error), Toast.LENGTH_LONG).show();
 							cBuilder.setContentText(getString(R.string.copy_error));
 							intent2.setDataAndType(Uri.fromFile(src), "video/*");
@@ -170,17 +179,34 @@ public class DownloadsService extends Service {
 						}
 					}
 					
+					/*
+					 *  Audio extraction enabled
+					 */
 					if (!audio.equals("none")) {
 						File in = new File(ShareActivity.path, vfilename);
 						
-						String acodec = settings.getString(vfilename + "FFext", ".audio");
+						acodec = settings.getString(vfilename + "FFext", ".audio");
 						aBaseName = settings.getString(vfilename + "FFbase", ".audio");
-						out = new File(ShareActivity.path, aBaseName + acodec);
+						aFileName = aBaseName + acodec;
+						out = new File(ShareActivity.path, aFileName);
 						
 						FfmpegController ffmpeg = null;
 
 					    try {
 					    	ffmpeg = new FfmpegController(context);
+					    	
+					    	// Toast + Notification + Log ::: Audio job in progress...
+					    	String text = null;
+					    	if (audio.equals("extr")) {
+								text = getString(R.string.audio_extr_progress);
+							} else {
+								text = getString(R.string.audio_conv_progress);
+							}
+					    	Toast.makeText(context,"YTD: " + text, Toast.LENGTH_LONG).show();
+					    	cBuilder.setContentTitle(aFileName);
+					        cBuilder.setContentText(text);
+							cNotificationManager.notify(ID*ID, cBuilder.build());
+							Utils.logger("i", "_ID " + ID + " " + text, DEBUG_TAG);
 					    } catch (IOException ioe) {
 					    	Log.e(DEBUG_TAG, "Error loading ffmpeg. " + ioe.getMessage());
 					    }
@@ -191,7 +217,6 @@ public class DownloadsService extends Service {
 					    
 					    try {
 							ffmpeg.extractAudio(in, out, audio, mp3BitRate, shell);
-						
 					    } catch (IOException e) {
 							Log.e(DEBUG_TAG, "IOException running ffmpeg" + e.getMessage());
 						} catch (InterruptedException e) {
@@ -220,7 +245,7 @@ public class DownloadsService extends Service {
 	        }
     	}
     };
-    
+
     public static void removeIdUpdateNotification(long id) {
 		if (id != 0) {
 			if (ShareActivity.sequence.remove(id)) {
@@ -248,67 +273,95 @@ public class DownloadsService extends Service {
 
 		@Override
 		public void shellOut(String shellLine) {
-			boolean audioQualitySuffixEnabled = settings.getBoolean("enable_audio_quality_suffix", true);
-			if (audioQualitySuffixEnabled) {
-				Pattern audioPattern = Pattern.compile("#0:0.*: Audio: (.+), .+?(mono|stereo .default.|stereo)(, .+ kb|)"); 
-				Matcher audioMatcher = audioPattern.matcher(shellLine);
-				if (audioMatcher.find() && audio.equals("extr")) {
-					try {
-						String oggBr = "a";
-						String groupTwo = "n";
-						if (audioMatcher.group(2).equals("stereo (default)")) {
-							if (vfilename.contains("hd")) {
-								oggBr = "192kb";
-							} else {
-								oggBr = "128kb";
-							}
-							groupTwo = "stereo";
-						} else {
-							oggBr = "";
-							groupTwo = audioMatcher.group(2);
-						}
-						
-						aSuffix = "_" +
-								groupTwo + 
-								"_" + 
-								audioMatcher.group(3).replace(", ", "").replace(" kb", "k") + 
-								oggBr + 
-								"." +
-								audioMatcher.group(1).replaceFirst(" (.*/.*)", "").replace("vorbis", "ogg");
-						
-						Utils.logger("i", "AudioSuffix: " + aSuffix, DEBUG_TAG);
-						
-					} catch (IllegalStateException e) {
-						Log.e(DEBUG_TAG, "one or more audioSuffix group not matched", e); 
-					}
-				}
-			}
+			audioQualitySuffixEnabled = settings.getBoolean("enable_audio_q_suffix", true);
+			findAudioSuffix(shellLine, audioQualitySuffixEnabled);
 			Utils.logger("d", shellLine, DEBUG_TAG);
 		}
 
 		@Override
 		public void processComplete(int exitValue) {
 			Utils.logger("i", "FFmpeg process exit value: " + exitValue, DEBUG_TAG);
+			String text = null;
+			Intent audioIntent =  new Intent(Intent.ACTION_VIEW);
 			if (exitValue == 0) {
-				if (renameAudioFile(aBaseName, out)) {
-					Toast.makeText(nContext,  "YTD: " + getString(R.string.audio_extr_completed), Toast.LENGTH_LONG).show();
+				// Toast + Notification + Log ::: Audio job OK
+				if (audio.equals("extr")) {
+					text = getString(R.string.audio_extr_completed);
+				} else {
+					text = getString(R.string.audio_conv_completed);
 				}
+				Utils.logger("i", "_ID " + ID + " " + text, DEBUG_TAG);
+				
+				File renamedAudioFilePath = renameAudioFile(aBaseName, out);
+				Toast.makeText(nContext,  renamedAudioFilePath.getName() + ": " + text, Toast.LENGTH_LONG).show();
+				cBuilder.setContentTitle(renamedAudioFilePath.getName());
+				cBuilder.setContentText(text);			
+				audioIntent.setDataAndType(Uri.fromFile(renamedAudioFilePath), "audio/*");
+				PendingIntent contentIntent = PendingIntent.getActivity(nContext, 0, audioIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        		cBuilder.setContentIntent(contentIntent);
+			} else {
+				// Toast + Notification + Log ::: Audio job error
+				if (audio.equals("extr")) {
+					text = getString(R.string.audio_extr_error);
+				} else {
+					text = getString(R.string.audio_conv_error);
+				}
+				Log.e(DEBUG_TAG, "_ID " + ID + " " + text);
+				Toast.makeText(nContext,  "YTD: " + text, Toast.LENGTH_LONG).show();
+				cBuilder.setContentText(text);
 			}
+			cNotificationManager.notify(ID*ID, cBuilder.build());
 		}
     }
     
-	public boolean renameAudioFile(String aBaseName, File out) {
+	public File renameAudioFile(String aBaseName, File extractedAudioFile) {
 		// Rename audio file to add a more detailed suffix, 
 		// but only if it has been matched from the ffmpeg console output
-		if (out.exists() && !aSuffix.equals(".audio")) {
-			if (out.renameTo(new File(ShareActivity.path, aBaseName + aSuffix))) {
-				Utils.logger("i", out.getName() + " renamed to: " + aBaseName + aSuffix, DEBUG_TAG);
-				return true;
+		if (audio.equals("extr") && 
+				audioQualitySuffixEnabled && 
+				extractedAudioFile.exists() && 
+				!aSuffix.equals(".audio")) {
+			String newFileName = aBaseName + aSuffix;
+			File newFileNamePath = new File(ShareActivity.path, newFileName);
+			if (extractedAudioFile.renameTo(newFileNamePath)) {
+				Utils.logger("i", extractedAudioFile.getName() + " renamed to: " + newFileName, DEBUG_TAG);
+				return newFileNamePath;
 			} else {
-				Log.e(DEBUG_TAG, "Unable to rename " + out.getName() + " to: " + aSuffix);
-				return false;
+				Log.e(DEBUG_TAG, "Unable to rename " + extractedAudioFile.getName() + " to: " + aSuffix);
 			}
 		}
-		return false;
+		return extractedAudioFile;
+	}
+
+	private void findAudioSuffix(String shellLine, boolean audioQualitySuffixEnabled) {
+		if (audioQualitySuffixEnabled) {
+			Pattern audioPattern = Pattern.compile("#0:0.*: Audio: (.+), .+?(mono|stereo .default.|stereo)(, .+ kb|)"); 
+			Matcher audioMatcher = audioPattern.matcher(shellLine);
+			if (audioMatcher.find() && audio.equals("extr")) {
+				String oggBr = "a";
+				String groupTwo = "n";
+				if (audioMatcher.group(2).equals("stereo (default)")) {
+					if (vfilename.contains("hd")) {
+						oggBr = "192k";
+					} else {
+						oggBr = "128k";
+					}
+					groupTwo = "stereo";
+				} else {
+					oggBr = "";
+					groupTwo = audioMatcher.group(2);
+				}
+				
+				aSuffix = "_" +
+						groupTwo + 
+						"_" + 
+						audioMatcher.group(3).replace(", ", "").replace(" kb", "k") + 
+						oggBr + 
+						"." +
+						audioMatcher.group(1).replaceFirst(" (.*/.*)", "").replace("vorbis", "ogg");
+				
+				Utils.logger("i", "AudioSuffix: " + aSuffix, DEBUG_TAG);
+			}
+		}
 	}
 }

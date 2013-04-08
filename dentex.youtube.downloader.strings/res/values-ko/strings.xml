@@ -46,7 +46,7 @@
     <string name="download_complete_dialog_positive">열기</string>
     <string name="downloading">다운로드 중&#8230;</string>
     <string name="cancel_download_dialog_title">다운로드를 취소하시겠습니까?</string>
-    <string name="video_list_error_toast">Error in video list.</string>
+    <string name="video_list_error_toast">비디오 목록에 에러가 발생하였습니다.</string>
     <string name="codec">\n\n\t코덱:</string>
     <string name="quality">\n\t화질:</string>
     <string name="size">\n\t파일크기:</string>
@@ -56,7 +56,7 @@
     <string name="long_click_title">선택한 링크 처리:</string>
     <string name="extsdcard_info_title">사용자 지정 저장경로</string>
     <string name="extsdcard_info_msg">시스템의 기본 저장경로에 다운로드한 후 사용자 지정 경로로 옮깁니다.</string>
-    <string name="ffmpeg_ready">FFmpeg ready.</string>
+    <string name="ffmpeg_ready">FFmpeg 이 준비됨</string>
     
     <string-array name="long_click_entries">
         <item>클립보드에 복사</item>
@@ -74,14 +74,14 @@
     <string name="failed_download">실패한 다운로드가 삭제되었습니다</string>
     <string name="new_v_download">찾음. 다운로드 중&#8230;</string>
     <string name="new_v_install">다운로드 완료. 클릭하면 설치를 시작합니다.</string>
-    <string name="ffmpeg_download_dialog_title">An additional file is needed. Download it now?</string>
-    <string name="ffmpeg_download_dialog_msg">Web link:</string>
-    <string name="ffmpeg_device_not_supported">Device not supported yet.</string>
-    <string name="ffmpeg_support_mail">Send email to the developer?
-        \nYou will review all information in your email application before sending any data.</string>
-    <string name="ffmpeg_download_notification">Downloading FFmpeg</string>
-    <string name="ffmpeg_install">Installing FFmpeg binary&#8230;</string>
-    <string name="email_via">Send email via:</string>
+    <string name="ffmpeg_download_dialog_title">추가적인 파일이 필요합니다. 다운로드 받으시겠습니까?</string>
+    <string name="ffmpeg_download_dialog_msg">웹 링크:</string>
+    <string name="ffmpeg_device_not_supported">지원하지 않는 기기입니다.</string>
+    <string name="ffmpeg_support_mail">개발자에게 이메일을 보내겠습니까?
+\n개발자에게 이메일을 보내기 전에 모든 정보를 다시 확인할 수 있습니다.</string>
+    <string name="ffmpeg_download_notification">FFmpeg 다운로드 중</string>
+    <string name="ffmpeg_install">FFmpeg 바이너리 설치&#8230;</string>
+    <string name="email_via">이메일로 보내기:</string>
     
     <!-- ### UpgradeApkActivity ### -->
     
@@ -102,12 +102,16 @@
     
     <string name="ytd_video">유튜브 다운로더 비디오</string>
     <string name="copy_error">복사 중 에러가 발생하였습니다</string>
-    <string name="copy_progress">File copy in progress&#8230;</string>
+    <string name="copy_progress">파일 복사 진행 중&#8230;</string>
     <string name="copy_ok">복사 완료되었습니다.</string>
     <string name="download_remove_failed">에러: 임시 다운로드파일이 삭제되지 않았습니다!</string>
     <string name="download_failed">다운로드 실패!</string>
-    <string name="audio_extr_completed">Audio extraction completed.</string>
-    <string name="audio_conv_completed">Audio encoding to mp3 completed.</string>
+    <string name="audio_extr_progress">Audio extraction in progress&#8230;</string>
+    <string name="audio_conv_progress">Audio encoding to mp3 in progress&#8230;</string>
+    <string name="audio_extr_completed">오디오 추출이 완료되었습니다.</string>
+    <string name="audio_conv_completed">mp3 변환이 완료되었습니다.</string>
+    <string name="audio_extr_error">Error during audio extraction.</string>
+    <string name="audio_conv_error">Error during audio encoding to mp3.</string>
     
     <!-- ### DonateActivity ### -->
     
@@ -116,7 +120,7 @@
 	<string name="paypal_summary">기부를 통해 유튜브 다운로더를 지원해주세요</string>
 	
 	<!-- ### FfmpegDownloadService ### -->
-	<string name="ffmpeg_install_failed">FFmpeg installation failed.</string>
+	<string name="ffmpeg_install_failed">FFmpeg 설치 실패.</string>
 
     <!-- ### preferences ### -->
 
@@ -158,7 +162,7 @@
     <!-- -->
     <string name="settings_cat_files">비디오 파일</string>
     <string name="enable_q_suffix_title">화질 정보 추가</string>
-    <string name="enable_q_suffix_summary">Add the video quality at the end of the file name</string>
+    <string name="enable_q_suffix_summary">파일 끝에 화질 정보를 추가합니다</string>
     <string name="enable_rename_title">파일 이름 변경 허용</string>
     <string name="enable_rename_summary">다운로드전에 파일 이름을 변경할 수 있도록 합니다. (로컬 다운로드에서만 가능)</string>
     <string name="show_size_title">파일 크기 보이기</string>
@@ -169,17 +173,17 @@
     <string name="show_thumb_summary">비디오와 함께 미리보기 이미지도 다운로드</string>
     
     <!-- -->
-    <string name="settings_cat_audio">Audio</string>
-    <string name="enable_audio_extraction_title">Enable audio extraction</string>
-    <string name="enable_audio_extraction_summary">Extract and convert audio from downloaded video</string>
-    <string name="mp3_bitrate_title">Bitrate for mp3 encoding (kbps)</string>
-    <string name="audio_extraction_type_title">Extraction type</string>
-    <string name="enable_audio_q_suffix_title">Append audio quality suffix</string>
-    <string name="enable_audio_q_suffix_summary">Add the audio quality at the end of the file name</string>
+    <string name="settings_cat_audio">오디오</string>
+    <string name="enable_audio_extraction_title">오디오 추출 기능 켜기</string>
+    <string name="enable_audio_extraction_summary">다운로드한 비디오에서 오디오를 추출합니다</string>
+    <string name="mp3_bitrate_title">mp3 음질 설정 (kbps)</string>
+    <string name="audio_extraction_type_title">오디오 추출 형식</string>
+    <string name="enable_audio_q_suffix_title">음질 정보 추가</string>
+    <string name="enable_audio_q_suffix_summary">파일 끝에 음질 정보를 추가합니다</string>
 
     <string-array name="audio_extraction_type_entries">
-        <item>Extract only</item>
-        <item>Extract and encode to mp3</item>
+        <item>오디오 추출만 하기</item>
+        <item>오디오 추출 후 mp3로 변환</item>
     </string-array>
     
     <!-- -->

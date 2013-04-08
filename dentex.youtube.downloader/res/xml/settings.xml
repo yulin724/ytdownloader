@@ -123,7 +123,7 @@
         	android:dependency="enable_audio_extraction"
         	android:title="@string/enable_audio_q_suffix_title"
         	android:summary="@string/enable_audio_q_suffix_summary"
-        	android:defaultValue="false" />
+        	android:defaultValue="true" />
             
 	</PreferenceCategory>
 

@@ -107,8 +107,12 @@
     <string name="copy_ok">Kopyalama tamamlandı.</string>
     <string name="download_remove_failed">Hata: Geçici indirilen dosya silinemedi!</string>
     <string name="download_failed">İndirme Başarısız!</string>
+    <string name="audio_extr_progress">Audio extraction in progress&#8230;</string>
+    <string name="audio_conv_progress">Audio encoding to mp3 in progress&#8230;</string>
     <string name="audio_extr_completed">Audio extraction completed.</string>
     <string name="audio_conv_completed">Audio encoding to mp3 completed.</string>
+    <string name="audio_extr_error">Error during audio extraction.</string>
+    <string name="audio_conv_error">Error during audio encoding to mp3.</string>
     
     <!-- ### DonateActivity ### -->
     

@@ -242,14 +242,18 @@ public class Utils extends Activity {
     	}
     }
     
-    public static void createLogFile(File destDir, String filename, String content) throws IOException {
+    public static void createLogFile(File destDir, String filename, String content) {
     	File file = new File(destDir, filename);
-        InputStream is = new ByteArrayInputStream(content.getBytes("UTF-8"));
-        OutputStream os = new FileOutputStream(file);
-        byte[] data = new byte[is.available()];
-        is.read(data);
-        os.write(data);
-        is.close();
-        os.close();
+    	try {
+	        InputStream is = new ByteArrayInputStream(content.getBytes("UTF-8"));
+	        OutputStream os = new FileOutputStream(file);
+	        byte[] data = new byte[is.available()];
+	        is.read(data);
+	        os.write(data);
+	        is.close();
+	        os.close();
+		} catch (IOException e) {
+			Log.e(DEBUG_TAG, "Error creating '" + filename + "' Log file", e);
+		}
 	}
 }

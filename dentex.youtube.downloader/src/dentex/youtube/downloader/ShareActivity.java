@@ -111,6 +111,7 @@ public class ShareActivity extends Activity {
 	public static final File dir_Downloads = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
 	public static final File dir_DCIM = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
 	public static final File dir_Movies = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES);
+	public File logDir = Environment.getExternalStorageDirectory();
 	boolean sshInfoCheckboxEnabled;
 	boolean generalInfoCheckboxEnabled;
 	boolean fileRenameEnabled;
@@ -139,8 +140,8 @@ public class ShareActivity extends Activity {
 	public static String audioCodec = "";
 	private boolean audioExtractionEnabled;
 	public static Context mContext;
-	boolean showSizeListPref;
-	boolean showSizePref;
+	boolean showSizesInVideoList;
+	boolean showSingleSize;
 	ContextThemeWrapper boxThemeContextWrapper = new ContextThemeWrapper(ShareActivity.this, R.style.BoxTheme);
 	public int count;
 	public String acodec = "";
@@ -160,7 +161,7 @@ public class ShareActivity extends Activity {
     	
         setContentView(R.layout.activity_share);
         
-    	showSizeListPref = settings.getBoolean("show_size_list", false);
+    	showSizesInVideoList = settings.getBoolean("show_size_list", false);
 
     	// Language init
         String lang  = settings.getString("lang", "default");
@@ -319,7 +320,7 @@ public class ShareActivity extends Activity {
     	    adb.setTitle(getString(R.string.tutorial_title));    	    
     	    //adb.setMessage(getString(R.string.tutorial_msg));
 
-    	    adb.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+    	    adb.setPositiveButton("OK", new DialogInterface.OnClickListener() {
     	    	public void onClick(DialogInterface dialog, int which) {
     	    		if (showAgain1.isChecked() == false) {
     	    			SharedPreferences.Editor editor = settings.edit();
@@ -432,8 +433,10 @@ public class ShareActivity extends Activity {
             lv.setOnItemClickListener(new OnItemClickListener() {
 				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 					//Utils.logger("i", "Selected link: " + links.get(pos), DEBUG_TAG);
+					
 					assignPath();
-                    //createLogFile(stringToIs(links[position]), "ytd_FINAL_LINK.txt");
+					
+                    //Utils.createLogFile(logDir, "ytd_FINAL_LINK.txt", links.get(position));
 					
                     pos = position;     
                     //pos = 45;		// to test IndexOutOfBound Exception...
@@ -442,19 +445,19 @@ public class ShareActivity extends Activity {
                     helpBuilder.setIcon(android.R.drawable.ic_dialog_info);
                     helpBuilder.setTitle(getString(R.string.list_click_dialog_title));
                     
-                    if (showSizeListPref) {
-                    	showSizePref = true;
+                    if (showSizesInVideoList) {
+                    	showSingleSize = true;
                     } else {
-                    	showSizePref = settings.getBoolean("show_size", false);
+                    	showSingleSize = settings.getBoolean("show_size", false);
                     }
 					
 					try {
-                        if (!showSizePref) {
+                        if (!showSingleSize) {
                         	helpBuilder.setMessage(titleRaw + 
                         			getString(R.string.codec) + " " + codecs.get(pos) + 
                 					getString(R.string.quality) + " " + qualities.get(pos) + stereo.get(pos));
                         } else {
-                        	if (!showSizeListPref) {
+                        	if (!showSizesInVideoList) {
                         		sizeQuery = new AsyncSizeQuery();
                         		sizeQuery.execute(links.get(position));
                         	} else {
@@ -481,17 +484,17 @@ public class ShareActivity extends Activity {
 		                    	    adb.setView(inputFilename);
 		                    	    adb.setTitle(getString(R.string.rename_dialog_title));
 		                    	    adb.setMessage(getString(R.string.rename_dialog_msg));
-		                    	    adb.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+		                    	    adb.setPositiveButton("OK", new DialogInterface.OnClickListener() {
 		                    	    	public void onClick(DialogInterface dialog, int which) {
 		                    	    		title = userFilename.getText().toString();
-		                    	    		composedVideoFilename = composeFilename();
+		                    	    		composedVideoFilename = composeVideoFilename();
 		                    	    		manageAudioFeature();
 											callDownloadManager(links.get(pos));
 		                    	    	}
 		                    	    });
 		                    	    adb.show();
 	                            } else {
-	                            	composedVideoFilename = composeFilename();
+	                            	composedVideoFilename = composeVideoFilename();
 	                            	manageAudioFeature();
 									callDownloadManager(links.get(pos));
 	                            }
@@ -516,7 +519,7 @@ public class ShareActivity extends Activity {
                         public void onClick(DialogInterface dialog, int which) {
                         	try {
                             	String wgetCmd;
-                            	composedVideoFilename = composeFilename();
+                            	composedVideoFilename = composeVideoFilename();
                             	
                             	wgetCmd = "REQ=`wget -q -e \"convert-links=off\" --keep-session-cookies --save-cookies /dev/null --no-check-certificate \'" + 
                             			validatedLink + "\' -O-` && urlblock=`echo $REQ | grep -oE \'url_encoded_fmt_stream_map\": \".*\' | sed -e \'s/\", \".*//\'" + 
@@ -529,7 +532,7 @@ public class ShareActivity extends Activity {
                             			" --keep-session-cookies --save-cookies /dev/null --tries=5 --timeout=45 --no-check-certificate \"$downloadurl\" -O " + 
                             			composedVideoFilename;
                             	
-                            	//Utils.logger("d", "wgetCmd: " + wgetCmd);
+                            	//Utils.logger("d", "wgetCmd: " + wgetCmd, DEBUG_TAG);
                                 
                             	ClipData cmd = ClipData.newPlainText("simple text", wgetCmd);
                                 ClipboardManager cb = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
@@ -545,7 +548,7 @@ public class ShareActivity extends Activity {
     	                    	    adb.setView(sshInfo);
     	                    	    adb.setTitle(getString(R.string.ssh_info_tutorial_title));
     	                    	    adb.setMessage(getString(R.string.ssh_info_tutorial_msg));
-    	                    	    adb.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+    	                    	    adb.setPositiveButton("OK", new DialogInterface.OnClickListener() {
     	                    	    	public void onClick(DialogInterface dialog, int which) {
     	                    	    		if (showAgain2.isChecked() == false) {
     	                    	    			SharedPreferences.Editor editor = settings.edit();
@@ -574,7 +577,7 @@ public class ShareActivity extends Activity {
                         }
                     });
                     
-                    if ((!showSizePref) || (showSizeListPref && showSizePref)) {
+                    if ((!showSingleSize) || (showSizesInVideoList && showSingleSize)) {
                     	helpDialog = helpBuilder.create();
                     	helpDialog.show();
                     }
@@ -591,7 +594,7 @@ public class ShareActivity extends Activity {
 				    	   //.setIcon(android.R.drawable.ic_menu_share)
 				           .setItems(R.array.long_click_entries, new DialogInterface.OnClickListener() {
 				               public void onClick(DialogInterface dialog, int which) {
-				            	   composedVideoFilename = composeFilename();
+				            	   composedVideoFilename = composeVideoFilename();
 				            	   switch (which) {
 				            	   case 0: // copy
 				            		    ClipData cmd = ClipData.newPlainText("simple text", links.get(position));
@@ -614,18 +617,22 @@ public class ShareActivity extends Activity {
         }
         
         public boolean useQualitySuffix() {
-        	boolean qualitySuffixEnabled = settings.getBoolean("enable_q_suffix", true);
-        	if (qualitySuffixEnabled) {
-        		return true;
-        	} else {
-        		return false;
-        	}
+        	boolean enabled = settings.getBoolean("enable_q_suffix", true);
+        	return enabled;
         }
         
-        public String composeFilename() {
-        	videoFilename = title + "_" + qualities.get(pos) + stereo.get(pos) + "." + codecs.get(pos);
-    	    if (!useQualitySuffix()) videoFilename = title + stereo.get(pos) + "." + codecs.get(pos);
-    	    Utils.logger("d", "filename: " + videoFilename, DEBUG_TAG);
+        public boolean useAudioQualitySuffix() {
+        	boolean enabled = settings.getBoolean("enable_audio_q_suffix", true);
+        	return enabled;
+        }
+        
+        public String composeVideoFilename() {
+        	if (useQualitySuffix()) {
+        		videoFilename = title + "_" + qualities.get(pos) + stereo.get(pos) + "." + codecs.get(pos);
+        	} else {
+    	    	videoFilename = title + stereo.get(pos) + "." + codecs.get(pos);
+        	}
+    	    Utils.logger("d", "videoFilename: " + videoFilename, DEBUG_TAG);
     	    return videoFilename;
         }
 
@@ -643,15 +650,12 @@ public class ShareActivity extends Activity {
     		    if (codecs.get(pos).equals("3gpp")) acodec = ".aac";
     		}
     		//QUALITY
-        	if (useQualitySuffix()&& extrType.equals("conv")) {
+        	if (useAudioQualitySuffix()&& extrType.equals("conv")) {
         		aquality = "_" + settings.getString("mp3_bitrate", "192k");
         	} else { 
         		aquality = "";
         	}
         	//FINALLY
-        	//audioFilename = title + aquality + acodec;
-        	//Utils.logger("d", "composedAudioFilename: " + audioFilename, DEBUG_TAG);
-        	//return audioFilename;
         	return aquality + acodec;
         }
 
@@ -776,7 +780,7 @@ public class ShareActivity extends Activity {
     	    adb.setTitle(getString(R.string.extsdcard_info_title));    	    
     	    adb.setMessage(getString(R.string.extsdcard_info_msg));
 
-    	    adb.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+    	    adb.setPositiveButton("OK", new DialogInterface.OnClickListener() {
     	    	public void onClick(DialogInterface dialog, int which) {
     	    		if (showAgain3.isChecked() == false) {
     	    			settings.edit().putBoolean("extsdcard_info", false).commit();
@@ -847,8 +851,8 @@ public class ShareActivity extends Activity {
 	            	Utils.logger("d", "asyncDownload cancelled @ 'return readIt'", DEBUG_TAG);
 	            	return null;
 	            }
-	
-	            //Makes sure that the InputStream is closed after the app is finished using it.
+	            
+	        //Makes sure that the InputStream is closed after the app is finished using it.
 	        } finally {
 	            if (is != null) {
 	                is.close();
@@ -910,9 +914,13 @@ public class ShareActivity extends Activity {
             } else {
             	Utils.logger("d", "asyncDownload cancelled @ 'findCodecAndQualityAndLinks' match", DEBUG_TAG);
             } 
-            //createLogFile(stringToIs(Arrays.toString(links)), "ytd_links.txt");
-            //createLogFile(stringToIs(Arrays.toString(codecs.toArray())), "ytd_codecs.txt");
-            //createLogFile(stringToIs(Arrays.toString(qualities.toArray())), "ytd_qualities.txt");
+            
+            /*
+			Utils.createLogFile(logDir, "ytd_links.txt", Arrays.toString(links.toArray()));
+			Utils.createLogFile(logDir, "ytd_codecs.txt", Arrays.toString(codecs.toArray()));
+	        Utils.createLogFile(logDir, "ytd_qualities.txt", Arrays.toString(qualities.toArray()));
+			*/
+            
             return "Match!";
         } else {
             return "No Match";
@@ -1076,7 +1084,8 @@ public class ShareActivity extends Activity {
 		return size;
 	}
 
-    /* method MakeSizeHumanReadable(int bytes, boolean si) from Stack Overflow:
+    /*
+     *  method MakeSizeHumanReadable(int bytes, boolean si) from Stack Overflow:
 	 * http://stackoverflow.com/questions/3758606/how-to-convert-byte-size-into-human-readable-format-in-java
 	 * 
 	 * Q: http://stackoverflow.com/users/404615/iimuhin
@@ -1106,18 +1115,18 @@ public class ShareActivity extends Activity {
         } else {
             codecs.add("NoMatch");
         }
-        //Utils.logger("d", "CQ index: " + i + ", Codec: " + codecs.get(i));
+        //Utils.logger("d", "CQ index: " + i + ", Codec: " + codecs.get(i), DEBUG_TAG);
     }
 
     private void qualityMatcher(String currentCQ, int i) {
         Pattern qualityPattern = Pattern.compile("(highres|hd1080|hd720|large|medium|small)");
         Matcher qualityMatcher = qualityPattern.matcher(currentCQ);
         if (qualityMatcher.find()) {
-            qualities.add(qualityMatcher.group().replaceAll("highres", "4K"));
+            qualities.add(qualityMatcher.group().replace("highres", "4K"));
         } else {
             qualities.add("NoMatch");
         }
-        //Utils.logger("d", "CQ index: " + i + ", Quality: " + qualities.get(i));
+        //Utils.logger("d", "CQ index: " + i + ", Quality: " + qualities.get(i), DEBUG_TAG);
     }
     
     private void stereoMatcher(String currentCQ, int i) {
@@ -1129,7 +1138,7 @@ public class ShareActivity extends Activity {
         } else {
             stereo.add("");
         }
-        //Utils.logger("d", "CQ index: " + i + ", Quality: " + qualities.get(i));
+        //Utils.logger("d", "CQ index: " + i + ", Quality: " + qualities.get(i), DEBUG_TAG);
     }
     
     void downloadThumbnail(String fileUrl) {
@@ -1184,7 +1193,7 @@ public class ShareActivity extends Activity {
 
 		@Override
         public void onReceive(Context context, Intent intent) {
-			//Utils.logger("d", "inAppCompleteReceiver: onReceive CALLED");
+			//Utils.logger("d", "inAppCompleteReceiver: onReceive CALLED", DEBUG_TAG);
 	        long id = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -2);
 	        if (enqueue != -1 && id != -2 && id == enqueue && !videoOnExt && !audioExtrEnabled) {
 	            Query query = new Query();
