@@ -220,11 +220,14 @@
     
     <string name="credits_text0">\tMain Licenses
         \n\n
-        This App and the FFmpeg binaries, used for its audio extraction feature, are released under the GPL-3.0.
+        This App and the FFmpeg binary (<http>http://www.ffmpeg.org/index.html</http>), 
+        used for the audio extraction feature, are released under the GPL-3.0.
     	\n\n
     	The filechooser library is released under the MIT license.
     	\n\n
     	The liblame library, used to compile FFmpeg, is released under the LGPL.
+    	A GitHub project, <http>https://github.com/intervigilium/liblame</http>, 
+    	has been used to compile the lame libraries for Android.
     	\n\n
     	For more informations, refer to the dedicated menus and to the license files 
     	available from this project\'s source code.

@@ -220,15 +220,18 @@
     
     <string name="credits_text0">\tLicenze principali
 \n\n
-Questa App e l\'eseguibile FFmpeg, usato per l\'estrazione dell\'audio, sono rilasciati sotto la GPL-3.0.
+Questa App e l\'eseguibile FFmpeg (<http>http://www.ffmpeg.org/index.html</http>), 
+usato per l\'estrazione dell\'audio, sono rilasciati sotto la GPL-3.0.
 \n\n
 La libreria filechooser è rilasciata sotto la MIT license.
 \n\n
 La libreria liblame, usata per compilare FFmpeg, è rilasciata sotto la LGPL.
+Un progetto su GitHub, <http>https://github.com/intervigilium/liblame</http>,
+è stato usato per compilare le librerie lame per Android.
 \n\n
 Per maggiori informazioni, fare riferimento al menu dedicato e ai file di licenza
 disponibili nel codice sorgente dei questo progetto.
-\n</string>
+</string>
     
     <string name="credits_text1"> \tLicenze per altre parti di codice
         \n\n

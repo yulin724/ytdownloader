@@ -107,12 +107,12 @@ COLLEZ la commande (utilisez le bouton menu) et pressez ENTRÉE.</string>
     <string name="copy_ok">Copie terminée.</string>
     <string name="download_remove_failed">Erreur: fichier temporaire téléchargé non supprimé.</string>
     <string name="download_failed">Téléchargement échoué!</string>
-    <string name="audio_extr_progress">Audio extraction in progress&#8230;</string>
-    <string name="audio_conv_progress">Audio encoding to mp3 in progress&#8230;</string>
+    <string name="audio_extr_progress">Extraction audio en cours&#8230;</string>
+    <string name="audio_conv_progress">Encodage audio en MP3 en cours&#8230;</string>
     <string name="audio_extr_completed">Extraction audio terminée.</string>
     <string name="audio_conv_completed">Encodage audio en MP3 terminé.</string>
-    <string name="audio_extr_error">Error during audio extraction.</string>
-    <string name="audio_conv_error">Error during audio encoding to mp3.</string>
+    <string name="audio_extr_error">Erreur durant l\'extraction audio.</string>
+    <string name="audio_conv_error">Erreur durant l\'encodage de l\'\audio en MP3.</string>
     
     <!-- ### DonateActivity ### -->
     
@@ -220,11 +220,14 @@ COLLEZ la commande (utilisez le bouton menu) et pressez ENTRÉE.</string>
     
     <string name="credits_text0">\tMain Licenses
         \n\n
-        This App and the FFmpeg binaries, used for its audio extraction feature, are released under the GPL-3.0.
+        This App and the FFmpeg binary (<http>http://www.ffmpeg.org/index.html</http>), 
+        used for the audio extraction feature, are released under the GPL-3.0.
     	\n\n
     	The filechooser library is released under the MIT license.
     	\n\n
     	The liblame library, used to compile FFmpeg, is released under the LGPL.
+    	A GitHub project, <http>https://github.com/intervigilium/liblame</http>, 
+    	has been used to compile the lame libraries for Android.
     	\n\n
     	For more informations, refer to the dedicated menus and to the license files 
     	available from this project\'s source code.
