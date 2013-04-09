@@ -214,24 +214,29 @@ map, PLAK het commando (gebruik de menuknop) en klik ENTER.</string>
 
     <!-- -->
     <string name="settings_cat_licenses">Licenties</string>
-    <string name="gpl_title">YTD\'s Licentie</string>
-    <string name="gpl_summary">GPL-3.0</string>
-    <string name="title_activity_gpl_show">GPL-3.0</string>
-
-    <string name="mit_title">Bestandskiezers Licentie</string>
-    <string name="mit_summary">MIT licentie</string>
-    <string name="title_activity_mit_show">MIT licentie</string>
 
     <string name="credits_title">Credits</string>
-    <string name="credits_summary">Andere licentie en vertalingen</string>
     <string name="title_activity_credits_show">Andere licentie en vertalingen</string>
+    
+    <string name="credits_text0">\tMain Licenses
+        \n\n
+        This App and the FFmpeg binaries, used for its audio extraction feature, are released under the GPL-3.0.
+    	\n\n
+    	The filechooser library is released under the MIT license.
+    	\n\n
+    	The liblame library, used to compile FFmpeg, is released under the LGPL.
+    	\n\n
+    	For more informations, refer to the dedicated menus and to the license files 
+    	available from this project\'s source code.
+    	\n</string>
+    
     <string name="credits_text1">Code fragmenten licentie
 \n\n
 Deze App gebruikt bepaalde code fragementen van de CyanogenMod custom ROM;
 \n\n
 De methode om de MD5 checksum te berekenen en te vergelijken, voor het 
 downloaden van bijwerkingspakketen, zijn ontleed van de \'CMUpdater\' App</string>
-	<string name="credits_text3">\nThe text of the license can be found in the LICENSE_GPL2 file or at <http>https://www.gnu.org/licenses/gpl-2.0.txt</http></string>
+	<string name="credits_text3">\nThe text of the license can be found in the LICENSE_GPL file or at <http>https://www.gnu.org/licenses/gpl-3.0.txt</http></string>
 	<string name="credits_text4">\n\tCode from StackOverflow
 	    \n\n
 	    In addition, the Java methods used in YTD to compare version numbers, 
@@ -244,15 +249,12 @@ downloaden van bijwerkingspakketen, zijn ontleed van de \'CMUpdater\' App</strin
 	    </string>
     <string name="credits_translators">\n\tVertalingen
 \n\nMede mogelijk gemaakt door:</string>
-    <string name="translators_info">\nVoor meer informatie:
-\n<http>forum.xda-developers.com/showthread.php?p=37708791</http>
-\n\n<http>www.getlocalization.com/ytdownloader</http></string>
+    <string name="translators_info">\nVoor meer informatie:</string>
         
     <!-- -->
     <string name="settings_cat_code">Broncode</string>
     <string name="ytd_code_git_title">YTD op GitHub</string>
     <string name="ytd_code_hg_title">YTD op Sourceforge</string>
-    <string name="chooser_code_title">Bestandskiezer op Google Code</string>
 
     <!-- -->
     <string name="settings_cat_social">Sociaal</string>

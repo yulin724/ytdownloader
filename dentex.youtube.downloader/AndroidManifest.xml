@@ -57,6 +57,11 @@
             android:configChanges="locale|orientation|screenSize|keyboard|keyboardHidden" >
         </activity>
         <activity
+            android:name="dentex.youtube.downloader.docs.LgplShowActivity"
+            android:label="@string/title_activity_lgpl_show"
+            android:configChanges="locale|orientation|screenSize|keyboard|keyboardHidden" >
+        </activity>
+        <activity
             android:name="dentex.youtube.downloader.docs.MitShowActivity"
             android:label="@string/title_activity_mit_show"
             android:configChanges="locale|orientation|screenSize|keyboard|keyboardHidden" >

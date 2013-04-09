@@ -214,17 +214,22 @@
 
     <!-- -->
     <string name="settings_cat_licenses">Licenças</string>
-    <string name="gpl_title">Licença do YTD</string>
-    <string name="gpl_summary">GPL-3.0</string>
-    <string name="title_activity_gpl_show">GPL-3.0</string>
-
-    <string name="mit_title">Licença do escolhedor de ficheiros</string>
-    <string name="mit_summary">Licença do MIT</string>
-    <string name="title_activity_mit_show">Licença do MIT</string>
 
     <string name="credits_title">Créditos</string>
-    <string name="credits_summary">Outras licenças e traduções</string>
     <string name="title_activity_credits_show">Outras licenças e traduções</string>
+    
+    <string name="credits_text0">\tMain Licenses
+        \n\n
+        This App and the FFmpeg binaries, used for its audio extraction feature, are released under the GPL-3.0.
+    	\n\n
+    	The filechooser library is released under the MIT license.
+    	\n\n
+    	The liblame library, used to compile FFmpeg, is released under the LGPL.
+    	\n\n
+    	For more informations, refer to the dedicated menus and to the license files 
+    	available from this project\'s source code.
+    	\n</string>
+    
     <string name="credits_text1"> Licenças de excertos do código
         \n\n
         Esta aplicação utiliza alguns excertos da ROM CyanogenMod;
@@ -243,15 +248,12 @@ um site de perguntas e respostas para programadores onde todo o conteudo está l
 Para mais detalhes, procurar comentarios no código Java do YTD.</string>
     <string name="credits_translators">\n\tTraduções
         \n\nAlém disso, pelas localizações adicionais obrigado a:</string>
-    <string name="translators_info">\nPara mais informações:
-\n<http>forum.xda-developers.com/showthread.php?p=37708791</http>
-\n\n<http>www.getlocalization.com/ytdownloader</http></string>
+    <string name="translators_info">\nPara mais informações:</string>
         
     <!-- -->
     <string name="settings_cat_code">Código Fonte</string>
     <string name="ytd_code_git_title">YTD no GitHub</string>
     <string name="ytd_code_hg_title">YTD no Sourceforge</string>
-    <string name="chooser_code_title">Escolhedor de ficheiros (Filechooser) no Google Code</string>
 
     <!-- -->
     <string name="settings_cat_social">Social</string>

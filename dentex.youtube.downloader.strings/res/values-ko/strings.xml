@@ -213,17 +213,22 @@
 
     <!-- -->
     <string name="settings_cat_licenses">라이센스</string>
-    <string name="gpl_title">유튜브 다운로더 라이센스</string>
-    <string name="gpl_summary">GPL-3.0</string>
-    <string name="title_activity_gpl_show">GPL-3.0</string>
-
-    <string name="mit_title">Filechooser 라이센스</string>
-    <string name="mit_summary">MIT 라이센스</string>
-    <string name="title_activity_mit_show">MIT 라이센스</string>
 
     <string name="credits_title">기타 저작권 정보</string>
-    <string name="credits_summary">기타 저작권 및 번역 정보</string>
     <string name="title_activity_credits_show">기타 저작권 및 번역 정보</string>
+    
+    <string name="credits_text0">\tMain Licenses
+        \n\n
+        This App and the FFmpeg binaries, used for its audio extraction feature, are released under the GPL-3.0.
+    	\n\n
+    	The filechooser library is released under the MIT license.
+    	\n\n
+    	The liblame library, used to compile FFmpeg, is released under the LGPL.
+    	\n\n
+    	For more informations, refer to the dedicated menus and to the license files 
+    	available from this project\'s source code.
+    	\n</string>
+    
     <string name="credits_text1">\t발췌한 소스에 대한 라이센스
 \n\n
 이 앱은 CyanogenMod custom ROM에서 발췌한 소스코드를 사용하고 있습니다;
@@ -239,15 +244,12 @@ Stack Overflow는 모든 컨텐츠가  CC BY-SA 3.0 라이센스를 따르는 �
 자세한 내용은 유튜브 다운로더의 자바 코드에 있는 주석을 살펴보세요.</string>
     <string name="credits_translators">\n\t번역
 \n\n아래에 내열한 분들의 도움으로 번역되었습니다:</string>
-    <string name="translators_info">\n더 상세한 정보 확인:
-\n<http>forum.xda-developers.com/showthread.php?p=37708791</http>
-\n\n<http>www.getlocalization.com/ytdownloader</http></string>
+    <string name="translators_info">\n더 상세한 정보 확인:</string>
         
     <!-- -->
     <string name="settings_cat_code">소스코드</string>
     <string name="ytd_code_git_title">GitHub에서 YTD보기</string>
     <string name="ytd_code_hg_title">소스포지에서 YTD보기</string>
-    <string name="chooser_code_title">구글코드에서 Filechooser보기</string>
 
     <!-- -->
     <string name="settings_cat_social">소셜</string>

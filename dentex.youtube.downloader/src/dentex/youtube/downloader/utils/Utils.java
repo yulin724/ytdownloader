@@ -93,7 +93,7 @@ public class Utils extends Activity {
 	 *
 	 * * Licensed under the GNU GPLv2 license
 	 *
-	 * The text of the license can be found in the LICENSE_GPL2 file
+	 * The text of the license can be found in the LICENSE_GPL file
 	 * or at https://www.gnu.org/licenses/gpl-2.0.txt
 	 */
 	
@@ -123,7 +123,7 @@ public class Utils extends Activity {
 	 *
 	 * * Licensed under the GNU GPLv2 license
 	 *
-	 * The text of the license can be found in the LICENSE_GPL2 file
+	 * The text of the license can be found in the LICENSE_GPL file
 	 * or at https://www.gnu.org/licenses/gpl-2.0.txt
 	 */
 	

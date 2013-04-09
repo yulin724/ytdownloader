@@ -1,0 +1,13 @@
+EXTRA_FLAGS='--disable-everything\
+    --enable-decoder="aac"\
+	--enable-decoder="mp3"\
+	--enable-decoder="mp4"\
+	--enable-decoder="flv"\
+	--enable-decoder="vorbis"\
+	--enable-decoder="vp8"\
+	--enable-decoder="mpeg4"\
+	--enable-decoder="h264"\
+	--enable-demuxer="ogg"\
+	--enable-demuxer="flv"\
+	--enable-demuxer="aac"\
+	--enable-demuxer="mp3"'

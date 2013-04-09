@@ -47,7 +47,7 @@ COLLEZ la commande (utilisez le bouton menu) et pressez ENTRÉE.</string>
     <string name="download_complete_dialog_positive">Ouvrir</string>
     <string name="downloading">Téléchargement&#8230;</string>
     <string name="cancel_download_dialog_title">Annuler le téléchargement?</string>
-    <string name="video_list_error_toast">Error in video list.</string>
+    <string name="video_list_error_toast">Erreur dans la liste vidéo.</string>
     <string name="codec">\n\n\tCodec:</string>
     <string name="quality">\n\tQualité:</string>
     <string name="size">\n\tPoids:</string>
@@ -57,7 +57,7 @@ COLLEZ la commande (utilisez le bouton menu) et pressez ENTRÉE.</string>
     <string name="long_click_title">Gérer le lien sélectionné:</string>
     <string name="extsdcard_info_title">Chemin de destination non standard</string>
     <string name="extsdcard_info_msg">Le fichier est d\'abord téléchargé dans le dossier Download, puis sera déplacé vers la destination sélectionnée.</string>
-    <string name="ffmpeg_ready">FFmpeg ready.</string>
+    <string name="ffmpeg_ready">FFmpeg prêt.</string>
     
     <string-array name="long_click_entries">
         <item>Copier dans le presse-papier</item>
@@ -75,14 +75,14 @@ COLLEZ la commande (utilisez le bouton menu) et pressez ENTRÉE.</string>
     <string name="failed_download">Téléchargement échoué retiré</string>
     <string name="new_v_download">trouvé. Téléchargement&#8230;</string>
     <string name="new_v_install">téléchargé. Cliquez pour installer.</string>
-    <string name="ffmpeg_download_dialog_title">An additional file is needed. Download it now?</string>
-    <string name="ffmpeg_download_dialog_msg">Web link:</string>
-    <string name="ffmpeg_device_not_supported">Device not supported yet.</string>
-    <string name="ffmpeg_support_mail">Send email to the developer?
-        \nYou will review all information in your email application before sending any data.</string>
-    <string name="ffmpeg_download_notification">Downloading FFmpeg</string>
-    <string name="ffmpeg_install">Installing FFmpeg binary&#8230;</string>
-    <string name="email_via">Send email via:</string>
+    <string name="ffmpeg_download_dialog_title">Un fichier supplémentaire est nécessaire. Le télécharger maintenant?</string>
+    <string name="ffmpeg_download_dialog_msg">Lien web:</string>
+    <string name="ffmpeg_device_not_supported">Périphérique pas encore supporté.</string>
+    <string name="ffmpeg_support_mail">Envoyer un email au développeur?
+\nVous verrez toutes les informations transmises dans votre logiciel de messagerie avant l\'envoi des données.</string>
+    <string name="ffmpeg_download_notification">Téléchargement de FFmpeg</string>
+    <string name="ffmpeg_install">Installation de FFmpeg&#8230;</string>
+    <string name="email_via">Envoyer un email via:</string>
     
     <!-- ### UpgradeApkActivity ### -->
     
@@ -103,14 +103,14 @@ COLLEZ la commande (utilisez le bouton menu) et pressez ENTRÉE.</string>
     
     <string name="ytd_video">Vidéo YTD</string>
     <string name="copy_error">Erreur pendant la copie</string>
-    <string name="copy_progress">File copy in progress&#8230;</string>
+    <string name="copy_progress">Copie des fichiers en cours&#8230;</string>
     <string name="copy_ok">Copie terminée.</string>
     <string name="download_remove_failed">Erreur: fichier temporaire téléchargé non supprimé.</string>
     <string name="download_failed">Téléchargement échoué!</string>
     <string name="audio_extr_progress">Audio extraction in progress&#8230;</string>
     <string name="audio_conv_progress">Audio encoding to mp3 in progress&#8230;</string>
-    <string name="audio_extr_completed">Audio extraction completed.</string>
-    <string name="audio_conv_completed">Audio encoding to mp3 completed.</string>
+    <string name="audio_extr_completed">Extraction audio terminée.</string>
+    <string name="audio_conv_completed">Encodage audio en MP3 terminé.</string>
     <string name="audio_extr_error">Error during audio extraction.</string>
     <string name="audio_conv_error">Error during audio encoding to mp3.</string>
     
@@ -121,7 +121,7 @@ COLLEZ la commande (utilisez le bouton menu) et pressez ENTRÉE.</string>
 	<string name="paypal_summary">Supporter le travail du développeur par un don</string>
 	
 	<!-- ### FfmpegDownloadService ### -->
-	<string name="ffmpeg_install_failed">FFmpeg installation failed.</string>
+	<string name="ffmpeg_install_failed">Erreur lors de l\'installation de FFmpeg.</string>
 
     <!-- ### preferences ### -->
 
@@ -163,7 +163,7 @@ COLLEZ la commande (utilisez le bouton menu) et pressez ENTRÉE.</string>
     <!-- -->
     <string name="settings_cat_files">Fichiers vidéo</string>
     <string name="enable_q_suffix_title">Ajouter la qualité en suffixe</string>
-    <string name="enable_q_suffix_summary">Add the video quality at the end of the file name</string>
+    <string name="enable_q_suffix_summary">Ajouter la qualité de la vidéo à la fin du nom du fichier</string>
     <string name="enable_rename_title">Activer le renommage des fichiers</string>
     <string name="enable_rename_summary">Renommer le fichier avant de le télécharger (téléchargement local seulement)</string>
     <string name="show_size_title">Montrer le poids des fichiers</string>
@@ -175,16 +175,16 @@ COLLEZ la commande (utilisez le bouton menu) et pressez ENTRÉE.</string>
     
     <!-- -->
     <string name="settings_cat_audio">Audio</string>
-    <string name="enable_audio_extraction_title">Enable audio extraction</string>
-    <string name="enable_audio_extraction_summary">Extract and convert audio from downloaded video</string>
-    <string name="mp3_bitrate_title">Bitrate for mp3 encoding (kbps)</string>
-    <string name="audio_extraction_type_title">Extraction type</string>
-    <string name="enable_audio_q_suffix_title">Append audio quality suffix</string>
-    <string name="enable_audio_q_suffix_summary">Add the audio quality at the end of the file name</string>
+    <string name="enable_audio_extraction_title">Activer l\'extraction audio</string>
+    <string name="enable_audio_extraction_summary">Extraire et convertir la piste audio des vidéos téléchargées</string>
+    <string name="mp3_bitrate_title">Débit binaire pour l\'encodage MP3 (kbps)</string>
+    <string name="audio_extraction_type_title">Type d\'extraction</string>
+    <string name="enable_audio_q_suffix_title">Ajouter la qualité audio en suffixe</string>
+    <string name="enable_audio_q_suffix_summary">Ajouter la qualité de l\'audio à la fin du nom du fichier</string>
 
     <string-array name="audio_extraction_type_entries">
-        <item>Extract only</item>
-        <item>Extract and encode to mp3</item>
+        <item>Extraire seulement</item>
+        <item>Extraire et encoder en MP3</item>
     </string-array>
     
     <!-- -->
@@ -214,17 +214,22 @@ COLLEZ la commande (utilisez le bouton menu) et pressez ENTRÉE.</string>
 
     <!-- -->
     <string name="settings_cat_licenses">Licences</string>
-    <string name="gpl_title">Licence de YTD</string>
-    <string name="gpl_summary">GPL-3.0</string>
-    <string name="title_activity_gpl_show">GPL-3.0</string>
-
-    <string name="mit_title">Licence de Filechooser (sélecteur de fichier)</string>
-    <string name="mit_summary">Licence du MIT</string>
-    <string name="title_activity_mit_show">Licence du MIT</string>
 
     <string name="credits_title">Autres crédits</string>
-    <string name="credits_summary">Autres licences et traductions</string>
     <string name="title_activity_credits_show">Autres licences et traductions</string>
+    
+    <string name="credits_text0">\tMain Licenses
+        \n\n
+        This App and the FFmpeg binaries, used for its audio extraction feature, are released under the GPL-3.0.
+    	\n\n
+    	The filechooser library is released under the MIT license.
+    	\n\n
+    	The liblame library, used to compile FFmpeg, is released under the LGPL.
+    	\n\n
+    	For more informations, refer to the dedicated menus and to the license files 
+    	available from this project\'s source code.
+    	\n</string>
+    
     <string name="credits_text1">\tLicence des extraits de code
 \n\n
 Cette application utilise certains extraits de code provenant de la ROM CyanogenMod.
@@ -243,15 +248,12 @@ un site de questions et réponses pour programmeurs où tout le contenu est sous
 Pour plus de détails, consultez les commentaires du code source Java de YTD.</string>
     <string name="credits_translators">\n\tTraductions
 \n\nMerci pour les localisations additionnelles:</string>
-    <string name="translators_info">\nPour plus d\'informations:
-\n<http>forum.xda-developers.com/showthread.php?p=37708791</http>
-\n\n<http>www.getlocalization.com/ytdownloader</http></string>
+    <string name="translators_info">\nPour plus d\'informations:</string>
         
     <!-- -->
     <string name="settings_cat_code">Code source</string>
     <string name="ytd_code_git_title">YTD sur GitHub</string>
     <string name="ytd_code_hg_title">YTD sur SourceForge</string>
-    <string name="chooser_code_title">Filechooser sur Google Code</string>
 
     <!-- -->
     <string name="settings_cat_social">Réseaux sociaux</string>

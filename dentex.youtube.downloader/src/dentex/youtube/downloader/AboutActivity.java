@@ -21,6 +21,7 @@ import android.util.Log;
 import dentex.youtube.downloader.docs.ChangelogActivity;
 import dentex.youtube.downloader.docs.CreditsShowActivity;
 import dentex.youtube.downloader.docs.GplShowActivity;
+import dentex.youtube.downloader.docs.LgplShowActivity;
 import dentex.youtube.downloader.docs.MitShowActivity;
 import dentex.youtube.downloader.utils.PopUps;
 import dentex.youtube.downloader.utils.Utils;
@@ -64,12 +65,12 @@ public class AboutActivity extends Activity {
     
     public static class AboutFragment extends PreferenceFragment implements OnSharedPreferenceChangeListener {
     	
+    	private Preference credits;
     	private Preference gpl;
 		private Preference mit;
-		private Preference credits;
+		private Preference lgpl;
 		private Preference git;
 		private Preference hg;
-		private Preference gc;
 		private Preference share;
 		private Preference cl;
 		private Preference loc;
@@ -84,6 +85,16 @@ public class AboutActivity extends Activity {
             for(int i=0;i<getPreferenceScreen().getPreferenceCount();i++){
                 initSummary(getPreferenceScreen().getPreference(i));
             }
+            
+            credits = (Preference) findPreference("credits");
+	        credits.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+	        	
+	            public boolean onPreferenceClick(Preference preference) {
+	            	Intent intent = new Intent(getActivity(),  CreditsShowActivity.class);
+	        		startActivity(intent);
+	                return true;
+	            }
+	        });
 		
 			gpl = (Preference) findPreference("gpl");
 	        gpl.setOnPreferenceClickListener(new OnPreferenceClickListener() {
@@ -105,11 +116,11 @@ public class AboutActivity extends Activity {
 	            }
 	        });
 	        
-	        credits = (Preference) findPreference("credits");
-	        credits.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+	        lgpl = (Preference) findPreference("lgpl");
+	        lgpl.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 	        	
 	            public boolean onPreferenceClick(Preference preference) {
-	            	Intent intent = new Intent(getActivity(),  CreditsShowActivity.class);
+	            	Intent intent = new Intent(getActivity(),  LgplShowActivity.class);
 	        		startActivity(intent);
 	                return true;
 	            }
@@ -132,18 +143,6 @@ public class AboutActivity extends Activity {
 	        	
 	            public boolean onPreferenceClick(Preference preference) {
 	            	String url = "https://sourceforge.net/projects/ytdownloader/";
-	            	Intent i = new Intent(Intent.ACTION_VIEW);
-	            	i.setData(Uri.parse(url));
-	            	startActivity(i);
-	            	return true;
-	            }
-	        });
-	        
-	        gc = (Preference) findPreference("chooser_code");
-	        gc.setOnPreferenceClickListener(new OnPreferenceClickListener() {
-	        	
-	            public boolean onPreferenceClick(Preference preference) {
-	            	String url = "https://code.google.com/p/android-filechooser/";
 	            	Intent i = new Intent(Intent.ACTION_VIEW);
 	            	i.setData(Uri.parse(url));
 	            	startActivity(i);

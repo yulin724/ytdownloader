@@ -214,24 +214,29 @@
 
     <!-- -->
     <string name="settings_cat_licenses">Licenses</string>
-    <string name="gpl_title">YTD\'s License</string>
-    <string name="gpl_summary">GPL-3.0</string>
-    <string name="title_activity_gpl_show">GPL-3.0</string>
-
-    <string name="mit_title">Filechooser\'s Licence</string>
-    <string name="mit_summary">MIT License</string>
-    <string name="title_activity_mit_show">MIT License</string>
 
     <string name="credits_title">Credits</string>
-    <string name="credits_summary">Other licenses and translations</string>
     <string name="title_activity_credits_show">Other licenses and translations</string>
+    
+    <string name="credits_text0">\tMain Licenses
+        \n\n
+        This App and the FFmpeg binaries, used for its audio extraction feature, are released under the GPL-3.0.
+    	\n\n
+    	The filechooser library is released under the MIT license.
+    	\n\n
+    	The liblame library, used to compile FFmpeg, is released under the LGPL.
+    	\n\n
+    	For more informations, refer to the dedicated menus and to the license files 
+    	available from this project\'s source code.
+    	\n</string>
+    
     <string name="credits_text1">\tCode excerpts License
         \n\n
         This App uses some code excerpts from the CyanogenMod custom ROM;
         \n\n
         Specifically the methods to calculate and then compare the MD5 
         checksum for downloaded upgrade packages are taken from the \'CMUpdater\' App</string>
-	<string name="credits_text3">\nThe text of the license can be found in the LICENSE_GPL2 file or at <http>https://www.gnu.org/licenses/gpl-2.0.txt</http></string>
+	<string name="credits_text3">\nThe text of the license can be found in the LICENSE_GPL file or at <http>https://www.gnu.org/licenses/gpl-3.0.txt</http></string>
 	<string name="credits_text4">\n\tCode from StackOverflow
 	    \n\n
 	    In addition, the Java methods used in YTD to compare version numbers, 
@@ -244,15 +249,12 @@
 	    </string>
     <string name="credits_translators">\n\tTranslations
         \n\nFurthermore, additional localizations thanks to:</string>
-    <string name="translators_info">\nFor more info:
-        \n<http>forum.xda-developers.com/showthread.php?p=37708791</http>
-        \n\n<http>www.getlocalization.com/ytdownloader</http></string>
+    <string name="translators_info">\nFor more info:</string>
         
     <!-- -->
     <string name="settings_cat_code">Source Code</string>
     <string name="ytd_code_git_title">YTD at GitHub</string>
     <string name="ytd_code_hg_title">YTD at Sourceforge</string>
-    <string name="chooser_code_title">Filechooser at Google Code</string>
 
     <!-- -->
     <string name="settings_cat_social">Social</string>
