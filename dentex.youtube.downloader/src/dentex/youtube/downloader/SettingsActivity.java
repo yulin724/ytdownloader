@@ -260,7 +260,7 @@ public class SettingsActivity extends Activity {
 	                                try {
 										Utils.createLogFile(destDir, filename, content);
 										i.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(new File(destDir, filename)));*/
-		                                i.putExtra(Intent.EXTRA_EMAIL, new String[] { "samuele.rini@enav.it" });
+		                                i.putExtra(Intent.EXTRA_EMAIL, new String[] { "samuele.rini76@gmail.com" });
 		                                i.putExtra(Intent.EXTRA_SUBJECT, "YTD: device info report");
 		                                i.putExtra(Intent.EXTRA_TEXT, content);
 

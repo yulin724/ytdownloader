@@ -325,8 +325,8 @@
     
     <string name="mp3_bitrate_default">192k</string>
     <string name="ffmpeg_download_dialog_msg_link">http://sourceforge.net/projects/ytdownloader/files/ffmpeg/ffmpeg_arm%1$s/download</string>
-    <string name="ffmpeg_size_arm7">6.6 MB</string>
-    <string name="ffmpeg_size_arm5">6.8 MB</string>
+    <string name="ffmpeg_size_arm7">6.0 MB</string>
+    <string name="ffmpeg_size_arm5">6.4 MB</string>
     
     <string-array name="lang_entries">
         <item>Default</item>

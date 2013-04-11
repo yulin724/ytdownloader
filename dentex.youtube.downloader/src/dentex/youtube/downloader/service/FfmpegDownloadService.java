@@ -79,6 +79,7 @@ public class FfmpegDownloadService extends Service {
         Request request = new Request(Uri.parse(link));
         request.setDestinationInExternalFilesDir(nContext, null, ffmpegBinName);
         request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE);
+        request.setVisibleInDownloadsUi(false);
         request.setTitle(getString(R.string.ffmpeg_download_notification));
         dm = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
         enqueue = dm.enqueue(request);
@@ -126,15 +127,26 @@ public class FfmpegDownloadService extends Service {
 	    		
 						File src = new File(nContext.getExternalFilesDir(null), ffmpegBinName);
 						File dst = new File(nContext.getDir("bin", 0), ffmpegBinName);
-						copyFfmpegToAppDataDir(context, src, dst);
+						
+						String md5 = null;
+						if (cpuVers == 7) md5 = "33fcf4d5a3b2e5193bd42c2c1fc2abc7";
+						if (cpuVers == 5) md5 = "0606931cfbaca351a47e59ab198bc81e";
+						
+						if (Utils.checkMD5(md5, src)) {
+							copyFfmpegToAppDataDir(context, src, dst);
+						} else {
+							SettingsActivity.SettingsFragment.touchAudioExtrPref(true, false);
+							deleteBadDownload(id);
+						}
 						break;
 						
 					case DownloadManager.STATUS_FAILED:
 						Log.e(DEBUG_TAG, ffmpegBinName + ", _ID " + id + " FAILED (status " + status + ")");
 						Log.e(DEBUG_TAG, " Reason: " + reason);
-						Toast.makeText(context,  ffmpegBinName + ": " + getString(R.string.download_failed), Toast.LENGTH_LONG).show();
+						Toast.makeText(nContext,  ffmpegBinName + ": " + getString(R.string.download_failed), Toast.LENGTH_LONG).show();
 						
 						SettingsActivity.SettingsFragment.touchAudioExtrPref(true, false);
+						deleteBadDownload(id);
 						break;
 						
 					default:
@@ -146,5 +158,11 @@ public class FfmpegDownloadService extends Service {
     		stopSelf();
 		}
 	};
+	
+	private void deleteBadDownload (long id) {
+		dm.remove(id);
+		Toast.makeText(this, getString(R.string.download_failed), Toast.LENGTH_LONG).show();
+		
+	}
 	
 }

@@ -952,7 +952,8 @@ public class ShareActivity extends Activity {
     	if (settings.getBoolean("show_size_list", false)) {
 	        while (codecsIter.hasNext()) {
 	        	try {
-	        		listEntries.add(codecsIter.next() + " - " + qualitiesIter.next() + stereoIter.next() + " - " + sizesIter.next());
+	        		listEntries.add(codecsIter.next().toUpperCase(Locale.ENGLISH).replace("WEBM", "WebM") + 
+	        				" - " + qualitiesIter.next() + stereoIter.next() + " - " + sizesIter.next());
 	        	} catch (NoSuchElementException e) {
 	        		listEntries.add("//");
 	        	}
@@ -960,7 +961,8 @@ public class ShareActivity extends Activity {
     	} else {
             while (codecsIter.hasNext()) {
             	try {
-                	listEntries.add(codecsIter.next() + " - " + qualitiesIter.next() + stereoIter.next());
+                	listEntries.add(codecsIter.next().toUpperCase(Locale.ENGLISH).replace("WEBM", "WebM") + 
+                			" - " + qualitiesIter.next() + stereoIter.next());
             	} catch (NoSuchElementException e) {
 	        		listEntries.add("//");
 	        	}	
@@ -1133,7 +1135,7 @@ public class ShareActivity extends Activity {
         Pattern qualityPattern = Pattern.compile("stereo3d=1");
         Matcher qualityMatcher = qualityPattern.matcher(currentCQ);
         if (qualityMatcher.find()) {
-            stereo.add(qualityMatcher.group().replaceAll("stereo3d=1", "_3D"));
+            stereo.add(qualityMatcher.group().replace("stereo3d=1", "_3D"));
             
         } else {
             stereo.add("");

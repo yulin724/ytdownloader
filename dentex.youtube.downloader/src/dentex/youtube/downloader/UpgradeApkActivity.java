@@ -315,12 +315,11 @@ public class UpgradeApkActivity extends Activity {
 
 		@Override
         public void onReceive(final Context context, final Intent intent) {
-	        long id = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -2);
+	        final long id = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -2);
 	        if (enqueue != -1 && id != -2 && id == enqueue) {
 	            Query query = new Query();
 	            query.setFilterById(id);
-	            DownloadManager dm = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
-	            Cursor c = dm.query(query);
+	            Cursor c = downloadManager.query(query);
 	            if (c.moveToFirst()) {
 	                int columnIndex = c.getColumnIndex(DownloadManager.COLUMN_STATUS);
 	                int status = c.getInt(columnIndex);
@@ -366,7 +365,7 @@ public class UpgradeApkActivity extends Activity {
 	                        helpBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
 	                        	
 	                            public void onClick(DialogInterface dialog, int which) {
-	                            	deleteBadDownload(context, intent);
+	                            	deleteBadDownload(id);
 	                            	callDownloadApk(matchedVersion);
 	                            	upgradeButton.setEnabled(false);
 	                            }
@@ -375,7 +374,7 @@ public class UpgradeApkActivity extends Activity {
 	                        helpBuilder.setNegativeButton(getString(R.string.dialogs_negative), new DialogInterface.OnClickListener() {
 	
 	                            public void onClick(DialogInterface dialog, int which) {
-	                            	deleteBadDownload(context, intent);
+	                            	deleteBadDownload(id);
 	                            	// cancel
 	                            }
 	                        });
@@ -386,17 +385,15 @@ public class UpgradeApkActivity extends Activity {
 	                        }
                     	}
                     } else if (status == DownloadManager.STATUS_FAILED) {
-                    	deleteBadDownload(context, intent);
+                    	deleteBadDownload(id);
                     }
                 }
             }
 		}
-
-		public void deleteBadDownload(final Context context, final Intent intent) {
-			long id = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -2);
-			downloadManager.remove(id);
-			Toast.makeText(context, getString(R.string.download_failed), Toast.LENGTH_LONG).show();
-		}
-
 	};
+	
+	private void deleteBadDownload (long id) {
+		downloadManager.remove(id);
+		Toast.makeText(this, getString(R.string.download_failed), Toast.LENGTH_LONG).show();
+	}
 }

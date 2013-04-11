@@ -25,6 +25,7 @@ import dentex.youtube.downloader.R;
 import dentex.youtube.downloader.ShareActivity;
 import dentex.youtube.downloader.ffmpeg.FfmpegController;
 import dentex.youtube.downloader.ffmpeg.ShellUtils.ShellCallback;
+import dentex.youtube.downloader.utils.SingleMediaScanner;
 import dentex.youtube.downloader.utils.Utils;
 
 public class DownloadsService extends Service {
@@ -146,6 +147,9 @@ public class DownloadsService extends Service {
 					        cBuilder.setContentText(context.getString(R.string.copy_ok));
 					        intent2.setDataAndType(Uri.fromFile(dst), "video/*");
 							Utils.logger("i", "_ID " + ID + " Copy OK", DEBUG_TAG);
+							
+							SingleMediaScanner sms = new SingleMediaScanner(nContext, dst, "video/*");
+							sms.onScanCompleted(dst.getAbsolutePath(), Uri.fromFile(dst));
 							
 							if (ShareActivity.dm.remove(id) == 0) {
 								Toast.makeText(context, "YTD: " + getString(R.string.download_remove_failed), Toast.LENGTH_LONG).show();
@@ -299,6 +303,9 @@ public class DownloadsService extends Service {
 				audioIntent.setDataAndType(Uri.fromFile(renamedAudioFilePath), "audio/*");
 				PendingIntent contentIntent = PendingIntent.getActivity(nContext, 0, audioIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         		cBuilder.setContentIntent(contentIntent);
+        		
+        		SingleMediaScanner sms = new SingleMediaScanner(nContext, renamedAudioFilePath, "audio/*");
+        		sms.onScanCompleted(renamedAudioFilePath.getAbsolutePath(), Uri.fromFile(renamedAudioFilePath));
 			} else {
 				// Toast + Notification + Log ::: Audio job error
 				if (audio.equals("extr")) {

@@ -1,9 +1,16 @@
 #!/bin/bash
 
-# CONFIGURATION 
-# extract tar.gz archives and set the NDK variable below
+#=======================================================================
+# CONFIGURATION:
+# - extract tar.gz archives 
+# - set the NDK variable below
+#=======================================================================
 
-export NDK=${HOME}/downloads/android-ndk
+export NDK=${HOME}/android-ndk
+
+SYSROOT=$NDK/platforms/android-14/arch-arm
+TOOLCHAIN=`echo $NDK/toolchains/arm-linux-androideabi-4.7/prebuilt/*-x86`
+export PATH=$TOOLCHAIN/bin:$PATH
 
 #=======================================================================
 # build lame based on content from 
@@ -11,9 +18,7 @@ export NDK=${HOME}/downloads/android-ndk
 #=======================================================================
 
 cd liblame
-
 $NDK/ndk-build
-
 mv libs/armeabi/liblame.so libs/armeabi/libmp3lame.so
 mv libs/armeabi-v7a/liblame.so libs/armeabi-v7a/libmp3lame.so
 
@@ -31,14 +36,9 @@ cd ..
 
 BASE_DIR=`pwd`
 
-SYSROOT=$NDK/platforms/android-8/arch-arm
-# Expand the prebuilt/* path into the correct one
-TOOLCHAIN=`echo $NDK/toolchains/arm-linux-androideabi-4.7/prebuilt/*-x86`
-export PATH=$TOOLCHAIN/bin:$PATH
-
 rm -rf build/ffmpeg
 mkdir -p build/ffmpeg
-cd ffmpeg
+cd ffmpeg-1.2
 
 for version in armv5te armv7a; do
 
