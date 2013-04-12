@@ -58,6 +58,7 @@
     <string name="extsdcard_info_title">Non standard destination path</string>
     <string name="extsdcard_info_msg">File is being downloaded initially in the standard Download folder and then will be moved to the selected destination.</string>
     <string name="ffmpeg_ready">FFmpeg ready.</string>
+    <string name="confirm_audio_checkbox">Extract audio after download\n(as defined in settings)</string>
     
     <string-array name="long_click_entries">
         <item>Copy to clipboard</item>
@@ -176,7 +177,7 @@
     <!-- -->
     <string name="settings_cat_audio">Audio</string>
     <string name="enable_audio_extraction_title">Enable audio extraction</string>
-    <string name="enable_audio_extraction_summary">Extract and convert audio from downloaded video</string>
+    <string name="enable_audio_extraction_summary">Extract and convert audio from downloaded video (for the local download only)</string>
     <string name="mp3_bitrate_title">Bitrate for mp3 encoding (kbps)</string>
     <string name="audio_extraction_type_title">Extraction type</string>
     <string name="enable_audio_q_suffix_title">Append audio quality suffix</string>

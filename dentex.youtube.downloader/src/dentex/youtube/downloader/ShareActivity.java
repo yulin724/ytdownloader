@@ -147,7 +147,8 @@ public class ShareActivity extends Activity {
 	public String acodec = "";
 	public String extrType;
 	public String aquality;
-	private boolean audioExtrEnabled = false;
+	//private boolean audioExtrEnabled = false;
+	public CheckBox audioConfirm; 
 
     @SuppressLint("CutPasteId")
 	@Override
@@ -322,7 +323,7 @@ public class ShareActivity extends Activity {
 
     	    adb.setPositiveButton("OK", new DialogInterface.OnClickListener() {
     	    	public void onClick(DialogInterface dialog, int which) {
-    	    		if (showAgain1.isChecked() == false) {
+    	    		if (!showAgain1.isChecked()) {
     	    			SharedPreferences.Editor editor = settings.edit();
     	    			editor.putBoolean("general_info", false);
     	    			editor.commit();
@@ -445,6 +446,8 @@ public class ShareActivity extends Activity {
                     helpBuilder.setIcon(android.R.drawable.ic_dialog_info);
                     helpBuilder.setTitle(getString(R.string.list_click_dialog_title));
                     
+                    insertAudioConfirmation();
+                    
                     if (showSizesInVideoList) {
                     	showSingleSize = true;
                     } else {
@@ -550,10 +553,10 @@ public class ShareActivity extends Activity {
     	                    	    adb.setMessage(getString(R.string.ssh_info_tutorial_msg));
     	                    	    adb.setPositiveButton("OK", new DialogInterface.OnClickListener() {
     	                    	    	public void onClick(DialogInterface dialog, int which) {
-    	                    	    		if (showAgain2.isChecked() == false) {
+    	                    	    		if (!showAgain2.isChecked()) {
     	                    	    			SharedPreferences.Editor editor = settings.edit();
     	                    	    			editor.putBoolean("ssh_info", false);
-    	                    	    			editor.commit();
+    	                    	    			editor.apply();
     	                    	    			sshInfoCheckboxEnabled = settings.getBoolean("ssh_info", true);
     	                    	    			Utils.logger("d", "sshInfoCheckboxEnabled: " + sshInfoCheckboxEnabled, DEBUG_TAG);
     	                    	    		}
@@ -615,6 +618,17 @@ public class ShareActivity extends Activity {
             	}
             });
         }
+        
+        public void insertAudioConfirmation() {
+			boolean fromPrefs = settings.getBoolean("enable_audio_extraction", false);
+			if (fromPrefs) {
+				LayoutInflater adbInflater = LayoutInflater.from(ShareActivity.this);
+				View handleAudio = adbInflater.inflate(R.layout.dialog_confirm_download, null);
+				audioConfirm = (CheckBox) handleAudio.findViewById(R.id.audioConfirm);
+				audioConfirm.setChecked(false);
+				helpBuilder.setView(handleAudio);
+			}
+		}
         
         public boolean useQualitySuffix() {
         	boolean enabled = settings.getBoolean("enable_q_suffix", true);
@@ -720,8 +734,8 @@ public class ShareActivity extends Activity {
     	Intent intent1 = new Intent(ShareActivity.this, DownloadsService.class);
     	intent1.putExtra("COPY", false);
     	
-    	audioExtrEnabled = settings.getBoolean("enable_audio_extraction", false);
-    	if (audioExtrEnabled) {
+    	//audioExtrEnabled = settings.getBoolean("enable_audio_extraction", false);
+    	if (audioConfirm.isChecked()) {
     		intent1.putExtra("AUDIO", extrType);
     	} else {
     		intent1.putExtra("AUDIO", "none");
@@ -1197,7 +1211,7 @@ public class ShareActivity extends Activity {
         public void onReceive(Context context, Intent intent) {
 			//Utils.logger("d", "inAppCompleteReceiver: onReceive CALLED", DEBUG_TAG);
 	        long id = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -2);
-	        if (enqueue != -1 && id != -2 && id == enqueue && !videoOnExt && !audioExtrEnabled) {
+	        if (enqueue != -1 && id != -2 && id == enqueue && !videoOnExt && !audioConfirm.isChecked()) {
 	            Query query = new Query();
 	            query.setFilterById(id);
 	            Cursor c = dm.query(query);
