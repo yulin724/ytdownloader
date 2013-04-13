@@ -22,6 +22,9 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.pm.Signature;
+import android.media.MediaScannerConnection;
+import android.media.MediaScannerConnection.MediaScannerConnectionClient;
+import android.net.Uri;
 import android.os.Build;
 import android.util.Log;
 import dentex.youtube.downloader.R;
@@ -31,10 +34,10 @@ import dentex.youtube.downloader.ShareActivity;
 public class Utils extends Activity {
 	
 	static final String DEBUG_TAG = "Utils";
-	public static SharedPreferences settings = ShareActivity.settings;
-	public final static String PREFS_NAME = ShareActivity.PREFS_NAME;
-	public InputStream isFromString;
-
+	static SharedPreferences settings = ShareActivity.settings;
+	static final String PREFS_NAME = ShareActivity.PREFS_NAME;
+	InputStream isFromString;
+	static MediaScannerConnection msc;
 	static String onlineVersion;
     
 	/* class VersionComparator from Stack Overflow:
@@ -255,5 +258,29 @@ public class Utils extends Activity {
 		} catch (IOException e) {
 			Log.e(DEBUG_TAG, "Error creating '" + filename + "' Log file", e);
 		}
+	}
+    
+    /* method mediaScan adapted from Stack Overflow:
+	 * 
+	 * http://stackoverflow.com/questions/9707572/android-how-to-get-and-setchange-id3-tagmetadata-of-audio-files/11035755#11035755
+	 * 
+	 * Q: http://stackoverflow.com/users/849664/chirag-shah
+	 * A: http://stackoverflow.com/users/1456506/shtrule
+	 */
+    
+    public static void scanMedia(Context context, final File[] file, final String[] mime) {
+		msc = new MediaScannerConnection(context, new MediaScannerConnectionClient() {
+			public void onScanCompleted(String path, Uri uri) {
+				Utils.logger("d", "Scanned " + path + ":", DEBUG_TAG);
+				Utils.logger("d", "-> uri: " + uri, DEBUG_TAG);
+				msc.disconnect();  
+			}
+			public void onMediaScannerConnected() {
+				for (int i = 0; i < file.length; i++) {
+					msc.scanFile(file[i].getAbsolutePath(), mime[i]);
+				}
+			}
+		});
+		msc.connect();
 	}
 }

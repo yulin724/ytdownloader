@@ -2,8 +2,14 @@ package dentex.youtube.downloader.service;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.cmc.music.common.ID3WriteException;
+import org.cmc.music.metadata.MusicMetadata;
+import org.cmc.music.metadata.MusicMetadataSet;
+import org.cmc.music.myid3.MyID3;
 
 import android.app.DownloadManager;
 import android.app.DownloadManager.Query;
@@ -16,6 +22,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
@@ -25,7 +32,6 @@ import dentex.youtube.downloader.R;
 import dentex.youtube.downloader.ShareActivity;
 import dentex.youtube.downloader.ffmpeg.FfmpegController;
 import dentex.youtube.downloader.ffmpeg.ShellUtils.ShellCallback;
-import dentex.youtube.downloader.utils.SingleMediaScanner;
 import dentex.youtube.downloader.utils.Utils;
 
 public class DownloadsService extends Service {
@@ -46,6 +52,8 @@ public class DownloadsService extends Service {
 	protected String acodec;
 	protected String aFileName;
 	public boolean audioQualitySuffixEnabled;
+	protected MediaScannerConnection scanner;
+	public File copyDst;
 
 	@Override
 	public IBinder onBind(Intent intent) {
@@ -121,7 +129,8 @@ public class DownloadsService extends Service {
 					 */
 					if (copy == true) {
 						File src = new File(ShareActivity.dir_Downloads, vfilename);
-						File dst = new File(ShareActivity.path, vfilename);
+						final File dst = new File(ShareActivity.path, vfilename);
+						copyDst = dst;
 						
 						if (settings.getBoolean("enable_own_notification", true) == true) {
 							try {
@@ -148,9 +157,8 @@ public class DownloadsService extends Service {
 					        intent2.setDataAndType(Uri.fromFile(dst), "video/*");
 							Utils.logger("i", "_ID " + ID + " Copy OK", DEBUG_TAG);
 							
-							SingleMediaScanner sms = new SingleMediaScanner(nContext, dst, "video/*");
-							sms.onScanCompleted(dst.getAbsolutePath(), Uri.fromFile(dst));
-							
+							if (!audio.equals("conv")) Utils.scanMedia(getApplicationContext(), new File[] {dst}, new String[] {"video/*"});
+						                  
 							if (ShareActivity.dm.remove(id) == 0) {
 								Toast.makeText(context, "YTD: " + getString(R.string.download_remove_failed), Toast.LENGTH_LONG).show();
 								Log.e(DEBUG_TAG, "temp download file NOT removed");
@@ -296,7 +304,7 @@ public class DownloadsService extends Service {
 				}
 				Utils.logger("i", "_ID " + ID + " " + text, DEBUG_TAG);
 				
-				File renamedAudioFilePath = renameAudioFile(aBaseName, out);
+				final File renamedAudioFilePath = renameAudioFile(aBaseName, out);
 				Toast.makeText(nContext,  renamedAudioFilePath.getName() + ": " + text, Toast.LENGTH_LONG).show();
 				cBuilder.setContentTitle(renamedAudioFilePath.getName());
 				cBuilder.setContentText(text);			
@@ -304,8 +312,21 @@ public class DownloadsService extends Service {
 				PendingIntent contentIntent = PendingIntent.getActivity(nContext, 0, audioIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         		cBuilder.setContentIntent(contentIntent);
         		
-        		SingleMediaScanner sms = new SingleMediaScanner(nContext, renamedAudioFilePath, "audio/*");
-        		sms.onScanCompleted(renamedAudioFilePath.getAbsolutePath(), Uri.fromFile(renamedAudioFilePath));
+        		if (audio.equals("conv")) {
+					try {
+						Utils.logger("d", "writing ID3 tags...", DEBUG_TAG);
+						addId3Tags(renamedAudioFilePath);
+					} catch (ID3WriteException e) {
+						Log.e(DEBUG_TAG, "Unable to write id3 tags", e);
+					} catch (IOException e) {
+						Log.e(DEBUG_TAG, "Unable to write id3 tags", e);
+					}
+					if (copy == true) {
+						Utils.scanMedia(getApplicationContext(), new File[] {copyDst, renamedAudioFilePath}, new String[] {"video/*", "audio/*"});
+					} else {
+						Utils.scanMedia(getApplicationContext(), new File[] {renamedAudioFilePath}, new String[] {"audio/*"});
+					}
+        		}
 			} else {
 				// Toast + Notification + Log ::: Audio job error
 				if (audio.equals("extr")) {
@@ -338,6 +359,32 @@ public class DownloadsService extends Service {
 			}
 		}
 		return extractedAudioFile;
+	}
+
+	/* method addId3Tags adapted from Stack Overflow:
+	 * 
+	 * http://stackoverflow.com/questions/9707572/android-how-to-get-and-setchange-id3-tagmetadata-of-audio-files/9770646#9770646
+	 * 
+	 * Q: http://stackoverflow.com/users/849664/chirag-shah
+	 * A: http://stackoverflow.com/users/903469/mkjparekh
+	 */
+	
+	public void addId3Tags(File src) throws IOException, ID3WriteException {
+        MusicMetadataSet src_set = new MyID3().read(src);
+        if (src_set == null) {
+            Log.w(DEBUG_TAG, "no metadata");
+        } else {
+	        MusicMetadata meta = new MusicMetadata("ytd");
+	        meta.setAlbum("YTD Extracted Audio");
+	        meta.setArtist("YTD");
+	        meta.setSongTitle(aBaseName);
+	        //String year = String.valueOf(Time.YEAR);
+	        Calendar cal = Calendar.getInstance();
+	        int year = cal.get(Calendar.YEAR);
+	        meta.setYear(String.valueOf(year));
+	        Log.i("TEST", String.valueOf(year));
+	        new MyID3().update(src, src_set, meta);
+        }
 	}
 
 	private void findAudioSuffix(String shellLine, boolean audioQualitySuffixEnabled) {

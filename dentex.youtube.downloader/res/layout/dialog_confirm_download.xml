@@ -6,7 +6,6 @@
     android:id="@+id/layout_root" >
     
     <CheckBox 
-        android:text="@string/confirm_audio_checkbox" 
         android:id="@+id/audioConfirm"
         android:textColor="@android:color/white"
         android:layout_width="wrap_content" 

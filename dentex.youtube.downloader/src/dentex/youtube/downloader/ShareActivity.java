@@ -147,7 +147,7 @@ public class ShareActivity extends Activity {
 	public String acodec = "";
 	public String extrType;
 	public String aquality;
-	//private boolean audioExtrEnabled = false;
+	public boolean audioExtrEnabled = false;
 	public CheckBox audioConfirm; 
 
     @SuppressLint("CutPasteId")
@@ -625,6 +625,8 @@ public class ShareActivity extends Activity {
 				LayoutInflater adbInflater = LayoutInflater.from(ShareActivity.this);
 				View handleAudio = adbInflater.inflate(R.layout.dialog_confirm_download, null);
 				audioConfirm = (CheckBox) handleAudio.findViewById(R.id.audioConfirm);
+				String text = getString(R.string.confirm_audio_checkbox1) + getString(R.string.confirm_audio_checkbox2);
+				audioConfirm.setText(text);
 				audioConfirm.setChecked(false);
 				helpBuilder.setView(handleAudio);
 			}
@@ -734,8 +736,8 @@ public class ShareActivity extends Activity {
     	Intent intent1 = new Intent(ShareActivity.this, DownloadsService.class);
     	intent1.putExtra("COPY", false);
     	
-    	//audioExtrEnabled = settings.getBoolean("enable_audio_extraction", false);
-    	if (audioConfirm.isChecked()) {
+    	audioExtrEnabled = settings.getBoolean("enable_audio_extraction", false);
+    	if (audioExtractionEnabled && audioConfirm.isChecked()) {
     		intent1.putExtra("AUDIO", extrType);
     	} else {
     		intent1.putExtra("AUDIO", "none");

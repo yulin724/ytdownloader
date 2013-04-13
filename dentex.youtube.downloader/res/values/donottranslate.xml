@@ -130,7 +130,7 @@
     <string name="title_activity_gpl_show">GPL-3.0</string>
 
     <string name="mit_title">MIT license</string>
-    <string name="mit_summary">android-filechooser</string>
+    <string name="mit_summary">android-filechooser &amp; MyID3</string>
     <string name="title_activity_mit_show">MIT license</string>
     
     <string name="lgpl_show_title">LGPL-3.0</string>
@@ -138,25 +138,6 @@
     <string name="title_activity_lgpl_show">LGPL-3.0</string>
 		
     <string name="gpl_text">GNU GENERAL PUBLIC LICENSE
-		\n\n
-		YTD Copyright &#169; 2013 Samuele Rini
-		\n\n
-		This program is free software: you can redistribute it and/or modify
-		it under the terms of the GNU General Public License as published by
-		the Free Software Foundation, either version 3 of the License, or
-		(at your option) any later version.
-		\n\n
-		This program is distributed in the hope that it will be useful,
-		but WITHOUT ANY WARRANTY; without even the implied warranty of
-		MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-		GNU General Public License for more details.
-		\n\n
-		You should have received a copy of the GNU General Public License
-		along with this program. If not, see <http>http://www.gnu.org/licenses</http>
-		\n\n
-		---
-		\n\n
-		FFmpeg Copyright &#169; 2000-2013 the FFmpeg developers
 		\n\n
 		This program is free software: you can redistribute it and/or modify
 		it under the terms of the GNU General Public License as published by
@@ -172,52 +153,6 @@
 		along with this program. If not, see <http>http://www.gnu.org/licenses</http></string>
 		
     <string name="lgpl_show_text">GNU LESSER GENERAL PUBLIC LICENSE
-        \n\n
-        liblame is licensed under LGPL
-        \n\n
-        Copyright &#169; 2010 Ethan Chen
-		\n\n
-		This library is free software; you can redistribute it and/or
-		modify it under the terms of the GNU Lesser General Public
-		License as published by the Free Software Foundation; either
-		version 2 of the License, or (at your option) any later version.
-		\n\n
-		This library is distributed in the hope that it will be useful,
-		but WITHOUT ANY WARRANTY; without even the implied warranty of
-		MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-		Lesser General Public License for more details.
-		\n\n
-		You should have received a copy of the GNU Lesser General Public
-		License along with this library; if not, write to the Free Software
-		Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-		\n\n
-		---
-		\n\n
-		LAME is licensed under LGPL
-		\n
-		\nCopyright &#169; 1999-2007 The LAME Project
-		\nCopyright &#169; 1999-2001 Mark Taylor
-		\nCopyright &#169; 1998 Micheal Cheng
-		\n\n
-		This library is free software; you can redistribute it and/or
-		modify it under the terms of the GNU Lesser General Public
-		License as published by the Free Software Foundation; either
-		version 2 of the License, or (at your option) any later version.
-		\n\n
-		This library is distributed in the hope that it will be useful,
-		but WITHOUT ANY WARRANTY; without even the implied warranty of
-		MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-		Lesser General Public License for more details.
-		\n\n
-		You should have received a copy of the GNU Lesser General Public
-		License along with this library; if not, write to the Free Software
-		Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-		\n\n
-		---
-		\n\n
-		mpglib is licensed under LGPL
-		\n\n
-		Copyright &#169; 1995-1997 Michael Hipp
 		\n\n
 		This library is free software; you can redistribute it and/or
 		modify it under the terms of the GNU Lesser General Public
@@ -235,8 +170,6 @@
 
     <string name="mit_text">The MIT License (MIT)
 		\n\n
-		Copyright &#169; 2012 Hai Bison
-		\n\n
 		Permission is hereby granted, free of charge, to any person obtaining a copy of
 		this software and associated documentation files (the "Software"), to deal in
 		the Software without restriction, including without limitation the rights to
@@ -253,9 +186,6 @@
 		COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 		IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 		CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</string>
-		
-    <string name="credits_text2">(<http>https://github.com/CyanogenMod/android_packages_apps_CMUpdater</http>).
-        \n\nCopyright &#169; 2012 The CyanogenMod Project, licensed under the GNU GPLv2 license.</string>
 		
     <string name="ytd_code_git_summary">https://github.com/dentex/ytdownloader/</string>
     <string name="ytd_code_hg_summary">https://sourceforge.net/projects/ytdownloader/</string>
