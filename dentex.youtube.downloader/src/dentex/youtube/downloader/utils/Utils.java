@@ -17,6 +17,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.regex.Pattern;
 
 import android.app.Activity;
+import android.app.Notification;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -26,6 +27,7 @@ import android.media.MediaScannerConnection;
 import android.media.MediaScannerConnection.MediaScannerConnectionClient;
 import android.net.Uri;
 import android.os.Build;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import dentex.youtube.downloader.R;
 import dentex.youtube.downloader.SettingsActivity.SettingsFragment;
@@ -221,6 +223,32 @@ public class Utils extends Activity {
     	return sb.toString();
     }
     
+    /* method mediaScan adapted from Stack Overflow:
+	 * 
+	 * http://stackoverflow.com/questions/9707572/android-how-to-get-and-setchange-id3-tagmetadata-of-audio-files/11035755#11035755
+	 * 
+	 * Q: http://stackoverflow.com/users/849664/chirag-shah
+	 * A: http://stackoverflow.com/users/1456506/shtrule
+	 */
+    
+    public static void scanMedia(Context context, final File[] file, final String[] mime) {
+		msc = new MediaScannerConnection(context, new MediaScannerConnectionClient() {
+			public void onScanCompleted(String path, Uri uri) {
+				Utils.logger("d", "Scanned " + path + ":", DEBUG_TAG);
+				Utils.logger("d", "-> uri: " + uri, DEBUG_TAG);
+				msc.disconnect();  
+			}
+			public void onMediaScannerConnected() {
+				for (int i = 0; i < file.length; i++) {
+					msc.scanFile(file[i].getAbsolutePath(), mime[i]);
+				}
+			}
+		});
+		msc.connect();
+	}
+    
+    // --------------- !!!
+    
     public static void themeInit(Context context) {
     	settings = context.getSharedPreferences(PREFS_NAME, 0);
 		String theme = settings.getString("choose_theme", "D");
@@ -260,27 +288,8 @@ public class Utils extends Activity {
 		}
 	}
     
-    /* method mediaScan adapted from Stack Overflow:
-	 * 
-	 * http://stackoverflow.com/questions/9707572/android-how-to-get-and-setchange-id3-tagmetadata-of-audio-files/11035755#11035755
-	 * 
-	 * Q: http://stackoverflow.com/users/849664/chirag-shah
-	 * A: http://stackoverflow.com/users/1456506/shtrule
-	 */
-    
-    public static void scanMedia(Context context, final File[] file, final String[] mime) {
-		msc = new MediaScannerConnection(context, new MediaScannerConnectionClient() {
-			public void onScanCompleted(String path, Uri uri) {
-				Utils.logger("d", "Scanned " + path + ":", DEBUG_TAG);
-				Utils.logger("d", "-> uri: " + uri, DEBUG_TAG);
-				msc.disconnect();  
-			}
-			public void onMediaScannerConnected() {
-				for (int i = 0; i < file.length; i++) {
-					msc.scanFile(file[i].getAbsolutePath(), mime[i]);
-				}
-			}
-		});
-		msc.connect();
-	}
+    public static void setNotificationDefaults(NotificationCompat.Builder cBuilder) {
+    	// TODO implement in prefs
+    	cBuilder.setDefaults(Notification.DEFAULT_VIBRATE | Notification.DEFAULT_SOUND | Notification.FLAG_SHOW_LIGHTS);
+    }
 }

@@ -39,7 +39,7 @@ public class DownloadsService extends Service {
 	private final static String DEBUG_TAG = "DownloadsService";
 	public static SharedPreferences settings = ShareActivity.settings;
 	public final String PREFS_NAME = ShareActivity.PREFS_NAME;
-	public boolean copy;
+	public static boolean copy;
 	public String audio;
 	public static int ID;
 	public static Context nContext;
@@ -123,6 +123,8 @@ public class DownloadsService extends Service {
 					
 			    	cBuilder.setSmallIcon(R.drawable.icon_nb);
 					cBuilder.setContentTitle(vfilename);
+					
+					Utils.setNotificationDefaults(cBuilder);
 					
 					/*
 					 *  Copy to extSdCard enabled
@@ -268,6 +270,8 @@ public class DownloadsService extends Service {
 		} else {
 			Log.e(DEBUG_TAG, "_ID  not found!");
 		}
+		
+		Utils.setNotificationDefaults(ShareActivity.mBuilder); // TODO fix: avoid double ring/vibration
 		
 		if (ShareActivity.sequence.size() > 0) {
 			ShareActivity.mBuilder.setContentText(ShareActivity.pt1 + " " + ShareActivity.sequence.size() + " " + ShareActivity.pt2);

@@ -1213,7 +1213,13 @@ public class ShareActivity extends Activity {
         public void onReceive(Context context, Intent intent) {
 			//Utils.logger("d", "inAppCompleteReceiver: onReceive CALLED", DEBUG_TAG);
 	        long id = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -2);
-	        if (enqueue != -1 && id != -2 && id == enqueue && !videoOnExt && !audioConfirm.isChecked()) {
+	        
+	        boolean audioConfirmed = false;
+	        if (audioConfirm != null && audioConfirm.isChecked()) {
+	        	audioConfirmed = true;
+	        }
+	        
+	        if (enqueue != -1 && id != -2 && id == enqueue && !videoOnExt && !audioConfirmed) {
 	            Query query = new Query();
 	            query.setFilterById(id);
 	            Cursor c = dm.query(query);
