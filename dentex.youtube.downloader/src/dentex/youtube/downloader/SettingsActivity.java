@@ -320,7 +320,7 @@ public class SettingsActivity extends Activity {
 			                            	intent.putExtra("DIR", sdcardAppDir.getAbsolutePath());
 			                            	getActivity().startService(intent);
 	                            		} else {
-	                            			FfmpegDownloadService.copyFfmpegToAppDataDir(mActivity, src, dst);
+	                            			FfmpegDownloadService.copyFfmpegToAppDataDir(getActivity(), src, dst);
 	                            		}
 	                            	} else {
 	                            		Utils.logger("w", getString(R.string.unable_save_dialog_msg), DEBUG_TAG);
@@ -351,7 +351,6 @@ public class SettingsActivity extends Activity {
 			});
 			
 			initAudioPreference();
-
 		}
         
         private int armCpuVersion() {
@@ -485,7 +484,7 @@ public class SettingsActivity extends Activity {
 
 		private void initSummary(Preference p){
         	if (p instanceof PreferenceCategory){
-        		PreferenceCategory pCat = (PreferenceCategory)p;
+        		PreferenceCategory pCat = (PreferenceCategory) p;
         		for(int i=0;i<pCat.getPreferenceCount();i++){
         			initSummary(pCat.getPreference(i));
         	    }
@@ -526,7 +525,7 @@ public class SettingsActivity extends Activity {
                 			chooserSummary = ShareActivity.dir_Downloads.getAbsolutePath();
                 			setChooserPrefAndSummary();
                 			PopUps.showPopUp(getString(R.string.system_warning_title), getString(R.string.system_warning_msg), "alert", getActivity());
-                			//Toast.makeText(fragContext, getString(R.string.system_warning), Toast.LENGTH_SHORT).show();
+                			//Toast.makeText(getActivity(), getString(R.string.system_warning_title), Toast.LENGTH_SHORT).show();
                 			break;
                 		case 2:
                 			// Path not mounted

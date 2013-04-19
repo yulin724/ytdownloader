@@ -57,8 +57,8 @@
     <string name="extsdcard_info_title">사용자 지정 저장경로</string>
     <string name="extsdcard_info_msg">시스템의 기본 저장경로에 다운로드한 후 사용자 지정 경로로 옮깁니다.</string>
     <string name="ffmpeg_ready">FFmpeg 이 준비됨</string>
-    <string name="confirm_audio_checkbox1">Extract audio after download</string>
-    <string name="confirm_audio_checkbox2">\n(as defined in settings)</string>
+    <string name="confirm_audio_checkbox1">다운로드 후 오디오 추출</string>
+    <string name="confirm_audio_checkbox2">\n(세부 사항은 추출 설정을 따릅니다)</string>
     
     <string-array name="long_click_entries">
         <item>클립보드에 복사</item>
@@ -177,7 +177,7 @@
     <!-- -->
     <string name="settings_cat_audio">오디오</string>
     <string name="enable_audio_extraction_title">오디오 추출 기능 켜기</string>
-    <string name="enable_audio_extraction_summary">Extract and convert audio from downloaded video (for the local download only)</string>
+    <string name="enable_audio_extraction_summary">다운로드한 비디오에서 오디오 추출 및 변환 (로컬 다운로드의 경우에만 가능)</string>
     <string name="mp3_bitrate_title">mp3 음질 설정 (kbps)</string>
     <string name="audio_extraction_type_title">오디오 추출 형식</string>
     <string name="enable_audio_q_suffix_title">음질 정보 추가</string>
@@ -201,6 +201,19 @@
         <item>사용안함</item>
     </string-array>
     
+    <string name="notification_defaults_title">Notification defaults</string>
+    <string name="notification_defaults_dialog_title">YTD\'s own notification defaults</string>
+    <string-array name="notification_defaults_entries">
+        <item>Sound and Vibration</item>
+        <item>Sound and Lights</item>
+        <item>Vibration and Lights</item>
+        <item>Sound, Vibration and Lights</item>
+        <item>Sound</item>
+        <item>Vibration</item>
+        <item>Lights</item>
+        <item>Nothing</item>
+    </string-array>   
+    
     <!-- -->
     <string name="settings_cat_updates">업데이트</string>
     <string name="update_title">업데이트 확인</string>
@@ -219,49 +232,43 @@
     <string name="credits_title">기타 저작권 정보</string>
     <string name="title_activity_credits_show">기타 저작권 및 번역 정보</string>
     
-    <string name="credits_text0">\tMain Licenses
-        \n\n
-        This App and is released under the GPL-3.0.
-        \n(YouTubeDownloader for Android Copyright &#169; 2013 Samuele Rini).
-        \n\n
-        The FFmpeg binary (<http>http://www.ffmpeg.org/index.html</http>), 
-        used for the audio extraction feature, is released under the GPL-3.0.
-        \n(FFmpeg version 1.2 Copyright &#169; 2000-2013 the FFmpeg developers).
-    	\n\n
-    	The filechooser library is released under the MIT license.
-    	\n(android-filechooser Copyright &#169; 2012 Hai Bison).
-    	\n\n
-    	The liblame library, used to compile FFmpeg, is released under the LGPL.
-    	A GitHub project, <http>https://github.com/intervigilium/liblame</http>, 
-    	has been used to compile the lame libraries for Android.
-    	\n(liblame Copyright &#169; 2010 Ethan Chen)
-    	\n(LAME Copyright &#169; 1999-2007 The LAME Project,
-		\nCopyright &#169; 1999-2001 Mark Taylor,
-		\nCopyright &#169; 1998 Micheal Cheng)
-    	\n(mpglib Copyright &#169; 1995-1997 Michael Hipp).
-    	\n\n
-    	YTD\'s mp3 tags are written with MyID3: a Java ID3 Tag Library
-    	(<http>http://www.fightingquaker.com/myid3</http> and <http>https://sites.google.com/site/eternalsandbox/myid3-for-android</http>) 
-    	released under the LGPL, as its dependency Jakarta Regexp library.
-    	\n(MyID3 Copyright &#169; 2008 Charles M. Chen, adapted for Android by Romulus Urakagi Ts\'ai).
-    	\n\n
-    	For more informations, refer to the dedicated menus and to the license files 
-    	available from this project\'s source code.
-    	\n</string>
+    <string name="credits_text0">\t주요 라이센스
+\n\n
+이 앱은 GPL-3.0 라이센스를 따릅니다.
+\n(YouTubeDownloader for Android Copyright &#169; 2013 Samuele Rini).
+\n\n
+오디오 추출 기능에 사용하는 FFmpeg 바이너리 (<http>http://www.ffmpeg.org/index.html</http>) 는 GPL-3.0를 따릅니다.
+\n(FFmpeg version 1.2 Copyright &#169; 2000-2013 the FFmpeg developers).
+\n\n
+The filechooser 라이브러리는 MIT 라이센스를 따릅니다.
+\n(android-filechooser Copyright &#169; 2012 Hai Bison).
+\n\n
+FFmpeg을 컴파일하는데 활용된 liblame 라이브러리는 LGPL 라이센스를 따릅니다.
+A GitHub 프로젝트 <http>https://github.com/intervigilium/liblame</http> 는 안드로이드 버전의 lame 라이브러리를 컴파일 하는데 쓰였습니다.
+\n(liblame Copyright &#169; 2010 Ethan Chen)
+\n(LAME Copyright &#169; 1999-2007 The LAME Project,
+\nCopyright &#169; 1999-2001 Mark Taylor,
+\nCopyright &#169; 1998 Micheal Cheng)
+\n(mpglib Copyright &#169; 1995-1997 Michael Hipp).
+\n\n
+YTD의 mp3 태깅은 MyID3 (자바 기반의 ID3 태그 라이브러리, <http>http://www.fightingquaker.com/myid3</http> 및 <http>https://sites.google.com/site/eternalsandbox/myid3-for-android</http>) 를 활용하며 해당 라이브러리가 의존하는 Jakarta 정규표현식 라이브러리와 더불어 LGPL 라이센스를 따릅니다.
+\n(MyID3 Copyright &#169; 2008 Charles M. Chen, adapted for Android by Romulus Urakagi Ts\'ai).
+\n\n
+더 많은 정보를 보려면 세부 메뉴 혹은 프로젝트 소스코드에 있는 라이센스 파일을 참고하시기 바랍니다.
+\n</string>
     
-    <string name="credits_text1">\tCode excerpts Licenses
-        \n\n
-        This App uses some code snippets from: 
-        \n\n
-        1) CyanogenMod custom ROM (<http>https://github.com/CyanogenMod/android_packages_apps_CMUpdater</http>)
-        \nCopyright &#169; 2012 The CyanogenMod Project, licensed under the GNU GPLv2 license.
-        \nThe text of the license can be found in the LICENSE_GPL file or at <http>https://www.gnu.org/licenses/gpl-3.0.txt</http>
-        \n\n
-        2) Stack Overflow (<http>http://stackoverflow.com</http>), a question and answer site for programmers where all 
-        the content is CC BY-SA 3.0 licensed (see <http>http://creativecommons.org/licenses/by-sa/3.0</http>).
-	    \n\n
-	    For more details, look for comments in YTD\'s Java code.
-	    </string>
+    <string name="credits_text1">\t발췌한 코드에 대한 라이센스 안내
+\n\n
+이 앱은 아래의 코드를 발췌하여 사용합니다: 
+\n\n
+1) CyanogenMod custom ROM (<http>https://github.com/CyanogenMod/android_packages_apps_CMUpdater</http>)
+\nCopyright &#169; 2012 The CyanogenMod Project, licensed under the GNU GPLv2 license.
+\nThe text of the license can be found in the LICENSE_GPL file or at <http>https://www.gnu.org/licenses/gpl-3.0.txt</http>
+\n\n
+2) Stack Overflow (<http>http://stackoverflow.com</http>), a question and answer site for programmers where all 
+the content is CC BY-SA 3.0 licensed (see <http>http://creativecommons.org/licenses/by-sa/3.0</http>).
+\n\n
+어 많은 정보를 보려면 YTD 소스코드에 있는 주석을 참고하세요.</string>
     <string name="credits_translators">\n\t번역
 \n\n아래에 내열한 분들의 도움으로 번역되었습니다:</string>
     <string name="translators_info">\n더 상세한 정보 확인:</string>

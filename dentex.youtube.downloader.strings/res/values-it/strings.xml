@@ -202,6 +202,19 @@
         <item>Mai</item>
     </string-array>
     
+    <string name="notification_defaults_title">Defaults notifiche</string>
+    <string name="notification_defaults_dialog_title">Defaults per le notifiche di YTD</string>
+    <string-array name="notification_defaults_entries">
+        <item>Suono e vibrazione</item>
+        <item>Suono e luci</item>
+        <item>Vibrazione e luci</item>
+        <item>Suono, vibrazione e luci</item>
+        <item>Suono</item>
+        <item>Vibrazione</item>
+        <item>Luci</item>
+        <item>Niente</item>
+    </string-array>   
+    
     <!-- -->
     <string name="settings_cat_updates">Aggiornamenti</string>
     <string name="update_title">Controlla aggiornamenti</string>

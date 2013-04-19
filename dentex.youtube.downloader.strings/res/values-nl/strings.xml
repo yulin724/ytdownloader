@@ -202,6 +202,19 @@ map, PLAK het commando (gebruik de menuknop) en klik ENTER.</string>
         <item>Nooit</item>
     </string-array>
     
+    <string name="notification_defaults_title">Notification defaults</string>
+    <string name="notification_defaults_dialog_title">YTD\'s own notification defaults</string>
+    <string-array name="notification_defaults_entries">
+        <item>Sound and Vibration</item>
+        <item>Sound and Lights</item>
+        <item>Vibration and Lights</item>
+        <item>Sound, Vibration and Lights</item>
+        <item>Sound</item>
+        <item>Vibration</item>
+        <item>Lights</item>
+        <item>Nothing</item>
+    </string-array>   
+    
     <!-- -->
     <string name="settings_cat_updates">Bijwerken</string>
     <string name="update_title">Controleren op updates</string>

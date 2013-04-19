@@ -58,8 +58,8 @@ COLLEZ la commande (utilisez le bouton menu) et pressez ENTRÉE.</string>
     <string name="extsdcard_info_title">Chemin de destination non standard</string>
     <string name="extsdcard_info_msg">Le fichier est d\'abord téléchargé dans le dossier Download, puis sera déplacé vers la destination sélectionnée.</string>
     <string name="ffmpeg_ready">FFmpeg prêt.</string>
-    <string name="confirm_audio_checkbox1">Extract audio after download</string>
-    <string name="confirm_audio_checkbox2">\n(as defined in settings)</string>
+    <string name="confirm_audio_checkbox1">Extraire l\'audio après le téléchargement</string>
+    <string name="confirm_audio_checkbox2">\n(comme défini dans les options)</string>
     
     <string-array name="long_click_entries">
         <item>Copier dans le presse-papier</item>
@@ -178,7 +178,7 @@ COLLEZ la commande (utilisez le bouton menu) et pressez ENTRÉE.</string>
     <!-- -->
     <string name="settings_cat_audio">Audio</string>
     <string name="enable_audio_extraction_title">Activer l\'extraction audio</string>
-    <string name="enable_audio_extraction_summary">Extract and convert audio from downloaded video (for the local download only)</string>
+    <string name="enable_audio_extraction_summary">Extraire et convertir l\'audio des vidéos téléchargées (téléchargements locaux uniquement)</string>
     <string name="mp3_bitrate_title">Débit binaire pour l\'encodage MP3 (kbps)</string>
     <string name="audio_extraction_type_title">Type d\'extraction</string>
     <string name="enable_audio_q_suffix_title">Ajouter la qualité audio en suffixe</string>
@@ -201,6 +201,19 @@ COLLEZ la commande (utilisez le bouton menu) et pressez ENTRÉE.</string>
         <item>Pendant le téléchargement seulement</item>
         <item>Jamais</item>
     </string-array>
+    
+    <string name="notification_defaults_title">Notification defaults</string>
+    <string name="notification_defaults_dialog_title">YTD\'s own notification defaults</string>
+    <string-array name="notification_defaults_entries">
+        <item>Sound and Vibration</item>
+        <item>Sound and Lights</item>
+        <item>Vibration and Lights</item>
+        <item>Sound, Vibration and Lights</item>
+        <item>Sound</item>
+        <item>Vibration</item>
+        <item>Lights</item>
+        <item>Nothing</item>
+    </string-array>   
     
     <!-- -->
     <string name="settings_cat_updates">Mettre à jour</string>

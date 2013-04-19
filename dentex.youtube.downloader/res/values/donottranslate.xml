@@ -282,6 +282,19 @@
     
     <string name="lang_default">default</string>
     
+    <string-array name="notification_defaults_entry_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+    </string-array>
+    
+    <string name="notification_defaults_default">0</string>
+    
     <string name="translators_list">   
         \nPLUG313 - Portuguese;
         \nrew06 - Turkish;

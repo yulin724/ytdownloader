@@ -289,7 +289,30 @@ public class Utils extends Activity {
 	}
     
     public static void setNotificationDefaults(NotificationCompat.Builder cBuilder) {
-    	// TODO implement in prefs
-    	cBuilder.setDefaults(Notification.DEFAULT_VIBRATE | Notification.DEFAULT_SOUND | Notification.FLAG_SHOW_LIGHTS);
+    	String def = settings.getString("notification_defaults", "0");
+    	if (def.equals("0")) {
+    		cBuilder.setDefaults(Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE);
+    	}
+    	if (def.equals("1")) {
+    		cBuilder.setDefaults(Notification.DEFAULT_SOUND | Notification.DEFAULT_LIGHTS);
+    	}
+    	if (def.equals("2")) {
+    		cBuilder.setDefaults(Notification.DEFAULT_LIGHTS | Notification.DEFAULT_VIBRATE);
+    	}
+    	if (def.equals("3")) {
+    		cBuilder.setDefaults(Notification.DEFAULT_ALL);
+    	}
+    	if (def.equals("4")) {
+    		cBuilder.setDefaults(Notification.DEFAULT_SOUND);
+    	}
+    	if (def.equals("5")) { 
+    		cBuilder.setDefaults(Notification.DEFAULT_VIBRATE);
+    	}
+    	if (def.equals("6")) {
+    		cBuilder.setDefaults(Notification.DEFAULT_LIGHTS);
+    	}
+    	if (def.equals("7")) {
+    		// nothing...
+    	}
     }
 }

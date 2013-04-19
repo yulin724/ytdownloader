@@ -150,6 +150,15 @@
             android:entryValues="@array/download_manager_notification_entry_values"
             android:defaultValue="@string/download_manager_notification_default"/>
         
+		<ListPreference
+		    android:key="notification_defaults"
+		    android:dependency="enable_own_notification"
+		    android:title="@string/notification_defaults_title"
+		    android:dialogTitle="@string/notification_defaults_dialog_title"
+		    android:entries="@array/notification_defaults_entries"
+		    android:entryValues="@array/notification_defaults_entry_values"
+		    android:defaultValue="@string/notification_defaults_default"/>
+        
     </PreferenceCategory>
     
     <PreferenceCategory 

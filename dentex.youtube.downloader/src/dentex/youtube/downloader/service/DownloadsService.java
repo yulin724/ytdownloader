@@ -39,8 +39,8 @@ public class DownloadsService extends Service {
 	private final static String DEBUG_TAG = "DownloadsService";
 	public static SharedPreferences settings = ShareActivity.settings;
 	public final String PREFS_NAME = ShareActivity.PREFS_NAME;
-	public static boolean copy;
-	public String audio;
+	public static boolean copyEnabled;
+	public static String audio;
 	public static int ID;
 	public static Context nContext;
 	public String aSuffix = ".audio";
@@ -48,7 +48,9 @@ public class DownloadsService extends Service {
 	protected File out;
 	protected String aBaseName;
 	private NotificationManager cNotificationManager;
+	public NotificationManager aNotificationManager;
 	private NotificationCompat.Builder cBuilder;
+	private NotificationCompat.Builder aBuilder;
 	protected String acodec;
 	protected String aFileName;
 	public boolean audioQualitySuffixEnabled;
@@ -74,8 +76,8 @@ public class DownloadsService extends Service {
 	
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-		copy = intent.getBooleanExtra("COPY", false);
-		Utils.logger("d", "Copy to extSdcard: " + copy, DEBUG_TAG);
+		copyEnabled = intent.getBooleanExtra("COPY", false);
+		Utils.logger("d", "Copy to extSdcard: " + copyEnabled, DEBUG_TAG);
 		
 		audio = intent.getStringExtra("AUDIO");
 		Utils.logger("d", "Audio extraction: " + audio, DEBUG_TAG);
@@ -118,18 +120,16 @@ public class DownloadsService extends Service {
 					Utils.logger("d", "_ID " + id + " SUCCESSFUL (status " + status + ")", DEBUG_TAG);
 					ID = (int) id;
 					
+					// copy job notification init
 					cBuilder =  new NotificationCompat.Builder(context);
 					cNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-					
 			    	cBuilder.setSmallIcon(R.drawable.icon_nb);
 					cBuilder.setContentTitle(vfilename);
-					
-					Utils.setNotificationDefaults(cBuilder);
-					
+
 					/*
 					 *  Copy to extSdCard enabled
 					 */
-					if (copy == true) {
+					if (copyEnabled) {
 						File src = new File(ShareActivity.dir_Downloads, vfilename);
 						final File dst = new File(ShareActivity.path, vfilename);
 						copyDst = dst;
@@ -158,6 +158,8 @@ public class DownloadsService extends Service {
 					        cBuilder.setContentText(context.getString(R.string.copy_ok));
 					        intent2.setDataAndType(Uri.fromFile(dst), "video/*");
 							Utils.logger("i", "_ID " + ID + " Copy OK", DEBUG_TAG);
+							
+							if (audio.equals("none")) Utils.setNotificationDefaults(cBuilder);
 							
 							if (!audio.equals("conv")) Utils.scanMedia(getApplicationContext(), new File[] {dst}, new String[] {"video/*"});
 						                  
@@ -193,6 +195,12 @@ public class DownloadsService extends Service {
 						}
 					}
 					
+					// audio jobs notification init
+					aBuilder =  new NotificationCompat.Builder(context);
+					aNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+			    	aBuilder.setSmallIcon(R.drawable.icon_nb);
+					aBuilder.setContentTitle(vfilename);
+					
 					/*
 					 *  Audio extraction enabled
 					 */
@@ -217,9 +225,9 @@ public class DownloadsService extends Service {
 								text = getString(R.string.audio_conv_progress);
 							}
 					    	Toast.makeText(context,"YTD: " + text, Toast.LENGTH_LONG).show();
-					    	cBuilder.setContentTitle(aFileName);
-					        cBuilder.setContentText(text);
-							cNotificationManager.notify(ID*ID, cBuilder.build());
+					    	aBuilder.setContentTitle(aFileName);
+					        aBuilder.setContentText(text);
+							cNotificationManager.notify(ID*ID, aBuilder.build());
 							Utils.logger("i", "_ID " + ID + " " + text, DEBUG_TAG);
 					    } catch (IOException ioe) {
 					    	Log.e(DEBUG_TAG, "Error loading ffmpeg. " + ioe.getMessage());
@@ -271,14 +279,14 @@ public class DownloadsService extends Service {
 			Log.e(DEBUG_TAG, "_ID  not found!");
 		}
 		
-		Utils.setNotificationDefaults(ShareActivity.mBuilder); // TODO fix: avoid double ring/vibration
+		if (!copyEnabled && audio.equals("none")) Utils.setNotificationDefaults(ShareActivity.mBuilder);
 		
 		if (ShareActivity.sequence.size() > 0) {
 			ShareActivity.mBuilder.setContentText(ShareActivity.pt1 + " " + ShareActivity.sequence.size() + " " + ShareActivity.pt2);
 			ShareActivity.mNotificationManager.notify(ShareActivity.mId, ShareActivity.mBuilder.build());
 		} else {
 			ShareActivity.mBuilder.setContentText(ShareActivity.noDownloads);
-			ShareActivity.mNotificationManager.notify(ShareActivity.mId, ShareActivity.mBuilder.build());
+	        ShareActivity.mNotificationManager.notify(ShareActivity.mId, ShareActivity.mBuilder.build());
 			Utils.logger("d", "No downloads in progress; stopping FileObserver and DownloadsService", DEBUG_TAG);
 			ShareActivity.videoFileObserver.stopWatching();
 			nContext.stopService(new Intent(DownloadsService.getContext(), DownloadsService.class));
@@ -308,13 +316,15 @@ public class DownloadsService extends Service {
 				}
 				Utils.logger("i", "_ID " + ID + " " + text, DEBUG_TAG);
 				
+				Utils.setNotificationDefaults(aBuilder);
+				
 				final File renamedAudioFilePath = renameAudioFile(aBaseName, out);
 				Toast.makeText(nContext,  renamedAudioFilePath.getName() + ": " + text, Toast.LENGTH_LONG).show();
-				cBuilder.setContentTitle(renamedAudioFilePath.getName());
-				cBuilder.setContentText(text);			
+				aBuilder.setContentTitle(renamedAudioFilePath.getName());
+				aBuilder.setContentText(text);			
 				audioIntent.setDataAndType(Uri.fromFile(renamedAudioFilePath), "audio/*");
 				PendingIntent contentIntent = PendingIntent.getActivity(nContext, 0, audioIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        		cBuilder.setContentIntent(contentIntent);
+        		aBuilder.setContentIntent(contentIntent);
         		
         		if (audio.equals("conv")) {
 					try {
@@ -325,7 +335,7 @@ public class DownloadsService extends Service {
 					} catch (IOException e) {
 						Log.e(DEBUG_TAG, "Unable to write id3 tags", e);
 					}
-					if (copy == true) {
+					if (copyEnabled) {
 						Utils.scanMedia(getApplicationContext(), new File[] {copyDst, renamedAudioFilePath}, new String[] {"video/*", "audio/*"});
 					} else {
 						Utils.scanMedia(getApplicationContext(), new File[] {renamedAudioFilePath}, new String[] {"audio/*"});
@@ -340,9 +350,9 @@ public class DownloadsService extends Service {
 				}
 				Log.e(DEBUG_TAG, "_ID " + ID + " " + text);
 				Toast.makeText(nContext,  "YTD: " + text, Toast.LENGTH_LONG).show();
-				cBuilder.setContentText(text);
+				aBuilder.setContentText(text);
 			}
-			cNotificationManager.notify(ID*ID, cBuilder.build());
+			cNotificationManager.notify(ID*ID, aBuilder.build());
 		}
     }
     
